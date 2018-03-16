@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+html, body {
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+.form-card {
+  margin-top: 10px;
+}
+
+mat-form-field {
+  /*width: 300px;*/
+  width: 90%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
