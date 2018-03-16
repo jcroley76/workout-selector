@@ -1,0 +1,70 @@
+<section fxLayout fxLayoutAlign="center">
+  <mat-card fxFlex.xs="100%" fxFlex="400px" class="form-card">
+    <mat-card-title>Sign Up</mat-card-title>
+      <form
+        fxLayout="column"
+        fxLayoutGap="10px"
+        #f="ngForm"
+        (ngSubmit)="onSubmit(f)">
+
+        <mat-card-content>
+          <mat-form-field>
+            <input
+              type="email"
+              matInput
+              placeholder="Email"
+              ngModel
+              name="email"
+              email
+              required
+              #emailInput="ngModel">
+            <mat-error *ngIf="emailInput.hasError('required')">Email is required.</mat-error>
+            <mat-error *ngIf="!emailInput.hasError('required')">Email is invalid.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field hintLabel="Password must be at least 6 characters.">
+            <input
+              type="password"
+              matInput
+              placeholder="Password"
+              ngModel
+              name="password"
+              minlength="6"
+              required
+              #pwInput="ngModel">
+            <mat-hint align="end">{{ pwInput.value?.length }} / 6</mat-hint>
+            <mat-error>Must be at least 6 characters.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              placeholder="Birthdate"
+              [max]="maxDate"
+              ngModel
+              name="birthdate"
+              required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-checkbox
+            ngModel
+            name="agree"
+            required
+            color="primary">Agree to Terms and Conditions.</mat-checkbox>
+        </mat-card-content>
+
+        <mat-card-actions fxLayoutAlign="end">
+          <button
+            type="submit"
+            mat-raised-button
+            color="primary"
+            fxLayoutAlign="end"
+            [disabled]="f.invalid">Submit</button>
+        </mat-card-actions>
+      </form>
+  </mat-card>
+</section>
+
