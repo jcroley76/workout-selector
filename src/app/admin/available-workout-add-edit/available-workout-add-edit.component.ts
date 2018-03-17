@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AvailableWorkoutService } from '../available-workout.service';
 import { DropdownService } from '../../shared/dropdown.service';
 import { DropDown } from '../../shared/models/dropdown.model';
 import { NgForm } from '@angular/forms';
-import { AvailableWorkout } from '../../shared/models/available-workout.model';
 import { UIService } from '../../shared/ui.service';
 
 @Component({
@@ -13,10 +12,9 @@ import { UIService } from '../../shared/ui.service';
   styleUrls: ['./available-workout-add-edit.component.css']
 })
 export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
+  @ViewChild('f') awForm: NgForm;
   isLoading = true;
-  availableWorkout: AvailableWorkout;
-  attributes = [];
-
+  editMode = false;
   equipmentList: DropDown[];
   equipmentSubscription: Subscription;
   sourceList: DropDown[];
@@ -113,19 +111,33 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
 
   saveAvailableWorkout(form: NgForm) {
     console.log('NgForm:', form);
-    this.attributes.push(form.value.source);
-    this.attributes.push(form.value.equipment);
-    this.attributes.push(form.value.type);
-    this.attributes.push(form.value.emphasis);
-    this.attributes.push(form.value.record);
-    console.log('attributes:', this.attributes);
-    console.log('availableWorkout:', this.availableWorkout);
-    // this.availableWorkout = {'', form.value.title, form.value.description, this.attributes};
-    // this.availableWorkoutService.saveAvailableWorkout(this.availableWorkout);
+    const value = form.value;
+    const availableWorkout = {
+      title: value.title,
+      description: value.description,
+      sources: value.source,
+      equipment: value.equipment,
+      type: value.type,
+      emphasis: value.emphasis,
+      record: value.record
+    };
+
+    console.log('availableWorkout:', availableWorkout);
+
+    // TODO: Create Edit functionality
+    if (this.editMode) {
+      this.availableWorkoutService.updateAvailableWorkout(availableWorkout);
+    } else {
+      this.availableWorkoutService.addAvailableWorkout(availableWorkout);
+    }
+    this.editMode = false;
+    // TODO: Redirect to Available Workouts list after successful save.
+    form.reset();
   }
 
-
-
-
+  onClear() {
+    this.awForm.reset();
+    this.editMode = false;
+  }
 
 }

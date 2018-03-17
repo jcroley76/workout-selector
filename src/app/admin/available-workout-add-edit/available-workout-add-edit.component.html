@@ -78,9 +78,12 @@
           <mat-select
             placeholder="Record"
             ngModel
-            name="record">
+            required
+            name="record"
+            #recordInput="ngModel">
             <mat-option *ngFor="let measurementType of measurementTypeList" [value]="measurementType.value">{{measurementType.value}}</mat-option>
           </mat-select>
+          <mat-error *ngIf="recordInput.hasError('required')">Record is required.</mat-error>
         </mat-form-field>
 
 
@@ -90,7 +93,8 @@
         <button
           mat-raised-button
           color="accent"
-          fxLayoutAlign="end">
+          fxLayoutAlign="end"
+          (click)="onClear()">
           <mat-icon>clear</mat-icon>
           Clear
         </button>
@@ -101,7 +105,7 @@
           fxLayoutAlign="end"
           [disabled]="f.invalid">
           <mat-icon>save</mat-icon>
-          Save
+          {{ editMode ? 'Update' : 'Add' }}
         </button>
       </mat-card-actions>
     </form>

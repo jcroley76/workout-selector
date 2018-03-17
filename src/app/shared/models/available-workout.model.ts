@@ -1,6 +1,10 @@
 export interface AvailableWorkout {
-  id: string;
   title: string;
   description: string;
-  attributes: [any];
+  sources: string[];
+  equipment: string[];
+  type: string[];
+  emphasis: string[];
+  record: string;
+  // attributes: string[];
 }
