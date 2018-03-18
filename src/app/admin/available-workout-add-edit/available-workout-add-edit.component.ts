@@ -158,5 +158,4 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
     this.awForm.reset();
     this.editMode = false;
   }
-
 }
