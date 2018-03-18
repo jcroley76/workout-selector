@@ -1,16 +1,26 @@
-import {AngularFirestore} from 'angularfire2/firestore';
-import {Injectable} from '@angular/core';
-import {AvailableWorkout} from '../shared/models/available-workout.model';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { Injectable } from '@angular/core';
+import { AvailableWorkout } from '../shared/models/available-workout.model';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs';
 
 @Injectable()
 export class AvailableWorkoutService {
   // private availableWorkout: AvailableWorkout;
+  availableWorkoutsChanged = new Subject<AvailableWorkout[]>();
+  startedEditing = new Subject<AvailableWorkout>();
+  private fbSubs: Subscription[] = [];
 
   constructor(private db: AngularFirestore) {
   }
 
   fetchAvailableWorkouts() {
-    // TODO: Retrieve list of all available workouts
+    this.fbSubs.push(this.db
+      .collection('available-workouts')
+      .valueChanges()
+      .subscribe((availableWorkouts: AvailableWorkout[]) => {
+        this.availableWorkoutsChanged.next(availableWorkouts);
+      }));
   }
 
   searchAvailableWorkouts() {

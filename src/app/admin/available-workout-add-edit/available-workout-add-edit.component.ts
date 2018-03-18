@@ -5,6 +5,7 @@ import { DropdownService } from '../../shared/dropdown.service';
 import { DropDown } from '../../shared/models/dropdown.model';
 import { NgForm } from '@angular/forms';
 import { UIService } from '../../shared/ui.service';
+import {AvailableWorkout} from "../../shared/models/available-workout.model";
 
 @Component({
   selector: 'app-available-workout-add-edit',
@@ -15,6 +16,7 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
   @ViewChild('f') awForm: NgForm;
   isLoading = true;
   editMode = false;
+  editSubscription: Subscription;
   equipmentList: DropDown[];
   equipmentSubscription: Subscription;
   sourceList: DropDown[];
@@ -32,6 +34,23 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
                private uiService: UIService) { }
 
   ngOnInit() {
+    this.editSubscription = this.availableWorkoutService.startedEditing
+      .subscribe(
+        (aw: AvailableWorkout) => {
+          console.log('edit aw', aw);
+          this.editMode = true;
+          this.awForm.setValue({
+            title: aw.title,
+            description: aw.description,
+            source: aw.sources,
+            record: aw.record,
+            emphasis: aw.emphasis,
+            equipment: aw.equipment,
+            type: aw.type
+          });
+        }
+      );
+
     this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
       isLoading => {
         this.isLoading = isLoading;
@@ -124,8 +143,8 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
 
     console.log('availableWorkout:', availableWorkout);
 
-    // TODO: Create Edit functionality
     if (this.editMode) {
+      // TODO: Make sure edit updates record and doesn't create a new one.
       this.availableWorkoutService.updateAvailableWorkout(availableWorkout);
     } else {
       this.availableWorkoutService.addAvailableWorkout(availableWorkout);
