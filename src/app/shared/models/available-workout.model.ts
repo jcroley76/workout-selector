@@ -1,4 +1,5 @@
 export interface AvailableWorkout {
+  id: string;
   title: string;
   description: string;
   sources: string[];

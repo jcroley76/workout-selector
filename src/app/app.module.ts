@@ -25,6 +25,7 @@ import { AuthService } from './auth/auth.service';
 import { AvailableWorkoutService } from './admin/available-workout.service';
 import { DropdownService } from './shared/dropdown.service';
 import { UIService } from './shared/ui.service';
+import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
 
 
 
@@ -41,7 +42,8 @@ import { UIService } from './shared/ui.service';
     SidenavListComponent,
     PastWorkoutsComponent,
     AdminComponent,
-    AvailableWorkoutAddEditComponent
+    AvailableWorkoutAddEditComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +61,7 @@ import { UIService } from './shared/ui.service';
     AvailableWorkoutService,
     UIService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DeleteDialogComponent]
 })
 export class AppModule { }

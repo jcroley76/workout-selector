@@ -34,20 +34,23 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
                private uiService: UIService) { }
 
   ngOnInit() {
-    this.editSubscription = this.availableWorkoutService.startedEditing
+    this.editSubscription = this.availableWorkoutService.availableWorkoutToEdit
       .subscribe(
         (aw: AvailableWorkout) => {
-          console.log('edit aw', aw);
-          this.editMode = true;
-          this.awForm.setValue({
-            title: aw.title,
-            description: aw.description,
-            source: aw.sources,
-            record: aw.record,
-            emphasis: aw.emphasis,
-            equipment: aw.equipment,
-            type: aw.type
-          });
+          // console.log('edit aw', aw);
+          if (aw) {
+            this.editMode = true;
+            this.awForm.setValue({
+              id: aw.id,
+              title: aw.title,
+              description: aw.description,
+              source: aw.sources,
+              record: aw.record,
+              emphasis: aw.emphasis,
+              equipment: aw.equipment,
+              type: aw.type
+            });
+          }
         }
       );
 
@@ -129,9 +132,10 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveAvailableWorkout(form: NgForm) {
-    console.log('NgForm:', form);
+    // console.log('NgForm:', form);
     const value = form.value;
     const availableWorkout = {
+      id: value.id,
       title: value.title,
       description: value.description,
       sources: value.source,
@@ -141,21 +145,12 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
       record: value.record
     };
 
-    console.log('availableWorkout:', availableWorkout);
-
-    if (this.editMode) {
-      // TODO: Make sure edit updates record and doesn't create a new one.
-      this.availableWorkoutService.updateAvailableWorkout(availableWorkout);
-    } else {
-      this.availableWorkoutService.addAvailableWorkout(availableWorkout);
-    }
-    this.editMode = false;
-    // TODO: Redirect to Available Workouts list after successful save.
-    form.reset();
+    // console.log('availableWorkout:', availableWorkout);
+    this.availableWorkoutService.saveAvailableWorkout(availableWorkout);
+    this.availableWorkoutService.availableWorkoutToEdit.next(null);
   }
 
   onClear() {
     this.awForm.reset();
-    this.editMode = false;
   }
 }

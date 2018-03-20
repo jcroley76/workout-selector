@@ -1,0 +1,15 @@
+<!-- https://blog.angular-university.io/angular-material-dialog/ -->
+<h2 mat-dialog-title>Are you sure you want to delete?</h2>
+
+<mat-dialog-content>
+  <b>{{title}}</b>
+  <p>
+  {{description}}
+  </p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayoutAlign="end">
+  <button class="mat-raised-button"(click)="abort()">Abort</button>
+  <button class="mat-raised-button mat-warn"(click)="delete()">Delete</button>
+</mat-dialog-actions>

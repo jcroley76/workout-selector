@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AvailableWorkout } from '../../shared/models/available-workout.model';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatDialog, MatDialogConfig } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { AvailableWorkoutService } from '../available-workout.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-available-workouts',
@@ -19,8 +19,7 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private availableWorkoutService: AvailableWorkoutService,
-              private router: Router,
-              private route: ActivatedRoute) { }
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     this.awChangedSubscription = this.availableWorkoutService.availableWorkoutsChanged.subscribe(
@@ -47,12 +46,32 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   onEditItem(aw: AvailableWorkout) {
-    console.log('list onEditItem', aw);
-    this.availableWorkoutService.startedEditing.next(aw);
+    // console.log('list onEditItem', aw);
+    this.availableWorkoutService.availableWorkoutToEdit.next(aw);
   }
 
   onDeleteItem(aw: AvailableWorkout) {
-    // TODO: Open modal to confirm delete
-    // this.availableWorkoutService.deleteAvailableWorkout(aw);
+    // Open Warning dialog then delete item
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.closeOnNavigation = false;
+    dialogConfig.data = {
+      title: aw.title,
+      description: aw.description
+    };
+
+    // this.dialog.open(DeleteDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(DeleteDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      data => {
+        if (data === 'delete') {
+          this.availableWorkoutService.deleteAvailableWorkout(aw);
+        }
+      }
+    );
   }
+
 }
