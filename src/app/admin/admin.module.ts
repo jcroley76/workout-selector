@@ -5,13 +5,21 @@ import { AvailableWorkoutsComponent} from './available-workouts/available-workou
 import { AdminComponent } from './admin.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { DeleteDialogComponent } from '../shared/delete-dialog/delete-dialog.component';
+import { UsersComponent } from './users/users.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
+import { ExercisesComponent } from './exercises/exercises.component';
+import { ExerciseAddEditComponent } from './exercise-add-edit/exercise-add-edit.component';
 
 @NgModule({
   declarations: [
     DeleteDialogComponent,
     AdminComponent,
     AvailableWorkoutAddEditComponent,
-    AvailableWorkoutsComponent
+    AvailableWorkoutsComponent,
+    ExercisesComponent,
+    ExerciseAddEditComponent,
+    UsersComponent,
+    UserEditComponent
   ],
   imports: [
     SharedModule,
