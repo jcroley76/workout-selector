@@ -1,11 +1,18 @@
 <section fxLayout fxLayoutAlign="center">
   <mat-card fxFlex.xs="100%" fxFlex="400px" class="form-card">
     <mat-card-title>Login</mat-card-title>
+    <!--<form-->
+      <!--fxLayout="column"-->
+      <!--fxLayoutGap="10px"-->
+      <!--[formGroup]="loginForm"-->
+      <!--(ngSubmit)="onSubmit()">-->
+
     <form
       fxLayout="column"
+      fxLayoutAlign="center center"
       fxLayoutGap="10px"
-      #f="ngForm"
-      (ngSubmit)="onSubmit(f)">
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()">
 
       <mat-card-content>
         <mat-form-field>
@@ -13,26 +20,19 @@
             type="email"
             matInput
             placeholder="Email"
-            ngModel
-            name="email"
-            email
-            required
-            #emailInput="ngModel">
-          <mat-error *ngIf="emailInput.hasError('required')">Email is required.</mat-error>
-          <mat-error *ngIf="!emailInput.hasError('required')">Email is invalid.</mat-error>
+            formControlName="email">
+          <mat-hint>Please enter a valid email.</mat-hint>
+          <mat-error>Invalid or missing email.</mat-error>
         </mat-form-field>
 
         <mat-form-field>
           <input
             type="password"
             matInput
-            placeholder="Password"
-            ngModel
-            name="password"
-            minlength="6"
-            required
-            #pwInput="ngModel">
-          <mat-error *ngIf="pwInput.hasError('required')">Password is required.</mat-error>
+            placeholder="Your password"
+            formControlName="password">
+          <mat-hint>Please enter your password.</mat-hint>
+          <mat-error>Missing password.</mat-error>
         </mat-form-field>
       </mat-card-content>
 
@@ -42,7 +42,7 @@
           mat-raised-button
           color="primary"
           fxLayoutAlign="end"
-          [disabled]="f.invalid">Submit</button>
+          [disabled]="loginForm.invalid">Submit</button>
       </mat-card-actions>
     </form>
   </mat-card>

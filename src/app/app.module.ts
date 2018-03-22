@@ -7,43 +7,26 @@ import { environment } from '../environments/environment';
 
 import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
-import { SignupComponent } from './auth/signup/signup.component';
-import { LoginComponent } from './auth/login/login.component';
-import { TrainingComponent } from './training/training.component';
-import { AvailableWorkoutsComponent } from './admin/available-workouts/available-workouts.component';
-import { RecommendWorkoutComponent } from './training/recommend-workout/recommend-workout.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
-import { PastWorkoutsComponent } from './training/past-workouts/past-workouts.component';
-import { AdminComponent } from './admin/admin.component';
-import { AvailableWorkoutAddEditComponent } from './admin/available-workout-add-edit/available-workout-add-edit.component';
 import { AuthService } from './auth/auth.service';
 import { AvailableWorkoutService } from './admin/available-workout.service';
 import { DropdownService } from './shared/dropdown.service';
 import { UIService } from './shared/ui.service';
-import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.component';
-
-
+import { AuthModule } from './auth/auth.module';
+import { AdminModule } from './admin/admin.module';
+import { TrainingModule } from './training/training.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignupComponent,
-    LoginComponent,
-    TrainingComponent,
-    AvailableWorkoutsComponent,
-    RecommendWorkoutComponent,
     WelcomeComponent,
     HeaderComponent,
-    SidenavListComponent,
-    PastWorkoutsComponent,
-    AdminComponent,
-    AvailableWorkoutAddEditComponent,
-    DeleteDialogComponent
+    SidenavListComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +36,10 @@ import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.comp
     FlexLayoutModule,
     FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    AuthModule,
+    AdminModule,
+    TrainingModule
   ],
   providers: [
     AuthService,
@@ -61,7 +47,6 @@ import { DeleteDialogComponent } from './shared/delete-dialog/delete-dialog.comp
     AvailableWorkoutService,
     UIService
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [DeleteDialogComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

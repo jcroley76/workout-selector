@@ -10,7 +10,6 @@ import { UIService } from '../shared/ui.service';
 export class AvailableWorkoutService {
   availableWorkoutsChanged = new Subject<AvailableWorkout[]>();
   availableWorkoutToEdit = new Subject<AvailableWorkout>();
-  // private editingAvailableWorkout: AvailableWorkout;
   private availableWorkouts: AvailableWorkout[] = [];
   private fbSubs: Subscription[] = [];
 
@@ -96,5 +95,9 @@ export class AvailableWorkoutService {
       }).catch(function(error) {
         console.error('Error removing Available Workout: ', error);
       });
+  }
+
+  cancelSubscriptions() {
+    this.fbSubs.forEach(sub => sub.unsubscribe());
   }
 }
