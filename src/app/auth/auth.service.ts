@@ -19,10 +19,12 @@ export class AuthService {
   initAuthListener() {
       this.afAuth.authState.subscribe(user => {
         if (user) {
+          // user logged in
           this.isAuthenticated = true;
           this.authChange.next(true);
           this.router.navigate(['/training']);
         } else {
+          // user not logged in
           this.availableWorkoutService.cancelSubscriptions();
           this.authChange.next(false);
           this.router.navigate(['/login']);
