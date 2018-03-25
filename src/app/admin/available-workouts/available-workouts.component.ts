@@ -78,5 +78,4 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
       }
     );
   }
-
 }
