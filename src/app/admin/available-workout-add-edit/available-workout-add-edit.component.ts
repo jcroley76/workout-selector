@@ -34,6 +34,7 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
                private uiService: UIService) { }
 
   ngOnInit() {
+    // TODO: Figure out error when adding a new Available-Workout
     this.editSubscription = this.availableWorkoutService.availableWorkoutToEdit
       .subscribe(
         (aw: AvailableWorkout) => {

@@ -7,8 +7,7 @@
     <mat-icon>input</mat-icon>
     <span class="nav-caption">Login</span>
   </a>
-  <a mat-list-item routerLink="/admin" (click)="onClose()" *ngIf="isAuth">
-    <!--TODO: Replace with isAdmin permission-->
+  <a mat-list-item routerLink="/admin" (click)="onClose()" *ngIf="isAdmin">
     <mat-icon>build</mat-icon>
     <span class="nav-caption">Admin</span>
   </a>

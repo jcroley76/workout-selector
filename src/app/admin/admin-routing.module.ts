@@ -4,9 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { AuthGuard } from '../auth/auth.guard';
 
+// TODO: Reorganize admin routes to individual pages
 const routes: Routes = [
-  // TODO: Figure out how to get roles on Users.
-  // https://angularfirebase.com/lessons/role-based-permissions-and-authorization-with-firebase-auth/
   { path: 'admin', component: AdminComponent, canLoad: [AuthGuard] }
 ];
 

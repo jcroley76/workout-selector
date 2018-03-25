@@ -47,6 +47,11 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
 
   onEditItem(aw: AvailableWorkout) {
     // console.log('list onEditItem', aw);
+    /** TODO: Fix following error
+     * Throws Error:
+     * There are no form controls registered with this group yet.  If you're using ngModel,
+     * you may want to check next tick (e.g. use setTimeout).
+    **/
     this.availableWorkoutService.availableWorkoutToEdit.next(aw);
   }
 

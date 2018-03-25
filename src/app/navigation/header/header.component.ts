@@ -11,13 +11,17 @@ import { AuthService } from '../../auth/auth.service';
 export class HeaderComponent implements OnInit, OnDestroy {
   @Output() sidenavToggle = new EventEmitter<void>();
   isAuth = false;
+  isAdmin = false;
+  isTrainer = false;
   authSubscription: Subscription;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
-    this.authSubscription = this.authService.authChange.subscribe(authStatus => {
-      this.isAuth = authStatus;
+    this.authSubscription = this.authService.loggedInUser$.subscribe(user => {
+      this.isAuth = this.authService.isAuth(user);
+      this.isAdmin = this.authService.isAdmin(user);
+      this.isTrainer = this.authService.isTrainer(user);
     });
   }
 
