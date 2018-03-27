@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/cor
 import { Subscription } from 'rxjs/Subscription';
 
 import { AuthService } from '../../auth/auth.service';
+import { User } from '../../auth/user.model';
 
 @Component({
   selector: 'app-header',
@@ -17,8 +18,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(private authService: AuthService) { }
 
+  userName: String;
+
   ngOnInit() {
     this.authSubscription = this.authService.loggedInUser$.subscribe(user => {
+      this.userName = user.displayName;
       this.isAuth = this.authService.isAuth(user);
       this.isAdmin = this.authService.isAdmin(user);
       this.isTrainer = this.authService.isTrainer(user);

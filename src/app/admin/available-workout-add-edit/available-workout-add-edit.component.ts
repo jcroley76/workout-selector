@@ -1,11 +1,12 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AvailableWorkoutService } from '../available-workout.service';
 import { DropdownService } from '../../shared/dropdown.service';
 import { DropDown } from '../../shared/models/dropdown.model';
 import { NgForm } from '@angular/forms';
 import { UIService } from '../../shared/ui.service';
-import {AvailableWorkout} from "../../shared/models/available-workout.model";
+import { AvailableWorkout } from '../../shared/models/available-workout.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-available-workout-add-edit',
@@ -16,7 +17,6 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
   @ViewChild('f') awForm: NgForm;
   isLoading = true;
   editMode = false;
-  editSubscription: Subscription;
   equipmentList: DropDown[];
   equipmentSubscription: Subscription;
   sourceList: DropDown[];
@@ -29,32 +29,13 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
   measurementTypeSubscription: Subscription;
   private loadingSubscription: Subscription;
 
-  constructor( private availableWorkoutService: AvailableWorkoutService,
+  constructor( private route: ActivatedRoute,
+               private router: Router,
+               private availableWorkoutService: AvailableWorkoutService,
                private dropdownService: DropdownService,
                private uiService: UIService) { }
 
   ngOnInit() {
-    // TODO: Figure out error when adding a new Available-Workout
-    this.editSubscription = this.availableWorkoutService.availableWorkoutToEdit
-      .subscribe(
-        (aw: AvailableWorkout) => {
-          // console.log('edit aw', aw);
-          if (aw) {
-            this.editMode = true;
-            this.awForm.setValue({
-              id: aw.id,
-              title: aw.title,
-              description: aw.description,
-              source: aw.sources,
-              record: aw.record,
-              emphasis: aw.emphasis,
-              equipment: aw.equipment,
-              type: aw.type
-            });
-          }
-        }
-      );
-
     this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
       isLoading => {
         this.isLoading = isLoading;
@@ -89,6 +70,8 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
         (this.measurementTypeList = meaList)
       );
     this.fetchMeasurementTypeList();
+
+    this.loadAvailableWorkout();
   }
 
   ngOnDestroy() {
@@ -132,8 +115,37 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
     this.dropdownService.fetchMeasurementTypeList();
   }
 
+  loadAvailableWorkout() {
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log('aw id', id);
+    if (id) {
+      this.availableWorkoutService.fetchAvailableWorkout(id)
+      // this.availableWorkoutService.loadAvailableWorkout()
+        .subscribe(
+          (aw: AvailableWorkout) => {
+            console.log('edit aw', aw);
+            if (aw) {
+              this.editMode = true;
+              this.awForm.setValue({
+                id: id,
+                title: aw.title,
+                description: aw.description,
+                source: aw.sources,
+                record: aw.record,
+                emphasis: aw.emphasis,
+                equipment: aw.equipment,
+                type: aw.type
+              });
+            }
+          }
+        );
+    } else {
+      this.availableWorkoutService.setAvailableWorkout(null);
+    }
+  }
+
   saveAvailableWorkout(form: NgForm) {
-    // console.log('NgForm:', form);
+    console.log('NgForm:', form);
     const value = form.value;
     const availableWorkout = {
       id: value.id,
@@ -146,9 +158,10 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
       record: value.record
     };
 
-    // console.log('availableWorkout:', availableWorkout);
+    console.log('availableWorkout:', availableWorkout);
     this.availableWorkoutService.saveAvailableWorkout(availableWorkout);
-    this.availableWorkoutService.availableWorkoutToEdit.next(null);
+    // this.availableWorkoutService.availableWorkoutToEdit.next(null);
+    this.router.navigate(['/admin/available-workouts']);
   }
 
   onClear() {

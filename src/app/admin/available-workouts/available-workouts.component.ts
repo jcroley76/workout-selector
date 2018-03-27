@@ -4,6 +4,7 @@ import { MatPaginator, MatSort, MatTableDataSource, MatDialog, MatDialogConfig }
 import { Subscription } from 'rxjs/Subscription';
 import { AvailableWorkoutService } from '../available-workout.service';
 import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-available-workouts',
@@ -19,7 +20,8 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private availableWorkoutService: AvailableWorkoutService,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private router: Router) { }
 
   ngOnInit() {
     this.awChangedSubscription = this.availableWorkoutService.availableWorkoutsChanged.subscribe(
@@ -46,13 +48,10 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   onEditItem(aw: AvailableWorkout) {
-    // console.log('list onEditItem', aw);
-    /** TODO: Fix following error
-     * Throws Error:
-     * There are no form controls registered with this group yet.  If you're using ngModel,
-     * you may want to check next tick (e.g. use setTimeout).
-    **/
-    this.availableWorkoutService.availableWorkoutToEdit.next(aw);
+    console.log('list onEditItem', aw);
+    // this.availableWorkoutService.availableWorkoutToEdit.next(aw);
+    // this.availableWorkoutService.setAvailableWorkout(aw);
+    this.router.navigate(['/admin/available-workout-add-edit', aw.id]);
   }
 
   onDeleteItem(aw: AvailableWorkout) {

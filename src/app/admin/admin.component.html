@@ -1,23 +1,35 @@
-<mat-tab-group (selectedIndexChange)="selectedIndexChange($event)" [selectedIndex]="selectedIndex">
-  <mat-tab label="Available Workouts">
-    <app-available-workouts></app-available-workouts>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <span (click)="onAddAvailableWorkout()">Add Workout</span>
-    </ng-template>
-    <app-available-workout-add-edit></app-available-workout-add-edit>
-  </mat-tab>
-  <mat-tab label="Exercises">
-    <app-exercises></app-exercises>
-  </mat-tab>
-  <mat-tab label="Add Exercise">
-    <app-exercise-add-edit></app-exercise-add-edit>
-  </mat-tab>
-  <mat-tab label="Users">
-    <app-users></app-users>
-  </mat-tab>
-  <mat-tab label="Edit User">
-    <app-user-edit></app-user-edit>
-  </mat-tab>
-</mat-tab-group>
+<!--<mat-tab-group (selectedIndexChange)="selectedIndexChange($event)" [selectedIndex]="selectedIndex">-->
+  <!--<mat-tab label="Available Workouts">-->
+    <!--<app-available-workouts></app-available-workouts>-->
+  <!--</mat-tab>-->
+  <!--<mat-tab>-->
+    <!--<ng-template mat-tab-label>-->
+      <!--<span (click)="onAddAvailableWorkout()">Add Workout</span>-->
+    <!--</ng-template>-->
+    <!--<app-available-workout-add-edit></app-available-workout-add-edit>-->
+  <!--</mat-tab>-->
+  <!--<mat-tab label="Exercises">-->
+    <!--<app-exercises></app-exercises>-->
+  <!--</mat-tab>-->
+  <!--<mat-tab label="Add Exercise">-->
+    <!--<app-exercise-add-edit></app-exercise-add-edit>-->
+  <!--</mat-tab>-->
+  <!--<mat-tab label="Users">-->
+    <!--<app-users></app-users>-->
+  <!--</mat-tab>-->
+  <!--<mat-tab label="Edit User">-->
+    <!--<app-user-edit></app-user-edit>-->
+  <!--</mat-tab>-->
+<!--</mat-tab-group>-->
+
+<nav mat-tab-nav-bar>
+  <a mat-tab-link
+     *ngFor="let routeLink of routeLinks; let i = index"
+     [routerLink]="routeLink.link"
+     routerLinkActive #rla="routerLinkActive"
+     [active]="rla.isActive">
+    {{routeLink.label}}
+  </a>
+</nav>
+<h3>Admin Section</h3>
+<router-outlet></router-outlet>

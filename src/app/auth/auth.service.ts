@@ -83,6 +83,7 @@ export class AuthService {
   }
 
   //// Keep user object updated with auth object
+  // TODO: displayname getting blanked on login or logout
   private updateUserData(user) {
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
@@ -104,6 +105,7 @@ export class AuthService {
   }
 
   isAuth(user: User): boolean {
+    // console.log('isAuth user', user);
     const allowed = ['admin', 'trainer', 'subscriber'];
     return this.checkAuthorization(user, allowed);
   }

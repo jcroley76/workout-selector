@@ -47,9 +47,32 @@ export class AvailableWorkoutService {
       }));
   }
 
-  searchAvailableWorkouts() {
-    // TODO: Find available workout based upon criteria
+  getAvailableWorkout() {
+    console.log('getAvailableWorkout', this.availableWorkoutToEdit)
+    return this.availableWorkoutToEdit;
   }
+
+  setAvailableWorkout(aw: AvailableWorkout) {
+    console.log('setAvailableWorkout', aw);
+    this.availableWorkoutToEdit.next(aw);
+  }
+
+  fetchAvailableWorkout(id: string) {
+    this.fbSubs.push(this.db
+        .collection('available-workouts')
+        .doc(id)
+        .valueChanges()
+        .subscribe((aw: AvailableWorkout) => {
+          this.availableWorkoutToEdit.next(aw);
+        })
+    );
+    console.log('service availableWorkoutToEdit', this.availableWorkoutToEdit);
+    return this.availableWorkoutToEdit;
+  }
+
+  // TODO: Find available workout based upon criteria
+  // searchAvailableWorkouts() {
+  // }
 
   saveAvailableWorkout(availableWorkout: AvailableWorkout) {
     if (availableWorkout.id) {
@@ -66,7 +89,7 @@ export class AvailableWorkoutService {
   private addDataToDatabase(availableWorkout: AvailableWorkout) {
     this.db.collection('available-workouts').add(availableWorkout)
       .then(function(docRef) {
-        console.log('Available Workout written with ID: ', docRef.id);
+        console.log('Available Workout Added with ID: ', docRef.id);
       })
       .catch(function(error) {
         console.error('Error adding Available Workout: ', error);
