@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AvailableWorkoutService } from '../available-workout.service';
 import { DropdownService } from '../../shared/dropdown.service';
 import { DropDown } from '../../shared/models/dropdown.model';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIService } from '../../shared/ui.service';
 import { AvailableWorkout } from '../../shared/models/available-workout.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-available-workout-add-edit',
@@ -14,9 +14,10 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./available-workout-add-edit.component.css']
 })
 export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
-  @ViewChild('f') awForm: NgForm;
+  awForm: FormGroup;
   isLoading = true;
   editMode = false;
+  id: string;
   equipmentList: DropDown[];
   equipmentSubscription: Subscription;
   sourceList: DropDown[];
@@ -71,7 +72,14 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
       );
     this.fetchMeasurementTypeList();
 
-    this.loadAvailableWorkout();
+    this.route.params
+      .subscribe(
+        (params: Params) => {
+          this.id = params['id'];
+          this.editMode = params['id'] != null;
+          this.initForm();
+        }
+      );
   }
 
   ngOnDestroy() {
@@ -115,52 +123,40 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
     this.dropdownService.fetchMeasurementTypeList();
   }
 
-  loadAvailableWorkout() {
-    const id = this.route.snapshot.paramMap.get('id');
-    console.log('aw id', id);
-    if (id) {
-      this.availableWorkoutService.fetchAvailableWorkout(id)
-      // this.availableWorkoutService.loadAvailableWorkout()
+  // Example: https://toddmotto.com/angular-2-form-controls-patch-value-set-value
+  initForm() {
+    this.awForm = new FormGroup({
+      'title': new FormControl('', Validators.required),
+      'description': new FormControl('', Validators.required),
+      'record': new FormControl('', Validators.required),
+      'sources': new FormControl('', Validators.required),
+      'emphasis': new FormControl(''),
+      'equipment': new FormControl(''),
+      'type': new FormControl(''),
+    });
+
+    console.log('editMode', this.editMode);
+    if (this.editMode) {
+      this.availableWorkoutService
+        .fetchAvailableWorkout(this.id)
         .subscribe(
           (aw: AvailableWorkout) => {
             console.log('edit aw', aw);
             if (aw) {
-              this.editMode = true;
-              this.awForm.setValue({
-                id: id,
-                title: aw.title,
-                description: aw.description,
-                source: aw.sources,
-                record: aw.record,
-                emphasis: aw.emphasis,
-                equipment: aw.equipment,
-                type: aw.type
-              });
+              this.awForm.patchValue(aw);
             }
           }
         );
-    } else {
-      this.availableWorkoutService.setAvailableWorkout(null);
     }
   }
 
-  saveAvailableWorkout(form: NgForm) {
-    console.log('NgForm:', form);
-    const value = form.value;
-    const availableWorkout = {
-      id: value.id,
-      title: value.title,
-      description: value.description,
-      sources: value.source,
-      equipment: value.equipment,
-      type: value.type,
-      emphasis: value.emphasis,
-      record: value.record
-    };
-
-    console.log('availableWorkout:', availableWorkout);
-    this.availableWorkoutService.saveAvailableWorkout(availableWorkout);
-    // this.availableWorkoutService.availableWorkoutToEdit.next(null);
+  saveAvailableWorkout() {
+    if (this.editMode) {
+      this.availableWorkoutService.updateDataToDatabase(this.id, this.awForm.value);
+    } else {
+      this.availableWorkoutService.addDataToDatabase(this.awForm.value);
+    }
+    this.onClear();
     this.router.navigate(['/admin/available-workouts']);
   }
 

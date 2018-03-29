@@ -47,16 +47,7 @@ export class AvailableWorkoutService {
       }));
   }
 
-  getAvailableWorkout() {
-    console.log('getAvailableWorkout', this.availableWorkoutToEdit)
-    return this.availableWorkoutToEdit;
-  }
-
-  setAvailableWorkout(aw: AvailableWorkout) {
-    console.log('setAvailableWorkout', aw);
-    this.availableWorkoutToEdit.next(aw);
-  }
-
+  // TODO: Refactor this
   fetchAvailableWorkout(id: string) {
     this.fbSubs.push(this.db
         .collection('available-workouts')
@@ -74,19 +65,11 @@ export class AvailableWorkoutService {
   // searchAvailableWorkouts() {
   // }
 
-  saveAvailableWorkout(availableWorkout: AvailableWorkout) {
-    if (availableWorkout.id) {
-      this.updateDataToDatabase(availableWorkout);
-    } else {
-      this.addDataToDatabase(availableWorkout);
-    }
-  }
-
   deleteAvailableWorkout(availableWorkout: AvailableWorkout) {
     this.deleteFromDatabase(availableWorkout);
   }
 
-  private addDataToDatabase(availableWorkout: AvailableWorkout) {
+  addDataToDatabase(availableWorkout: AvailableWorkout) {
     this.db.collection('available-workouts').add(availableWorkout)
       .then(function(docRef) {
         console.log('Available Workout Added with ID: ', docRef.id);
@@ -96,8 +79,8 @@ export class AvailableWorkoutService {
       });
   }
 
-  private updateDataToDatabase(availableWorkout: AvailableWorkout) {
-    const awRef = this.db.collection('available-workouts').doc(availableWorkout.id);
+  updateDataToDatabase(id: string, availableWorkout: AvailableWorkout) {
+    const awRef = this.db.collection('available-workouts').doc(id);
     console.log('awRef: ', awRef);
     awRef.update(availableWorkout)
       .then(function() {
@@ -109,7 +92,7 @@ export class AvailableWorkoutService {
       });
   }
 
-  private deleteFromDatabase(availableWorkout: AvailableWorkout) {
+  deleteFromDatabase(availableWorkout: AvailableWorkout) {
     this.db.collection('available-workouts')
       .doc(availableWorkout.id)
       .delete()
