@@ -4,7 +4,9 @@
       <mat-icon>menu</mat-icon>
     </button>
   </div>
-  <div><a routerLink="/">LOGO</a> isAuth: {{isAuth}} user: {{userName}}</div>
+  <div><a routerLink="/">LOGO</a></div>
+  <div *ngIf="userName"><small>Welcome back {{userName}}</small></div>
+  <!-- TODO: Refresh header on logout -->
   <div fxFlex fxLayout fxLayoutAlign="flex-end" fxHide.xs>
     <ul fxLayout fxLayoutGap="10px" class="navigation-items">
       <li *ngIf="!isAuth"><a routerLink="/signup">Signup</a></li>

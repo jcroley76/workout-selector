@@ -20,14 +20,22 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   isAdmin = false;
   isTrainer = false;
   authSubscription: Subscription;
+  loggedInUserSubscription: Subscription;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.authSubscription = this.authService.loggedInUser$.subscribe(user => {
-      this.isAuth = this.authService.isAuth(user);
+    this.authSubscription = this.authService.authChanged$.subscribe(authStatus => {
+      this.isAuth = authStatus;
+    });
+
+    this.loggedInUserSubscription = this.authService.loggedInUser$.subscribe(user => {
+      console.log('header user', user);
       this.isAdmin = this.authService.isAdmin(user);
       this.isTrainer = this.authService.isTrainer(user);
+      console.log('header isSubscriber', this.isAuth);
+      console.log('header isAdmin', this.isAdmin);
+      console.log('header isTrainer', this.isTrainer);
     });
   }
 
@@ -37,10 +45,14 @@ export class SidenavListComponent implements OnInit, OnDestroy {
 
   onLogout() {
     this.onClose();
+    this.isAuth = false;
+    this.isAdmin = false;
+    this.isTrainer = false;
     this.authService.logout();
   }
 
   ngOnDestroy() {
     this.authSubscription.unsubscribe();
+    this.loggedInUserSubscription.unsubscribe();
   }
 }

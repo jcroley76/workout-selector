@@ -47,7 +47,6 @@ export class AvailableWorkoutService {
       }));
   }
 
-  // TODO: Refactor this
   fetchAvailableWorkout(id: string) {
     this.fbSubs.push(this.db
         .collection('available-workouts')
@@ -57,7 +56,7 @@ export class AvailableWorkoutService {
           this.availableWorkoutToEdit.next(aw);
         })
     );
-    console.log('service availableWorkoutToEdit', this.availableWorkoutToEdit);
+    // console.log('service availableWorkoutToEdit', this.availableWorkoutToEdit);
     return this.availableWorkoutToEdit;
   }
 

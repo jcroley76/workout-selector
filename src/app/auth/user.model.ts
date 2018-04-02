@@ -1,5 +1,5 @@
 export interface Roles {
-  subscriber: boolean;
+  subscriber?: boolean;
   trainer?:   boolean;
   admin?:     boolean;
 }
