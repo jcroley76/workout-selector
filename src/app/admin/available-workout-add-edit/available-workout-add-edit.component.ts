@@ -130,6 +130,12 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
       'description': new FormControl('', Validators.required),
       'record': new FormControl('', Validators.required),
       'sources': new FormControl('', Validators.required),
+      'duration': new FormControl('', {
+        validators: [
+          Validators.required,
+          Validators.pattern('^(?:(?:([01]?\\d|2[0-3]):)?([0-5]?\\d):)?([0-5]?\\d)$')
+        ]
+      }),
       'emphasis': new FormControl(''),
       'equipment': new FormControl(''),
       'type': new FormControl(''),
@@ -152,6 +158,7 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
 
   saveAvailableWorkout() {
     if (this.editMode) {
+      console.log('save available workout', this.awForm.value);
       this.availableWorkoutService.updateDataToDatabase(this.id, this.awForm.value);
     } else {
       this.availableWorkoutService.addDataToDatabase(this.awForm.value);

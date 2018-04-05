@@ -31,6 +31,20 @@
           </mat-error>
         </mat-form-field>
 
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="Duration (hh:mm:ss)"
+            formControlName="duration">
+          <mat-error *ngIf="awForm.get('duration').hasError('required') && awForm.get('duration').touched">
+            Duration is required.
+          </mat-error>
+          <mat-error *ngIf="awForm.get('duration').hasError('pattern') && awForm.get('duration').touched">
+            Duration must have an hh:mm:ss format.
+          </mat-error>
+        </mat-form-field>
+
         <br />
         * The below fields will be saved as an attribute cloud on the available-workout document
         <mat-form-field>

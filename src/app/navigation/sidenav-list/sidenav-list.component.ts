@@ -30,12 +30,9 @@ export class SidenavListComponent implements OnInit, OnDestroy {
     });
 
     this.loggedInUserSubscription = this.authService.loggedInUser$.subscribe(user => {
-      console.log('header user', user);
+      // console.log('header user', user);
       this.isAdmin = this.authService.isAdmin(user);
       this.isTrainer = this.authService.isTrainer(user);
-      console.log('header isSubscriber', this.isAuth);
-      console.log('header isAdmin', this.isAdmin);
-      console.log('header isTrainer', this.isTrainer);
     });
   }
 

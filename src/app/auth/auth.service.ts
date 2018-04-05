@@ -19,7 +19,6 @@ export class AuthService {
               private afs: AngularFirestore,
               private uiService: UIService) {
     //// Get auth data, then get firestore user document || null
-    console.log('getUserData');
     this.loggedInUser$ = this.afAuth.authState
       .switchMap(user => {
         if (user) {
@@ -32,9 +31,7 @@ export class AuthService {
 
   initAuthListener() {
     this.afAuth.authState.subscribe(user => {
-      console.log('init user', user);
       if (user) {
-        console.log('init user', user);
         this.isAuthenticated = true;
         this.authChanged$.next(true);
         this.router.navigate(['/training']);

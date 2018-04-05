@@ -5,10 +5,9 @@
     </button>
   </div>
   <div><a routerLink="/">LOGO</a></div>
-  <div *ngIf="userName"><small>Welcome back {{userName}}</small></div>
-  <!-- TODO: Refresh header on logout -->
   <div fxFlex fxLayout fxLayoutAlign="flex-end" fxHide.xs>
     <ul fxLayout fxLayoutGap="10px" class="navigation-items">
+      <li *ngIf="userName"><small>  Welcome back {{userName}}</small></li>
       <li *ngIf="!isAuth"><a routerLink="/signup">Signup</a></li>
       <li *ngIf="!isAuth"><a routerLink="/login">Login</a></li>
       <li *ngIf="isAdmin"><a routerLink="/admin">Admin</a></li>

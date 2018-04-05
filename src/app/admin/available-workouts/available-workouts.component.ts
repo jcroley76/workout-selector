@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./available-workouts.component.css']
 })
 export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDestroy {
-  displayedColumns = ['sources', 'title', 'emphasis', 'record', 'actions'];
+  displayedColumns = ['sources', 'title', 'emphasis', 'record', 'duration', 'actions'];
   dataSource = new MatTableDataSource<AvailableWorkout>();
   private awChangedSubscription: Subscription;
 
@@ -26,6 +26,7 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
   ngOnInit() {
     this.awChangedSubscription = this.availableWorkoutService.availableWorkoutsChanged.subscribe(
       (availableWorkouts: AvailableWorkout[]) => {
+        console.log('availableWorkouts', availableWorkouts);
         this.dataSource.data = availableWorkouts;
       }
     );
@@ -49,8 +50,6 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
 
   onEditItem(aw: AvailableWorkout) {
     console.log('list onEditItem', aw);
-    // this.availableWorkoutService.availableWorkoutToEdit.next(aw);
-    // this.availableWorkoutService.setAvailableWorkout(aw);
     this.router.navigate(['/admin/available-workout-add-edit', aw.id]);
   }
 
@@ -66,7 +65,6 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
       description: aw.description
     };
 
-    // this.dialog.open(DeleteDialogComponent, dialogConfig);
     const dialogRef = this.dialog.open(DeleteDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(

@@ -21,3 +21,7 @@ mat-form-field {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+.mat-raised-button.mat-small {
+  min-width: 1%;
+}

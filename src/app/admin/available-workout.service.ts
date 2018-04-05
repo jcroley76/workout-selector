@@ -28,6 +28,7 @@ export class AvailableWorkoutService {
             id: doc.payload.doc.id,
             title: doc.payload.doc.data().title,
             description: doc.payload.doc.data().description,
+            duration: doc.payload.doc.data().duration,
             sources: doc.payload.doc.data().sources,
             equipment: doc.payload.doc.data().equipment,
             type: doc.payload.doc.data().type,
