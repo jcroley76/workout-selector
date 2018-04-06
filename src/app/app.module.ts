@@ -20,6 +20,7 @@ import { UIService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { TrainingModule } from './training/training.module';
+import { ExerciseService } from './admin/exercise.service';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { TrainingModule } from './training/training.module';
     AuthService,
     DropdownService,
     AvailableWorkoutService,
+    ExerciseService,
     UIService
   ],
   bootstrap: [AppComponent]

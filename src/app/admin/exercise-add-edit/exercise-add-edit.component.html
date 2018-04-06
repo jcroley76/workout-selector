@@ -1,3 +1,87 @@
-<p>
-  exercise-add-edit works!
-</p>
+<section fxLayout fxLayoutAlign="center">
+  <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
+    <mat-card-title>{{ editMode ? 'Edit' : 'Add' }} an Exercise</mat-card-title>
+    <form
+      fxLayout="column"
+      fxLayoutGap="10px"
+      [formGroup]="exForm"
+      (ngSubmit)="saveExercise()">
+
+      <mat-card-content>
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="Name"
+            formControlName="name">
+          <mat-error *ngIf="exForm.get('name').hasError('required') && exForm.get('name').touched">
+            Title is required.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <textarea
+            rows="5"
+            cols="50"
+            matInput
+            placeholder="Description"
+            formControlName="description"></textarea>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select
+            placeholder="Primary Movement Pattern"
+            formControlName="movementPattern">
+            <mat-option *ngFor="let movementPattern of movementPatternList" [value]="movementPattern.value">{{movementPattern.value}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="exForm.get('movementPattern').hasError('movementPattern') && exForm.get('movementPattern').touched">
+            Movement Pattern is required.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select
+            placeholder="Equipment Used"
+            formControlName="equipment"
+            multiple>
+            <mat-option *ngFor="let equipment of equipmentList" [value]="equipment.value">{{equipment.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select
+            placeholder="Muscle Groups Worked"
+            formControlName="bodyPart"
+            multiple>
+            <mat-option *ngFor="let bodyPart of bodyPartList" [value]="bodyPart.value">{{bodyPart.value}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="exForm.get('bodyPart').hasError('bodyPart') && exForm.get('bodyPart').touched">
+            Muscle Groups is required.
+          </mat-error>
+        </mat-form-field>
+
+      </mat-card-content>
+
+      <mat-card-actions fxLayoutAlign="end">
+        <button
+          mat-raised-button
+          color="accent"
+          fxLayoutAlign="end"
+          (click)="onClear()">
+          <mat-icon>clear</mat-icon>
+          Clear
+        </button>
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          fxLayoutAlign="end"
+          [disabled]="exForm.invalid">
+          <mat-icon>save</mat-icon>
+          {{ editMode ? 'Update' : 'Add' }}
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</section>
+

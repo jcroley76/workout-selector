@@ -24,6 +24,12 @@ export class DropdownService {
   measurementTypeList: DropDown[] = [];
   measurementTypeListChanged = new Subject<DropDown[]>();
 
+  bodyPartList: DropDown[] = [];
+  bodyPartListChanged = new Subject<DropDown[]>();
+
+  movementPatternList: DropDown[] = [];
+  movementPatternListChanged = new Subject<DropDown[]>();
+
   constructor(private db: AngularFirestore, private uiService: UIService) {
   }
 
@@ -149,6 +155,57 @@ export class DropdownService {
         this.uiService.loadingStateChanged.next(false);
         this.uiService.showSnackbar('Fetching Measurement Type List failed, please try again later', null, 3000);
         this.measurementTypeListChanged.next(null);
+      }));
+  }
+
+  // TODO: Rename BodyPart to MuscleGroup
+  fetchBodyPartList() {
+    this.uiService.loadingStateChanged.next(true);
+    this.fbSubs.push(this.db
+      .collection('muscle-groups')
+      .snapshotChanges()
+      .map(docArray => {
+        // throw(new Error());
+        return docArray.map(doc => {
+          return {
+            name: doc.payload.doc.data().name,
+            value: doc.payload.doc.data().name
+          };
+        });
+      })
+      .subscribe((bodyPartList: DropDown[]) => {
+        this.uiService.loadingStateChanged.next(false);
+        this.bodyPartList = bodyPartList;
+        this.bodyPartListChanged.next([...this.bodyPartList]);
+      }, error => {
+        this.uiService.loadingStateChanged.next(false);
+        this.uiService.showSnackbar('Fetching Body Part List failed, please try again later', null, 3000);
+        this.bodyPartListChanged.next(null);
+      }));
+  }
+
+  fetchMovementPatternList() {
+    this.uiService.loadingStateChanged.next(true);
+    this.fbSubs.push(this.db
+      .collection('movement-patterns')
+      .snapshotChanges()
+      .map(docArray => {
+        // throw(new Error());
+        return docArray.map(doc => {
+          return {
+            name: doc.payload.doc.data().name,
+            value: doc.payload.doc.data().name
+          };
+        });
+      })
+      .subscribe((movementPatternList: DropDown[]) => {
+        this.uiService.loadingStateChanged.next(false);
+        this.movementPatternList = movementPatternList;
+        this.movementPatternListChanged.next([...this.movementPatternList]);
+      }, error => {
+        this.uiService.loadingStateChanged.next(false);
+        this.uiService.showSnackbar('Fetching Movement Pattern List failed, please try again later', null, 3000);
+        this.movementPatternListChanged.next(null);
       }));
   }
 

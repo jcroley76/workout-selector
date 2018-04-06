@@ -18,6 +18,7 @@ const routes: Routes = [
       { path: 'available-workout-add-edit/:id', component: AvailableWorkoutAddEditComponent },
       { path: 'exercises', component: ExercisesComponent },
       { path: 'exercise-add-edit', component: ExerciseAddEditComponent },
+      { path: 'exercise-add-edit/:id', component: ExerciseAddEditComponent },
     ]},
 ];
 
