@@ -88,7 +88,7 @@ export class AuthService {
   }
 
   //// Keep user object updated with auth object
-  private updateUserData(user) {
+  private updateUserData(user: User) {
     // Sets user data to firestore on login
     console.log('updateUserData', user);
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
@@ -122,8 +122,6 @@ export class AuthService {
     return this.checkAuthorization(user, allowed);
   }
 
-  // determines if user has matching role
-  // TODO: This is always returning true
   private checkAuthorization(user: User, allowedRoles: string[]): boolean {
     if (!user) { return false; }
     for (const role of allowedRoles) {

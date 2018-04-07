@@ -7,6 +7,7 @@ import { AvailableWorkoutsComponent } from './available-workouts/available-worko
 import { AvailableWorkoutAddEditComponent } from './available-workout-add-edit/available-workout-add-edit.component';
 import { ExercisesComponent } from './exercises/exercises.component';
 import { ExerciseAddEditComponent } from './exercise-add-edit/exercise-add-edit.component';
+import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
   { path: 'admin',
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'exercises', component: ExercisesComponent },
       { path: 'exercise-add-edit', component: ExerciseAddEditComponent },
       { path: 'exercise-add-edit/:id', component: ExerciseAddEditComponent },
+      { path: 'users', component: UsersComponent },
     ]},
 ];
 

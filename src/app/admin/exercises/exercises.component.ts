@@ -61,7 +61,7 @@ export class ExercisesComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogConfig.autoFocus = true;
     dialogConfig.closeOnNavigation = false;
     dialogConfig.data = {
-      name: ex.name,
+      title: ex.name,
       description: ex.description
     };
 

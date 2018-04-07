@@ -27,6 +27,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     SharedModule,
     AdminRoutingModule
   ],
-  entryComponents: [DeleteDialogComponent]
+  entryComponents: [
+    DeleteDialogComponent,
+    UserEditComponent
+  ]
 })
 export class AdminModule {}

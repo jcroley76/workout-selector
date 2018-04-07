@@ -26,5 +26,4 @@ export class DeleteDialogComponent implements OnInit {
   abort() {
     this.dialogRef.close('abort');
   }
-
 }
