@@ -1,6 +1,6 @@
 
 <section fxLayout fxLayoutAlign="center">
-  <mat-card fxFlex.xs="100%" fxFlex="400px" class="form-card">
+  <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
     <mat-card-title>Recommend a Workout</mat-card-title>
       <mat-card-content>
         <b>Filter by:</b>
@@ -12,11 +12,13 @@
           Style (yoga, weights, cardio, etc.)<br />
           Source (p90x, Crossfit, Body Beast, Skogg, etc.)<br />
         </p>
-        <input
-          type="text"
-          matInput
-          placeholder="Search"
-          [(ngModel)]="searchterm" (keydown)="search($event)">
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="Search"
+            [(ngModel)]="searchTerm" (keydown)="search($event)">
+        </mat-form-field>
       </mat-card-content>
 
       <mat-card-actions fxLayoutAlign="end">
