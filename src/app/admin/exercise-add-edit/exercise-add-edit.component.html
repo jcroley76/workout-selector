@@ -51,11 +51,11 @@
         <mat-form-field>
           <mat-select
             placeholder="Muscle Groups Worked"
-            formControlName="bodyPart"
+            formControlName="muscleGroup"
             multiple>
-            <mat-option *ngFor="let bodyPart of bodyPartList" [value]="bodyPart.value">{{bodyPart.value}}</mat-option>
+            <mat-option *ngFor="let muscleGroup of muscleGroupList" [value]="muscleGroup.value">{{muscleGroup.value}}</mat-option>
           </mat-select>
-          <mat-error *ngIf="exForm.get('bodyPart').hasError('bodyPart') && exForm.get('bodyPart').touched">
+          <mat-error *ngIf="exForm.get('muscleGroup').hasError('muscleGroup') && exForm.get('muscleGroup').touched">
             Muscle Groups is required.
           </mat-error>
         </mat-form-field>

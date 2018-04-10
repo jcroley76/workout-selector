@@ -20,8 +20,8 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
   id: string;
   equipmentList: DropDown[];
   equipmentSubscription: Subscription;
-  bodyPartList: DropDown[];
-  bodyPartSubscription: Subscription;
+  muscleGroupList: DropDown[];
+  muscleGroupSubscription: Subscription;
   movementPatternList: DropDown[];
   movementPatternSubscription: Subscription;
   private loadingSubscription: Subscription;
@@ -44,11 +44,11 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
       );
     this.fetchEquipmentList();
 
-    this.bodyPartSubscription = this.dropdownService.bodyPartListChanged
+    this.muscleGroupSubscription = this.dropdownService.muscleGroupListChanged
       .subscribe(empList =>
-        (this.bodyPartList = empList)
+        (this.muscleGroupList = empList)
       );
-    this.fetchBodyPartList();
+    this.fetchMuscleGroupList();
 
     this.movementPatternSubscription = this.dropdownService.movementPatternListChanged
       .subscribe(meaList =>
@@ -73,8 +73,8 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
     if (this.equipmentSubscription) {
       this.equipmentSubscription.unsubscribe();
     }
-    if (this.bodyPartSubscription) {
-      this.bodyPartSubscription.unsubscribe();
+    if (this.muscleGroupSubscription) {
+      this.muscleGroupSubscription.unsubscribe();
     }
     if (this.movementPatternSubscription) {
       this.movementPatternSubscription.unsubscribe();
@@ -85,8 +85,8 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
     this.dropdownService.fetchEquipmentList();
   }
 
-  fetchBodyPartList() {
-    this.dropdownService.fetchBodyPartList();
+  fetchMuscleGroupList() {
+    this.dropdownService.fetchMuscleGroupList();
   }
 
   fetchMovementPatternList() {
@@ -100,7 +100,7 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
       'description': new FormControl(''),
       'movementPattern': new FormControl('', Validators.required),
       'equipment': new FormControl('', Validators.required),
-      'bodyPart': new FormControl(''),
+      'muscleGroup': new FormControl(''),
     });
 
     console.log('editMode', this.editMode);

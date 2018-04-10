@@ -30,7 +30,7 @@ export class ExerciseService {
             description: doc.payload.doc.data().description,
             movementPattern: doc.payload.doc.data().movementPattern,
             equipment: doc.payload.doc.data().equipment,
-            bodyPart: doc.payload.doc.data().bodyPart,
+            muscleGroup: doc.payload.doc.data().muscleGroup,
           };
         });
       })

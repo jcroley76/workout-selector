@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./exercises.component.css']
 })
 export class ExercisesComponent implements OnInit, AfterViewInit, OnDestroy {
-  displayedColumns = ['name', 'movementPattern', 'bodyPart', 'equipment', 'actions'];
+  displayedColumns = ['name', 'movementPattern', 'muscleGroup', 'equipment', 'actions'];
   dataSource = new MatTableDataSource<Exercise>();
   private exChangedSubscription: Subscription;
 

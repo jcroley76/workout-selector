@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: '', component: WelcomeComponent},
   { path: 'training', component: TrainingComponent },
   { path: 'admin', component: AdminComponent },
-  // TODO: Figure out how to make these work
+  // TODO: Figure out how to make AdminGuard work
   // https://github.com/angular/angular-cli/issues/9488
   // { path: 'admin', loadChildren: './admin/admin.module#AdminModule', canLoad: [AdminGuard] },
   // { path: 'training', loadChildren: './training/training.module#TrainingModule', canActivate: [AuthGuard] }

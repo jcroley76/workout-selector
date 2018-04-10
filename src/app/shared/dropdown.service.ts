@@ -24,8 +24,8 @@ export class DropdownService {
   measurementTypeList: DropDown[] = [];
   measurementTypeListChanged = new Subject<DropDown[]>();
 
-  bodyPartList: DropDown[] = [];
-  bodyPartListChanged = new Subject<DropDown[]>();
+  muscleGroupList: DropDown[] = [];
+  muscleGroupListChanged = new Subject<DropDown[]>();
 
   movementPatternList: DropDown[] = [];
   movementPatternListChanged = new Subject<DropDown[]>();
@@ -158,8 +158,7 @@ export class DropdownService {
       }));
   }
 
-  // TODO: Rename BodyPart to MuscleGroup
-  fetchBodyPartList() {
+  fetchMuscleGroupList() {
     this.uiService.loadingStateChanged.next(true);
     this.fbSubs.push(this.db
       .collection('muscle-groups')
@@ -173,14 +172,14 @@ export class DropdownService {
           };
         });
       })
-      .subscribe((bodyPartList: DropDown[]) => {
+      .subscribe((muscleGroupList: DropDown[]) => {
         this.uiService.loadingStateChanged.next(false);
-        this.bodyPartList = bodyPartList;
-        this.bodyPartListChanged.next([...this.bodyPartList]);
+        this.muscleGroupList = muscleGroupList;
+        this.muscleGroupListChanged.next([...this.muscleGroupList]);
       }, error => {
         this.uiService.loadingStateChanged.next(false);
         this.uiService.showSnackbar('Fetching Body Part List failed, please try again later', null, 3000);
-        this.bodyPartListChanged.next(null);
+        this.muscleGroupListChanged.next(null);
       }));
   }
 
