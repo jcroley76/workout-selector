@@ -10,6 +10,12 @@ import { UIService } from '../shared/ui.service';
 export class AvailableWorkoutService {
   availableWorkoutsChanged = new Subject<AvailableWorkout[]>();
   availableWorkoutToEdit = new Subject<AvailableWorkout>();
+
+  startAt = new Subject();
+  endAt = new Subject();
+  startObs = this.startAt.asObservable();
+  endObs = this.startAt.asObservable();
+
   private availableWorkouts: AvailableWorkout[] = [];
   private fbSubs: Subscription[] = [];
 
@@ -61,9 +67,19 @@ export class AvailableWorkoutService {
     return this.availableWorkoutToEdit;
   }
 
-  // TODO: Find available workout based upon criteria
-  // searchAvailableWorkouts() {
-  // }
+  // Find available workout based upon criteria
+  // source https://github.com/rajayogan/angular5-instantsearch/blob/master/src/app/app.component.ts
+  searchAvailableWorkouts(start, end) {
+    // TODO: Everything is working but the query returns no results.
+    // TODO: May need to model after fetchAvailableWorkouts
+    return this.db
+      .collection('available-workouts',
+          ref => ref.limit(4)
+                            .orderBy('name')
+                            .startAt(start)
+                            .endAt(end))
+      .valueChanges();
+  }
 
   deleteAvailableWorkout(availableWorkout: AvailableWorkout) {
     this.deleteFromDatabase(availableWorkout);
