@@ -8,13 +8,13 @@ import { UIService } from '../shared/ui.service';
 
 @Injectable()
 export class AvailableWorkoutService {
-  availableWorkoutsChanged = new Subject<AvailableWorkout[]>();
-  availableWorkoutToEdit = new Subject<AvailableWorkout>();
+  availableWorkoutsChanged$ = new Subject<AvailableWorkout[]>();
+  availableWorkoutToEdit$ = new Subject<AvailableWorkout>();
 
-  startAt = new Subject();
-  endAt = new Subject();
-  startObs = this.startAt.asObservable();
-  endObs = this.startAt.asObservable();
+  startAt$ = new Subject();
+  endAt$ = new Subject();
+  startObs$ = this.startAt$.asObservable();
+  endObs$ = this.startAt$.asObservable();
 
   private availableWorkouts: AvailableWorkout[] = [];
   private fbSubs: Subscription[] = [];
@@ -23,7 +23,7 @@ export class AvailableWorkoutService {
   }
 
   fetchAvailableWorkouts() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('available-workouts')
       .snapshotChanges()
@@ -44,13 +44,13 @@ export class AvailableWorkoutService {
         });
       })
       .subscribe((availableWorkouts: AvailableWorkout[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.availableWorkouts = availableWorkouts;
-        this.availableWorkoutsChanged.next([...this.availableWorkouts]);
+        this.availableWorkoutsChanged$.next([...this.availableWorkouts]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Workouts failed, please try again later', null, 3000);
-        this.availableWorkoutsChanged.next(null);
+        this.availableWorkoutsChanged$.next(null);
       }));
   }
 
@@ -60,25 +60,27 @@ export class AvailableWorkoutService {
         .doc(id)
         .valueChanges()
         .subscribe((aw: AvailableWorkout) => {
-          this.availableWorkoutToEdit.next(aw);
+          this.availableWorkoutToEdit$.next(aw);
         })
     );
-    // console.log('service availableWorkoutToEdit', this.availableWorkoutToEdit);
-    return this.availableWorkoutToEdit;
+    return this.availableWorkoutToEdit$;
   }
 
   // Find available workout based upon criteria
   // source https://github.com/rajayogan/angular5-instantsearch/blob/master/src/app/app.component.ts
   searchAvailableWorkouts(start, end) {
-    // TODO: Everything is working but the query returns no results.
-    // TODO: May need to model after fetchAvailableWorkouts
-    return this.db
+    console.log('searchAvailableWorkouts', start, end);
+    const result = this.db
       .collection('available-workouts',
-          ref => ref.limit(4)
-                            .orderBy('name')
-                            .startAt(start)
-                            .endAt(end))
+          ref => ref.orderBy('title')
+                            .limit(4)
+        // TODO: startAt and endAt are not working
+                            // .startAt(start)
+                            // .endAt(end)
+      )
       .valueChanges();
+    console.log('result', result);
+    return result;
   }
 
   deleteAvailableWorkout(availableWorkout: AvailableWorkout) {

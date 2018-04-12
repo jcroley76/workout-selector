@@ -17,7 +17,7 @@ export class UserService {
   }
 
   fetchUsers() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('users')
       .snapshotChanges()
@@ -33,11 +33,11 @@ export class UserService {
         });
       })
       .subscribe((users: User[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.users = users;
         this.usersChanged.next([...this.users]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Users failed, please try again later', null, 3000);
         this.usersChanged.next(null);
       }));

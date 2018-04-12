@@ -24,7 +24,7 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
               private router: Router) { }
 
   ngOnInit() {
-    this.awChangedSubscription = this.availableWorkoutService.availableWorkoutsChanged.subscribe(
+    this.awChangedSubscription = this.availableWorkoutService.availableWorkoutsChanged$.subscribe(
       (availableWorkouts: AvailableWorkout[]) => {
         console.log('availableWorkouts', availableWorkouts);
         this.dataSource.data = availableWorkouts;

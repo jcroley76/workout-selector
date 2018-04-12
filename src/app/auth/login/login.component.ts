@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService, private uiService: UIService) {}
 
   ngOnInit() {
-    this.loadingSubs = this.uiService.loadingStateChanged.subscribe(isLoading => {
+    this.loadingSubs = this.uiService.loadingStateChanged$.subscribe(isLoading => {
       this.isLoading = isLoading;
     });
     this.loginForm = new FormGroup({

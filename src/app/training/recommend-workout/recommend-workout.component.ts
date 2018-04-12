@@ -14,7 +14,7 @@ export class RecommendWorkoutComponent implements OnInit {
   constructor(private availableWorkoutsService: AvailableWorkoutService) { }
 
   ngOnInit() {
-    Observable.combineLatest(this.availableWorkoutsService.startObs, this.availableWorkoutsService.endObs)
+    Observable.combineLatest(this.availableWorkoutsService.startObs$, this.availableWorkoutsService.endObs$)
       .subscribe((value) => {
           console.log('value', value);
           this.availableWorkoutsService.searchAvailableWorkouts(value[0], value[1])
@@ -28,12 +28,9 @@ export class RecommendWorkoutComponent implements OnInit {
   search($event) {
     const q = $event.target.value;
     if (q !== '') {
-      this.availableWorkoutsService.startAt.next(q);
-      this.availableWorkoutsService.endAt.next(q + '\uf8ff');
+      this.availableWorkoutsService.startAt$.next(q);
+      this.availableWorkoutsService.endAt$.next(q + '\uf8ff');
     }
-    // else {
-    //   this.availableWorkouts = this.availableWorkouts.fetchAvailableWorkouts();
-    // }
   }
 
 }

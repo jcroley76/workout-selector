@@ -49,12 +49,12 @@ export class AuthService {
       .then(credential => {
         console.log('registerUser', credential);
         this.updateUserData(credential);
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.router.navigate(['/training']);
       })
       .catch(error => {
         console.log('Error with registration', error);
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar(error.message, null, 3000);
       });
   }
@@ -67,12 +67,12 @@ export class AuthService {
       .then(credential => {
         console.log('login credential', credential);
         // this.getUserData();
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.router.navigate(['/training']);
       })
       .catch(error => {
         console.log('Error with login', error);
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar(error.message, null, 3000);
       });
   }

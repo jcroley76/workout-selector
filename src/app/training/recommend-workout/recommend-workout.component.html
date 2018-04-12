@@ -27,30 +27,30 @@
           GO!
         </button>
       </mat-card-actions>
-
   </mat-card>
-
-  <mat-card
-    fxFlex.xs="100%"
-    fxFlex="400px"
-    class="form-card"
-    *ngFor="let aw of availableWorkouts">
-    <mat-card-title>{{aw.title}}</mat-card-title>
-
-      <mat-card-content>
-        <p>{{aw.description}}</p>
-        <b>Workout Type:</b>{{aw.type}}<br />
-        <b>Area of Emphasis:</b>{{aw.emphasis}}<br />
-        <b>Duration:</b>{{aw.duration}}<br />
-      </mat-card-content>
-
-      <mat-card-actions fxLayoutAlign="end">
-        <button type="submit" mat-raised-button color="primary" fxLayoutAlign="end">
-          <mat-icon>directions_run</mat-icon>
-          Select!
-        </button>
-      </mat-card-actions>
-
-  </mat-card>
-
 </section>
+
+<mat-grid-list cols="2" gutterSize="10px">
+  <mat-grid-tile *ngFor="let aw of availableWorkouts">
+    <mat-card
+      fxFlex.xs="100%"
+      fxFlex="400px"
+      class="form-card">
+      <mat-card-title>{{aw.title}}</mat-card-title>
+
+        <mat-card-content>
+          <p>{{aw.description}}</p>
+          <b>Workout Type: </b>{{aw.type}}<br />
+          <b>Area of Emphasis: </b>{{aw.emphasis}}<br />
+          <b>Duration: </b>{{aw.duration}}<br />
+        </mat-card-content>
+
+        <mat-card-actions fxLayoutAlign="end">
+          <button type="submit" mat-raised-button color="primary" fxLayoutAlign="end">
+            <mat-icon>directions_run</mat-icon>
+            Select!
+          </button>
+        </mat-card-actions>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>

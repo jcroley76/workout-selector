@@ -1,1 +1,10 @@
+mat-grid-list {
+  max-width: 810px;
+  max-height: 810px;
+  margin: auto;
+}
 
+mat-grid-tile {/
+  padding: 0;
+  margin: 5px;
+}

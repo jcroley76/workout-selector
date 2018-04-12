@@ -37,7 +37,7 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
                private uiService: UIService) { }
 
   ngOnInit() {
-    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
+    this.loadingSubscription = this.uiService.loadingStateChanged$.subscribe(
       isLoading => {
         this.isLoading = isLoading;
       }

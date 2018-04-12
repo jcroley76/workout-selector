@@ -34,7 +34,7 @@ export class DropdownService {
   }
 
   fetchEquipmentList() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('equipment')
       .snapshotChanges()
@@ -48,18 +48,18 @@ export class DropdownService {
         });
       })
       .subscribe((equipmentList: DropDown[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.equipmentList = equipmentList;
         this.equipmentListChanged.next([...this.equipmentList]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Equipment List failed, please try again later', null, 3000);
         this.equipmentListChanged.next(null);
       }));
   }
 
   fetchSourceList() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('workout-source')
       .snapshotChanges()
@@ -73,18 +73,18 @@ export class DropdownService {
         });
       })
       .subscribe((sourceList: DropDown[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.sourceList = sourceList;
         this.sourceListChanged.next([...this.sourceList]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Source List failed, please try again later', null, 3000);
         this.sourceListChanged.next(null);
       }));
   }
 
   fetchTypeList() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('workout-type')
       .snapshotChanges()
@@ -98,18 +98,18 @@ export class DropdownService {
         });
       })
       .subscribe((typeList: DropDown[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.typeList = typeList;
         this.typeListChanged.next([...this.typeList]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Type List failed, please try again later', null, 3000);
         this.typeListChanged.next(null);
       }));
   }
 
   fetchEmphasisList() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('workout-emphasis')
       .snapshotChanges()
@@ -123,18 +123,18 @@ export class DropdownService {
         });
       })
       .subscribe((emphasisList: DropDown[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.emphasisList = emphasisList;
         this.emphasisListChanged.next([...this.emphasisList]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Emphasis List failed, please try again later', null, 3000);
         this.emphasisListChanged.next(null);
       }));
   }
 
   fetchMeasurementTypeList() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('measurement-types')
       .snapshotChanges()
@@ -148,18 +148,18 @@ export class DropdownService {
         });
       })
       .subscribe((measurementTypeList: DropDown[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.measurementTypeList = measurementTypeList;
         this.measurementTypeListChanged.next([...this.measurementTypeList]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Measurement Type List failed, please try again later', null, 3000);
         this.measurementTypeListChanged.next(null);
       }));
   }
 
   fetchMuscleGroupList() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('muscle-groups')
       .snapshotChanges()
@@ -173,18 +173,18 @@ export class DropdownService {
         });
       })
       .subscribe((muscleGroupList: DropDown[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.muscleGroupList = muscleGroupList;
         this.muscleGroupListChanged.next([...this.muscleGroupList]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Body Part List failed, please try again later', null, 3000);
         this.muscleGroupListChanged.next(null);
       }));
   }
 
   fetchMovementPatternList() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('movement-patterns')
       .snapshotChanges()
@@ -198,11 +198,11 @@ export class DropdownService {
         });
       })
       .subscribe((movementPatternList: DropDown[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.movementPatternList = movementPatternList;
         this.movementPatternListChanged.next([...this.movementPatternList]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Movement Pattern List failed, please try again later', null, 3000);
         this.movementPatternListChanged.next(null);
       }));

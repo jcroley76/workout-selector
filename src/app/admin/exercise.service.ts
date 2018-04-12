@@ -17,7 +17,7 @@ export class ExerciseService {
   }
 
   fetchExercises() {
-    this.uiService.loadingStateChanged.next(true);
+    this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
       .collection('exercises')
       .snapshotChanges()
@@ -35,11 +35,11 @@ export class ExerciseService {
         });
       })
       .subscribe((exercises: Exercise[]) => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.exercises = exercises;
         this.exercisesChanged.next([...this.exercises]);
       }, error => {
-        this.uiService.loadingStateChanged.next(false);
+        this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Exercises failed, please try again later', null, 3000);
         this.exercisesChanged.next(null);
       }));
