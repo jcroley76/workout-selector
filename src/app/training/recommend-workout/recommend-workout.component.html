@@ -1,37 +1,75 @@
+<form>
+  <section fxLayout fxLayoutAlign="center">
+    <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
+      <mat-card-title>Recommend a Workout</mat-card-title>
+        <mat-card-content>
+          <b>Filter by:</b>
+          <p>
+            Exercises<br />
+            Duration<br />
+            Equipment<br />
+            Muscle Group(s)<br />
+            Style (yoga, weights, cardio, etc.)<br />
+            Source (p90x, Crossfit, Body Beast, Skogg, etc.)<br />
+          </p>
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              placeholder="Title"
+              name="title"
+              [(ngModel)]="title"
+              (change)="filterContains('title', title)">
+          </mat-form-field>
+          <button
+            type="button"
+            mat-raised-button
+            class="mat-small"
+            color="warn"
+            title="Delete"
+            *ngIf="title"
+            (click)="removeFilter('title')"
+            fxLayoutAlign="end">
+            <mat-icon>highlight_off</mat-icon>
+          </button>
 
-<section fxLayout fxLayoutAlign="center">
-  <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
-    <mat-card-title>Recommend a Workout</mat-card-title>
-      <mat-card-content>
-        <b>Filter by:</b>
-        <p>
-          Exercises<br />
-          Duration<br />
-          Equipment<br />
-          Muscle Group(s)<br />
-          Style (yoga, weights, cardio, etc.)<br />
-          Source (p90x, Crossfit, Body Beast, Skogg, etc.)<br />
-        </p>
-        <mat-form-field>
-          <input
-            type="text"
-            matInput
-            placeholder="Search"
-            [(ngModel)]="searchTerm" (keydown)="search($event)">
-        </mat-form-field>
-      </mat-card-content>
+          <mat-form-field>
+            <mat-select
+              placeholder="Source"
+              name="source"
+              [(ngModel)]="source"
+              (change)="filterExact('source', source)">
+              <mat-option *ngFor="let source of sourceList" [value]="source.value">{{source.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-      <mat-card-actions fxLayoutAlign="end">
-        <button type="submit" mat-raised-button color="primary" fxLayoutAlign="end">
-          <mat-icon>directions_run</mat-icon>
-          GO!
-        </button>
-      </mat-card-actions>
-  </mat-card>
-</section>
+          <mat-form-field>
+            <mat-select
+              placeholder="Workout Type"
+              name="type"
+              [(ngModel)]="type"
+              (change)="filterExact('type', type)">
+              <mat-option *ngFor="let type of typeList" [value]="type.value">{{type.value}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-select
+              placeholder="Area of Emphasis"
+              name="emphasis"
+              [(ngModel)]="emphasis"
+              (change)="filterExact('emphasis', emphasis)">
+              <mat-option *ngFor="let emphasis of emphasisList" [value]="emphasis.value">{{emphasis.value}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+         </mat-card-content>
+    </mat-card>
+  </section>
+</form>
 
 <mat-grid-list cols="2" gutterSize="10px">
-  <mat-grid-tile *ngFor="let aw of availableWorkouts">
+  <mat-grid-tile *ngFor="let aw of filteredWorkouts">
     <mat-card
       fxFlex.xs="100%"
       fxFlex="400px"
