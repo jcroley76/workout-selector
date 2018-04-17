@@ -1,11 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import { AvailableWorkoutService } from '../../admin/available-workout.service';
-import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { AvailableWorkout } from '../../shared/models/available-workout.model';
-import { FormsModule } from '@angular/forms';
-import { DropdownService } from '../../shared/dropdown.service';
-import { DropDown } from '../../shared/models/dropdown.model';
 
 @Component({
   selector: 'app-recommend-workout',
@@ -14,25 +10,11 @@ import { DropDown } from '../../shared/models/dropdown.model';
 })
 export class RecommendWorkoutComponent implements OnInit, OnDestroy {
   private awChangedSubscription: Subscription;
+  searchText = '';
   availableWorkouts: AvailableWorkout[];
   filteredWorkouts: AvailableWorkout[];
-  sourceList: DropDown[];
-  sourceSubscription: Subscription;
-  typeList: DropDown[];
-  typeSubscription: Subscription;
-  emphasisList: DropDown[];
-  emphasisSubscription: Subscription;
 
-  /// filter-able properties
-  title: string;
-  source: string;
-  type: string;
-  emphasis: string;
-  /// Active filter rules
-  filters = {};
-
-  constructor( private availableWorkoutService: AvailableWorkoutService,
-               private dropdownService: DropdownService) { }
+  constructor( private availableWorkoutService: AvailableWorkoutService) { }
 
   ngOnInit() {
     this.awChangedSubscription = this.availableWorkoutService.availableWorkoutsChanged$.subscribe(
@@ -43,91 +25,52 @@ export class RecommendWorkoutComponent implements OnInit, OnDestroy {
       }
     );
     this.availableWorkoutService.fetchAvailableWorkouts();
-
-    this.sourceSubscription = this.dropdownService.sourceListChanged
-      .subscribe(srcList =>
-        (this.sourceList = srcList)
-      );
-    this.fetchSourceList();
-
-    this.typeSubscription = this.dropdownService.typeListChanged
-      .subscribe(typList =>
-        (this.typeList = typList)
-      );
-    this.fetchTypeList();
-
-    this.emphasisSubscription = this.dropdownService.emphasisListChanged
-      .subscribe(empList =>
-        (this.emphasisList = empList)
-      );
-    this.fetchEmphasisList();
   }
 
   ngOnDestroy() {
-    if (this.sourceSubscription) {
-      this.sourceSubscription.unsubscribe();
-    }
-    if (this.typeSubscription) {
-      this.typeSubscription.unsubscribe();
-    }
-    if (this.emphasisSubscription) {
-      this.emphasisSubscription.unsubscribe();
+    if (this.awChangedSubscription) {
+      this.awChangedSubscription.unsubscribe();
     }
   }
 
-  fetchSourceList() {
-    this.dropdownService.fetchSourceList();
+  /// checks if object is present in array
+  isPresent(array, item) {
+    return array.some(el => {
+      return el.id === item.id;
+    });
   }
 
-  fetchTypeList() {
-    this.dropdownService.fetchTypeList();
-  }
-
-  fetchEmphasisList() {
-    this.dropdownService.fetchEmphasisList();
-  }
-
-  /// Filtering functions
-  private applyFilters() {
-    this.filteredWorkouts = _.filter(this.availableWorkouts, _.conforms(this.filters) );
-    console.log('filteredWorkouts', this.filteredWorkouts);
-  }
-
-  /// filter property by equality to rule
-  // https://angularfirebase.com/lessons/multi-property-data-filtering-with-firebase-and-angular-4/
-  filterExact(property: string, rule: any) {
-    console.log('filterExact', property, rule);
-    this.filters[property] = val => val === rule;
-    console.log('filters', this.filters);
-    this.applyFilters();
-  }
-  /// filter  numbers greater than rule
-  filterContains(property: string, rule: number) {
-    console.log('filterContains', property, rule);
-    this.filters[property] = val => _.find(val, rule);
-    console.log('filters', this.filters);
-    this.applyFilters();
-  }
-  /// filter  numbers greater than rule
-  filterGreaterThan(property: string, rule: number) {
-    this.filters[property] = val => val > rule;
-    this.applyFilters();
-  }
-
-  /// filter properties that resolve to true
-  filterBoolean(property: string, rule: boolean) {
-    if (!rule) {
-      this.removeFilter(property);
-    } else {
-      this.filters[property] = val => val;
-      this.applyFilters();
-    }
+  /// returns objects containing text
+  // TODO: Move this to some type of shared service
+  filterContains(searchText: string) {
+    this.filteredWorkouts = [];
+    this.availableWorkouts
+      .filter( it => {
+        for (const prop in it) {
+          if (it[prop]) {
+            if (Array.isArray(it[prop])) {
+              it[prop].forEach(item => {
+                if (item.toLowerCase().includes(searchText)) {
+                  if (!this.isPresent(this.filteredWorkouts, it)) {
+                    this.filteredWorkouts.push(it);
+                  }
+                }
+              });
+            } else {
+              if (it[prop].toLowerCase().includes(searchText)) {
+                if (!this.isPresent(this.filteredWorkouts, it)) {
+                  this.filteredWorkouts.push(it);
+                }
+              }
+            }
+          }
+        }
+      });
   }
 
   /// removes filter
-  removeFilter(property: string) {
-    delete this.filters[property];
-    this[property] = null
-    this.applyFilters();
+  removeFilter() {
+    this.filteredWorkouts = [];
+    this.searchText = '';
   }
 }

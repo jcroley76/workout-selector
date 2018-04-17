@@ -23,6 +23,7 @@ import { TrainingModule } from './training/training.module';
 import { ExerciseService } from './admin/exercise.service';
 import { UserService } from './admin/user.service';
 
+
 @NgModule({
   declarations: [
     AppComponent,
