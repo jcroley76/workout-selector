@@ -40,7 +40,6 @@ export class RecommendWorkoutComponent implements OnInit, OnDestroy {
     });
   }
 
-  /// returns objects containing text
   // TODO: Move this to some type of shared service
   filterContains(searchText: string) {
     this.filteredWorkouts = [];
