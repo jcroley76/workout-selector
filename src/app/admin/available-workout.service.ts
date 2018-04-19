@@ -66,25 +66,6 @@ export class AvailableWorkoutService {
     return this.availableWorkoutToEdit$;
   }
 
-  // Find available workout based upon criteria
-  // source https://github.com/rajayogan/angular5-instantsearch/blob/master/src/app/app.component.ts
-  // TODO: Type ahead is probably not the way to do this. Look at filtering:
-  // https://angularfirebase.com/lessons/multi-property-data-filtering-with-firebase-and-angular-4/
-  searchAvailableWorkouts(start, end) {
-    console.log('searchAvailableWorkouts', start, end);
-    const result = this.db
-      .collection('available-workouts',
-          ref => ref.orderBy('title')
-                            .limit(4)
-        // TODO: startAt and endAt are not working
-                            // .startAt(start)
-                            // .endAt(end)
-      )
-      .valueChanges();
-    console.log('result', result);
-    return result;
-  }
-
   deleteAvailableWorkout(availableWorkout: AvailableWorkout) {
     this.deleteFromDatabase(availableWorkout);
   }

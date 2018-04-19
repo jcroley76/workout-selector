@@ -2,36 +2,51 @@
   <section fxLayout fxLayoutAlign="center">
     <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
       <mat-card-title>Recommend a Workout</mat-card-title>
-        <mat-card-content>
-          <b>Filter by:</b>
-          <mat-form-field>
-            <input
-              type="text"
-              matInput
-              placeholder="Enter text to search by"
-              name="searchText"
-              [(ngModel)]="searchText"
-              (change)="filterContains(searchText)">
+      <mat-card-content>
+        <b>What are you looking for today?</b>
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="Enter text to search by"
+            name="searchText"
+            [(ngModel)]="searchText">
           </mat-form-field>
-          <button
-            type="button"
-            mat-raised-button
-            class="mat-small"
-            color="warn"
-            title="Delete"
-            *ngIf="searchText"
-            (click)="removeFilter('title')"
-            fxLayoutAlign="end">
-            <mat-icon>highlight_off</mat-icon>
-          </button>
 
-         </mat-card-content>
+      </mat-card-content>
+
+      <mat-card-actions fxLayoutAlign="end">
+        <button
+          type="button"
+          mat-raised-button
+          class="mat-small"
+          color="primary"
+          title="Go"
+          *ngIf="searchText"
+          (click)="filterContains()"
+          fxLayoutAlign="end">
+          <mat-icon>highlight_off</mat-icon>
+          Go!
+        </button>
+        <button
+          type="button"
+          mat-raised-button
+          class="mat-small"
+          color="warn"
+          title="Clear"
+          *ngIf="searchText"
+          (click)="removeFilter('title')"
+          fxLayoutAlign="end">
+          <mat-icon>highlight_off</mat-icon>
+          Clear
+        </button>
+      </mat-card-actions>
     </mat-card>
   </section>
 </form>
 
-<mat-grid-list cols="2" gutterSize="10px">
-  <mat-grid-tile *ngFor="let aw of filteredWorkouts">
+<mat-grid-list cols="2" rowHeight="1:1" gutterSize="10px">
+  <mat-grid-tile *ngFor="let aw of filteredWorkouts | filterContains : searchText">
     <mat-card
       fxFlex.xs="100%"
       fxFlex="400px"
@@ -39,7 +54,7 @@
       <mat-card-title>{{aw.title}}</mat-card-title>
 
         <mat-card-content>
-          <p>{{aw.description}}</p>
+          <pre>{{aw.description}}</pre>
           <b>Workout Type: </b>{{aw.type}}<br />
           <b>Area of Emphasis: </b>{{aw.emphasis}}<br />
           <b>Duration: </b>{{aw.duration}}<br />

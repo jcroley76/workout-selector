@@ -50,8 +50,7 @@
         <mat-form-field>
           <mat-select
             placeholder="Source"
-            formControlName="sources"
-            multiple>
+            formControlName="sources">
             <mat-option *ngFor="let source of sourceList" [value]="source.value">{{source.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="awForm.get('sources').hasError('required') && awForm.get('sources').touched">
@@ -89,7 +88,8 @@
         <mat-form-field>
           <mat-select
             placeholder="Record"
-            formControlName="record">
+            formControlName="record"
+            multiple>
             <mat-option *ngFor="let measurementType of measurementTypeList" [value]="measurementType.value">{{measurementType.value}}</mat-option>
           </mat-select>
           <mat-error *ngIf="awForm.get('record').hasError('required') && awForm.get('record').touched">
