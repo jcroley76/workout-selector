@@ -5,5 +5,4 @@ export interface Exercise {
   movementPattern: string;
   equipment: string[];
   muscleGroup: string[];
-  // attributes: string[];
 }

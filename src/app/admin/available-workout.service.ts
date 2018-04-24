@@ -11,11 +11,6 @@ export class AvailableWorkoutService {
   availableWorkoutsChanged$ = new Subject<AvailableWorkout[]>();
   availableWorkoutToEdit$ = new Subject<AvailableWorkout>();
 
-  startAt$ = new Subject();
-  endAt$ = new Subject();
-  startObs$ = this.startAt$.asObservable();
-  endObs$ = this.startAt$.asObservable();
-
   private availableWorkouts: AvailableWorkout[] = [];
   private fbSubs: Subscription[] = [];
 

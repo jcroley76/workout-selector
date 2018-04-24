@@ -8,5 +8,4 @@ export interface AvailableWorkout {
   type: string[];
   emphasis: string[];
   record: string;
-  // attributes: string[];
 }

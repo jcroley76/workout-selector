@@ -61,7 +61,12 @@
         </mat-card-content>
 
         <mat-card-actions fxLayoutAlign="end">
-          <button type="submit" mat-raised-button color="primary" fxLayoutAlign="end">
+          <button
+            type="button"
+            mat-raised-button
+            color="primary"
+            fxLayoutAlign="end"
+            (click)="onSelectWorkout(aw)">
             <mat-icon>directions_run</mat-icon>
             Select!
           </button>

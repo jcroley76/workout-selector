@@ -6,18 +6,21 @@ import { TrainingRoutingModule } from './training-routing.module';
 import { PastWorkoutsComponent } from './past-workouts/past-workouts.component';
 import { RecommendWorkoutComponent } from './recommend-workout/recommend-workout.component';
 import { FilterContainsPipe } from '../shared/utils/filterContains.pipe';
+import { RecordWorkoutComponent } from './record-workout/record-workout.component';
+import { RecordedWorkoutService } from './recorded-workout.service';
 
 @NgModule({
   declarations: [
     TrainingComponent,
     PastWorkoutsComponent,
     RecommendWorkoutComponent,
-    FilterContainsPipe
+    FilterContainsPipe,
+    RecordWorkoutComponent
   ],
   imports: [
     SharedModule,
     TrainingRoutingModule
   ],
-  providers: [FilterContainsPipe]
+  providers: [FilterContainsPipe, RecordedWorkoutService]
 })
 export class TrainingModule {}

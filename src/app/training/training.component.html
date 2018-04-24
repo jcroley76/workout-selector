@@ -1,8 +1,21 @@
-<mat-tab-group>
-  <mat-tab label="Recommend Workout">
-    <app-recommend-workout></app-recommend-workout>
-  </mat-tab>
-  <mat-tab label="Completed Workouts">
-    <app-past-workouts></app-past-workouts>
-  </mat-tab>
-</mat-tab-group>
+<!--<mat-tab-group>-->
+  <!--<mat-tab label="Recommend a Workout">-->
+    <!--<app-recommend-workout></app-recommend-workout>-->
+  <!--</mat-tab>-->
+  <!--<mat-tab label="Completed Workouts">-->
+    <!--<app-past-workouts></app-past-workouts>-->
+  <!--</mat-tab>-->
+  <!--<mat-tab label="Record a Workout">-->
+    <!--<app-record-workout></app-record-workout>-->
+  <!--</mat-tab>-->
+<!--</mat-tab-group>-->
+<nav mat-tab-nav-bar>
+  <a mat-tab-link
+     *ngFor="let routeLink of routeLinks; let i = index"
+     [routerLink]="routeLink.link"
+     routerLinkActive #rla="routerLinkActive"
+     [active]="rla.isActive">
+    {{routeLink.label}}
+  </a>
+</nav>
+<router-outlet></router-outlet>

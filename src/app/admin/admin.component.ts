@@ -10,7 +10,6 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.routeLinks = [
-      // {label: 'Admin', link: '/admin'},
       {label: 'Available Workouts', link: 'available-workouts'},
       {label: 'Add Workout', link: 'available-workout-add-edit'},
       {label: 'Exercises', link: 'exercises'},
