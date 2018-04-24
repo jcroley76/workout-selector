@@ -1,3 +1,102 @@
-<p>
-  record-workout works!
-</p>
+<section fxLayout fxLayoutAlign="center">
+  <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
+    <mat-card-title>{{ editMode ? 'Edit' : 'Add' }} a Workout</mat-card-title>
+    <form
+      fxLayout="column"
+      fxLayoutGap="10px"
+      [formGroup]="rwForm"
+      (ngSubmit)="saveRecordedWorkout()">
+
+      <mat-card-content>
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="Title"
+            formControlName="title">
+          <mat-error *ngIf="rwForm.get('title').hasError('required') && rwForm.get('title').touched">
+            Title is required.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select
+            placeholder="Workout Type"
+            formControlName="type">
+            <mat-option *ngFor="let type of typeList" [value]="type.value">{{type.value}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <textarea
+            rows="5"
+            cols="50"
+            matInput
+            placeholder="Description"
+            formControlName="description"></textarea>
+          <mat-error *ngIf="rwForm.get('description').hasError('required') && rwForm.get('description').touched">
+            Description is required.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            placeholder="Duration (hh:mm:ss)"
+            formControlName="duration">
+          <mat-error *ngIf="rwForm.get('duration').hasError('required') && rwForm.get('duration').touched">
+            Duration is required.
+          </mat-error>
+          <mat-error *ngIf="rwForm.get('duration').hasError('pattern') && rwForm.get('duration').touched">
+            Duration must have an hh:mm:ss format.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select
+            placeholder="Source"
+            formControlName="sources">
+            <mat-option *ngFor="let source of sourceList" [value]="source.value">{{source.name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="rwForm.get('sources').hasError('required') && rwForm.get('sources').touched">
+            Source is required.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select
+            placeholder="Area of Emphasis"
+            formControlName="emphasis">
+            <mat-option *ngFor="let emphasis of emphasisList" [value]="emphasis.value">{{emphasis.value}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!--TODO: Figure out how to display ExerciseSets when type is weightlifting-->
+
+      </mat-card-content>
+
+      <mat-card-actions fxLayoutAlign="end">
+        <button
+          type="button"
+          mat-raised-button
+          color="accent"
+          fxLayoutAlign="end"
+          (click)="onClear()">
+          <mat-icon>clear</mat-icon>
+          Clear
+        </button>
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          fxLayoutAlign="end"
+          [disabled]="rwForm.invalid">
+          <mat-icon>save</mat-icon>
+          {{ editMode ? 'Update' : 'Add' }}
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</section>
+

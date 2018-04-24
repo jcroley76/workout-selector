@@ -8,6 +8,7 @@ import { RecommendWorkoutComponent } from './recommend-workout/recommend-workout
 import { FilterContainsPipe } from '../shared/utils/filterContains.pipe';
 import { RecordWorkoutComponent } from './record-workout/record-workout.component';
 import { RecordedWorkoutService } from './recorded-workout.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { RecordedWorkoutService } from './recorded-workout.service';
     RecordWorkoutComponent
   ],
   imports: [
+    ReactiveFormsModule,
     SharedModule,
     TrainingRoutingModule
   ],

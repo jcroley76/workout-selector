@@ -8,7 +8,6 @@ export interface RecordedWorkout {
   source: string;
   type: string;
   emphasis: string;
-  record: string;
   exercises: WorkoutExercise[];
 }
 
