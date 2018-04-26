@@ -10,7 +10,8 @@
             matInput
             placeholder="Enter text to search by"
             name="searchText"
-            [(ngModel)]="searchText">
+            [(ngModel)]="searchText"
+            (change)="filterContains()">
           </mat-form-field>
 
       </mat-card-content>
@@ -20,21 +21,9 @@
           type="button"
           mat-raised-button
           class="mat-small"
-          color="primary"
-          title="Go"
-          *ngIf="searchText"
-          (click)="filterContains()"
-          fxLayoutAlign="end">
-          <mat-icon>highlight_off</mat-icon>
-          Go!
-        </button>
-        <button
-          type="button"
-          mat-raised-button
-          class="mat-small"
           color="warn"
           title="Clear"
-          *ngIf="searchText"
+          *ngIf="filteredWorkouts.length > 0"
           (click)="removeFilter('title')"
           fxLayoutAlign="end">
           <mat-icon>highlight_off</mat-icon>
@@ -45,22 +34,19 @@
   </section>
 </form>
 
-<mat-grid-list cols="2" rowHeight="1:1" gutterSize="10px">
-  <mat-grid-tile *ngFor="let aw of filteredWorkouts | filterContains : searchText">
-    <mat-card
-      fxFlex.xs="100%"
-      fxFlex="400px"
-      class="form-card">
-      <mat-card-title>{{aw.title}}</mat-card-title>
-
-        <mat-card-content>
-          <pre>{{aw.description}}</pre>
-          <b>Workout Type: </b>{{aw.type}}<br />
-          <b>Area of Emphasis: </b>{{aw.emphasis}}<br />
-          <b>Duration: </b>{{aw.duration}}<br />
-        </mat-card-content>
-
-        <mat-card-actions fxLayoutAlign="end">
+<section fxLayout fxLayoutAlign="center" *ngIf="filteredWorkouts.length > 0">
+  <mat-card
+    fxFlex.xs="100%"
+    fxFlex="600px"
+    class="form-card">
+    <mat-list>
+      <mat-list-item *ngFor="let aw of filteredWorkouts | filterContains : searchText">
+        <h3 mat-line>{{ aw.title }}</h3>
+        <div mat-line><pre>{{aw.description}}</pre></div>
+        <div mat-line><b>Workout Type: </b>{{aw.type}}</div>
+        <div mat-line><b>Area of Emphasis: </b>{{aw.emphasis}}</div>
+        <div mat-line><b>Duration: </b>{{aw.duration}}</div>
+        <div mat-line fxLayoutAlign="end">
           <button
             type="button"
             mat-raised-button
@@ -70,7 +56,9 @@
             <mat-icon>directions_run</mat-icon>
             Select!
           </button>
-        </mat-card-actions>
-    </mat-card>
-  </mat-grid-tile>
-</mat-grid-list>
+        </div>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
+</section>

@@ -36,7 +36,7 @@ export class RecommendWorkoutComponent implements OnInit, OnDestroy {
 
   onSelectWorkout(aw: AvailableWorkout) {
     console.log('Selected Workout', aw);
-    this.router.navigate(['/training/record-workout', aw.id]);
+    this.router.navigate(['/training/record-workout', {load: 'aw', id: aw.id}]);
   }
 
   filterContains() {

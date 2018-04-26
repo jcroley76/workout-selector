@@ -7,6 +7,8 @@ import { RecordedWorkoutService } from '../recorded-workout.service';
 import { DropdownService } from '../../shared/dropdown.service';
 import { UIService } from '../../shared/ui.service';
 import { RecordedWorkout } from '../../shared/models/recorded-workout.model';
+import { AvailableWorkoutService } from '../../admin/available-workout.service';
+import {AvailableWorkout} from "../../shared/models/available-workout.model";
 
 @Component({
   selector: 'app-record-workout',
@@ -17,6 +19,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
   rwForm: FormGroup;
   isLoading = true;
   editMode = false;
+  loadComponent = '';
   id: string;
   sourceList: DropDown[];
   sourceSubscription: Subscription;
@@ -31,6 +34,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private recordedWorkoutService: RecordedWorkoutService,
+              private availableWorkoutService: AvailableWorkoutService,
               private dropdownService: DropdownService,
               private uiService: UIService) { }
 
@@ -69,6 +73,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
       .subscribe(
         (params: Params) => {
           this.id = params['id'];
+          this.loadComponent = params['load'];
           this.editMode = params['id'] != null;
           this.initForm();
         }
@@ -111,6 +116,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
 
   initForm() {
     this.rwForm = new FormGroup({
+      'date': new FormControl(new Date(), Validators.required),
       'title': new FormControl('', Validators.required),
       'type': new FormControl('', Validators.required),
       'description': new FormControl(''),
@@ -127,21 +133,32 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
     console.log('editMode', this.editMode);
     if (this.editMode) {
       // TODO: Determine if relating source is Past Workouts (RecordedWorkout) or RecommendedWorkout (AvailableWorkout)
-      this.recordedWorkoutService
-        .fetchRecordedWorkout(this.id)
-        .subscribe(
-          (rw: RecordedWorkout) => {
-            console.log('edit rw', rw);
-            if (rw) {
-              this.rwForm.patchValue(rw);
+      console.log('load', this.loadComponent);
+      if (this.loadComponent === 'rw') {
+        this.recordedWorkoutService
+          .fetchRecordedWorkout(this.id)
+          .subscribe((rw: RecordedWorkout) => {
+              console.log('edit rw', rw);
+              if (rw) {
+                this.rwForm.patchValue(rw);
+              }
             }
-          }
-        );
+          );
+      } else if (this.loadComponent === 'aw') {
+        this.availableWorkoutService
+          .fetchAvailableWorkout(this.id)
+          .subscribe((aw: AvailableWorkout) => {
+            console.log('edit aw', aw);
+            if (aw) {
+              this.rwForm.patchValue(aw);
+            }
+          });
+      }
     }
   }
 
   saveRecordedWorkout() {
-    if (this.editMode) {
+    if (this.loadComponent === 'rw') {
       console.log('save recorded workout', this.rwForm.value);
       this.recordedWorkoutService.updateDataToDatabase(this.id, this.rwForm.value);
     } else {

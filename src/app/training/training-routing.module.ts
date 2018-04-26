@@ -15,7 +15,7 @@ const routes: Routes = [
     { path: 'recommend-workout', component: RecommendWorkoutComponent },
     { path: 'past-workouts', component: PastWorkoutsComponent },
     { path: 'record-workout', component: RecordWorkoutComponent },
-    { path: 'record-workout/:id', component: RecordWorkoutComponent },
+    { path: 'record-workout/:load/:id', component: RecordWorkoutComponent },
   ] }
 ];
 

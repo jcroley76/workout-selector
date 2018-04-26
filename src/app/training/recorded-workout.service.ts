@@ -17,6 +17,10 @@ export class RecordedWorkoutService {
   constructor(private db: AngularFirestore, private uiService: UIService) {
   }
 
+  fetchRecordedWorkoutsByUser() {
+    // TODO:
+  }
+
   fetchRecordedWorkouts() {
     this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
@@ -27,10 +31,11 @@ export class RecordedWorkoutService {
         return docArray.map(doc => {
           return {
             id: doc.payload.doc.id,
+            date: doc.payload.doc.data().date,
             title: doc.payload.doc.data().title,
             description: doc.payload.doc.data().description,
             duration: doc.payload.doc.data().duration,
-            source: doc.payload.doc.data().source,
+            sources: doc.payload.doc.data().sources,
             type: doc.payload.doc.data().type,
             emphasis: doc.payload.doc.data().emphasis,
             record: doc.payload.doc.data().record,
