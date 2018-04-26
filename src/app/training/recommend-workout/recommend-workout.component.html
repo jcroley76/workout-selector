@@ -23,7 +23,7 @@
           class="mat-small"
           color="warn"
           title="Clear"
-          *ngIf="filteredWorkouts.length > 0"
+          *ngIf="filteredWorkouts"
           (click)="removeFilter('title')"
           fxLayoutAlign="end">
           <mat-icon>highlight_off</mat-icon>
@@ -34,7 +34,7 @@
   </section>
 </form>
 
-<section fxLayout fxLayoutAlign="center" *ngIf="filteredWorkouts.length > 0">
+<section fxLayout fxLayoutAlign="center" *ngIf="filteredWorkouts">
   <mat-card
     fxFlex.xs="100%"
     fxFlex="600px"

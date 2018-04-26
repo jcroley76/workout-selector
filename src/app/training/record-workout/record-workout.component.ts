@@ -8,7 +8,8 @@ import { DropdownService } from '../../shared/dropdown.service';
 import { UIService } from '../../shared/ui.service';
 import { RecordedWorkout } from '../../shared/models/recorded-workout.model';
 import { AvailableWorkoutService } from '../../admin/available-workout.service';
-import {AvailableWorkout} from "../../shared/models/available-workout.model";
+import { AvailableWorkout } from '../../shared/models/available-workout.model';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-record-workout',
@@ -20,6 +21,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
   isLoading = true;
   editMode = false;
   loadComponent = '';
+  userId = '';
   id: string;
   sourceList: DropDown[];
   sourceSubscription: Subscription;
@@ -30,9 +32,11 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
   measurementTypeList: DropDown[];
   measurementTypeSubscription: Subscription;
   private loadingSubscription: Subscription;
+  private loggedInUserSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
+              private authService: AuthService,
               private recordedWorkoutService: RecordedWorkoutService,
               private availableWorkoutService: AvailableWorkoutService,
               private dropdownService: DropdownService,
@@ -44,6 +48,13 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
         this.isLoading = isLoading;
       }
     );
+
+    this.loggedInUserSubscription = this.authService.loggedInUser$.subscribe(user => {
+      if (user) {
+        this.userId = user.uid;
+        this.recordedWorkoutService.fetchRecordedWorkoutsByUser(this.userId);
+      }
+    });
 
     this.sourceSubscription = this.dropdownService.sourceListChanged
       .subscribe(srcList =>
@@ -132,7 +143,6 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
 
     console.log('editMode', this.editMode);
     if (this.editMode) {
-      // TODO: Determine if relating source is Past Workouts (RecordedWorkout) or RecommendedWorkout (AvailableWorkout)
       console.log('load', this.loadComponent);
       if (this.loadComponent === 'rw') {
         this.recordedWorkoutService
@@ -158,8 +168,9 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
   }
 
   saveRecordedWorkout() {
+    this.rwForm.value.userId = this.userId;
+    console.log('save recorded workout', this.rwForm.value);
     if (this.loadComponent === 'rw') {
-      console.log('save recorded workout', this.rwForm.value);
       this.recordedWorkoutService.updateDataToDatabase(this.id, this.rwForm.value);
     } else {
       this.recordedWorkoutService.addDataToDatabase(this.rwForm.value);

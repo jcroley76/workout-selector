@@ -6,6 +6,7 @@ import { MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource }
 import { RecordedWorkoutService } from '../recorded-workout.service';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.component';
+import {AuthService} from "../../auth/auth.service";
 
 @Component({
   selector: 'app-past-workouts',
@@ -15,24 +16,34 @@ import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.
 export class PastWorkoutsComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns = ['date', 'sources', 'title', 'emphasis', 'record', 'duration', 'actions'];
   dataSource = new MatTableDataSource<RecordedWorkout>();
+  userId = '';
+  loggedInUserSubscription: Subscription;
   private rwChangedSubscription: Subscription;
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private recordedWorkoutService: RecordedWorkoutService,
+              private authService: AuthService,
               private dialog: MatDialog,
               private router: Router) {
   }
 
   ngOnInit() {
+    this.loggedInUserSubscription = this.authService.loggedInUser$.subscribe(user => {
+      console.log('loggedInUser', user);
+      if (user) {
+        this.userId = user.uid;
+        this.recordedWorkoutService.fetchRecordedWorkoutsByUser(this.userId);
+      }
+    });
+
     this.rwChangedSubscription = this.recordedWorkoutService.recordedWorkoutsChanged$.subscribe(
       (recordedWorkouts: RecordedWorkout[]) => {
         console.log('recordedWorkouts', recordedWorkouts);
         this.dataSource.data = recordedWorkouts;
       }
     );
-    this.recordedWorkoutService.fetchRecordedWorkouts();
   }
 
   ngAfterViewInit() {

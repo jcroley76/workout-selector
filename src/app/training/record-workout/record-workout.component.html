@@ -16,7 +16,8 @@
       <mat-form-field>
         <mat-select
           placeholder="Source"
-          formControlName="sources">
+          formControlName="sources"
+          multiple>
           <mat-option *ngFor="let source of sourceList" [value]="source.value">{{source.name}}</mat-option>
         </mat-select>
         <mat-error *ngIf="rwForm.get('sources').hasError('required') && rwForm.get('sources').touched">

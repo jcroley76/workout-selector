@@ -1,5 +1,4 @@
 import { Exercise } from './exercise.model';
-// import { User } from '../../auth/user.model';
 
 export interface RecordedWorkout {
   id: string;
@@ -11,8 +10,7 @@ export interface RecordedWorkout {
   type: string;
   emphasis: string;
   exercises: WorkoutExercise[];
-  // TODO:
-  // user: User;
+  userId: string;
 }
 
 export interface WorkoutExercise {
