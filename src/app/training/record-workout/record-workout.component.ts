@@ -20,6 +20,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
   rwForm: FormGroup;
   isLoading = true;
   editMode = false;
+  canAddExercises = false;
   loadComponent = '';
   userId = '';
   id: string;
@@ -52,7 +53,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
     this.loggedInUserSubscription = this.authService.loggedInUser$.subscribe(user => {
       if (user) {
         this.userId = user.uid;
-        this.recordedWorkoutService.fetchRecordedWorkoutsByUser(this.userId);
+        // this.recordedWorkoutService.fetchRecordedWorkoutsByUser(this.userId);
       }
     });
 
@@ -151,6 +152,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
               console.log('edit rw', rw);
               if (rw) {
                 this.rwForm.patchValue(rw);
+                this.canAddExercises = this.isLiftingWorkout(rw.emphasis) || this.isLiftingWorkout(rw.type);
               }
             }
           );
@@ -161,6 +163,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
             console.log('edit aw', aw);
             if (aw) {
               this.rwForm.patchValue(aw);
+              this.canAddExercises = this.isLiftingWorkout(aw.emphasis) || this.isLiftingWorkout(aw.type);
             }
           });
       }
@@ -177,6 +180,36 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
     }
     this.onClear();
     this.router.navigate(['/training/past-workouts']);
+  }
+
+  checkCanAddExercises() {
+    let result = false;
+    if (this.rwForm.value.type) {
+      result = this.isLiftingWorkout(this.rwForm.value.type);
+    }
+    if (this.rwForm.value.emphasis) {
+      result = this.isLiftingWorkout(this.rwForm.value.emphasis);
+    }
+    this.canAddExercises = result;
+  }
+
+  isLiftingWorkout(values: string[]): boolean {
+    console.log('isLiftingWorkout values', values);
+    let result = false;
+    values.forEach(value => {
+      if (value === 'lifting weights' ||
+        value === 'strength' ||
+        value === 'hypertrophy (size)' ) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
+  addExercises() {
+    if (this.canAddExercises) {
+      this.router.navigate(['/training/workout-display', this.id]);
+    }
   }
 
   onClear() {

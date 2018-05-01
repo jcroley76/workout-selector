@@ -29,8 +29,13 @@
         <mat-select
           placeholder="Workout Type"
           formControlName="type"
+          (change)="checkCanAddExercises()"
           multiple>
-          <mat-option *ngFor="let type of typeList" [value]="type.value">{{type.value}}</mat-option>
+          <mat-option
+            *ngFor="let type of typeList"
+            [value]="type.value">
+            {{type.value}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -72,14 +77,17 @@
           </mat-error>
         </mat-form-field>
 
-
-
         <mat-form-field>
           <mat-select
             placeholder="Area of Emphasis"
             formControlName="emphasis"
+            (change)="checkCanAddExercises()"
             multiple>
-            <mat-option *ngFor="let emphasis of emphasisList" [value]="emphasis.value">{{emphasis.value}}</mat-option>
+            <mat-option
+              *ngFor="let emphasis of emphasisList"
+              [value]="emphasis.value">
+              {{emphasis.value}}
+            </mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -91,11 +99,21 @@
         <button
           type="button"
           mat-raised-button
-          color="accent"
+          color="warn"
           fxLayoutAlign="end"
           (click)="onClear()">
           <mat-icon>clear</mat-icon>
           Clear
+        </button>
+        <button
+          *ngIf="canAddExercises"
+          type="button"
+          mat-raised-button
+          color="accent"
+          fxLayoutAlign="end"
+          (click)="addExercises()">
+          <mat-icon>fitness_center</mat-icon>
+          Add Exercises
         </button>
         <button
           type="submit"

@@ -18,11 +18,12 @@ import {
   MatPaginatorModule,
   MatSnackBarModule,
   MatDialogModule,
-  MatGridListModule
+  MatGridListModule,
+  MatExpansionModule
 } from '@angular/material';
 
 @NgModule({
-  imports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule, MatListModule, MatTabsModule, MatCardModule, MatSelectModule, MatSnackBarModule, MatTableModule, MatSortModule, MatPaginatorModule, MatDialogModule, MatGridListModule],
-  exports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule, MatListModule, MatTabsModule, MatCardModule, MatSelectModule, MatSnackBarModule, MatTableModule, MatSortModule, MatPaginatorModule, MatDialogModule, MatGridListModule]
+  imports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule, MatListModule, MatTabsModule, MatCardModule, MatSelectModule, MatSnackBarModule, MatTableModule, MatSortModule, MatPaginatorModule, MatDialogModule, MatGridListModule, MatExpansionModule],
+  exports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule, MatListModule, MatTabsModule, MatCardModule, MatSelectModule, MatSnackBarModule, MatTableModule, MatSortModule, MatPaginatorModule, MatDialogModule, MatGridListModule, MatExpansionModule]
 })
 export class MaterialModule {}

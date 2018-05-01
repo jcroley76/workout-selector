@@ -6,9 +6,9 @@ export interface RecordedWorkout {
   title: string;
   description: string;
   duration: string;
-  sources: string;
-  type: string;
-  emphasis: string;
+  sources: string[];
+  type: string[];
+  emphasis: string[];
   exercises: WorkoutExercise[];
   userId: string;
 }

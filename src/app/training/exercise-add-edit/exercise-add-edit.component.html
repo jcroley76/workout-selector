@@ -1,0 +1,29 @@
+<section fxLayout fxLayoutAlign="center">
+  <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
+    <mat-card-title>{{ editMode ? 'Edit' : 'Add' }} an Exercise</mat-card-title>
+    <form
+      fxLayout="row"
+      fxLayoutGap="10px"
+      [formGroup]="exForm"
+      (ngSubmit)="saveExercise()">
+
+      <mat-form-field class="input-half-width">
+        <input
+          type="text"
+          matInput
+          placeholder="Exercise"
+          formControlName="exercise">
+        <mat-error *ngIf="exForm.get('exercise').hasError('required') && exForm.get('exercise').touched">
+          Exercise is required.
+        </mat-error>
+      </mat-form-field>
+
+      <div class="input-half-width">
+        <app-exercise-set-add-edit></app-exercise-set-add-edit>
+      </div>
+
+
+    </form>
+
+  </mat-card>
+</section>

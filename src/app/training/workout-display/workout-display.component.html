@@ -1,0 +1,37 @@
+<section fxLayout fxLayoutAlign="center">
+
+  <mat-expansion-panel fxFlex.xs="100%" fxFlex="600px" style="margin-top: 10px;">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <b>{{ recordedWorkout?.date | date:'shortDate' }}</b>&nbsp; {{ recordedWorkout?.title }}
+      </mat-panel-title>
+      <mat-panel-description *ngIf="recordedWorkout?.sources">
+        {{ recordedWorkout?.sources }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div>{{recordedWorkout?.description}}</div>
+    <div>
+      <table style="margin-top: 10px;">
+        <tr><td><b>Workout Type:</b></td><td>{{recordedWorkout?.type}}</td></tr>
+        <tr><td><b>Area of Emphasis:</b></td><td>{{recordedWorkout?.emphasis}}</td></tr>
+        <tr><td><b>Duration:</b></td><td>{{recordedWorkout?.duration}}</td></tr>
+      </table>
+    </div>
+
+    <mat-action-row>
+      <button
+        type="button"
+        mat-raised-button
+        color="accent"
+        title="Edit"
+        (click)="onEditWorkout()">
+        <mat-icon>mode_edit</mat-icon>
+        Edit Workout
+      </button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+</section>
+
+<app-exercise-add-edit editMode="false" workoutId="{{recordedWorkout?.id}}"></app-exercise-add-edit>

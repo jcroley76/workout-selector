@@ -9,6 +9,9 @@ import { FilterContainsPipe } from '../shared/utils/filterContains.pipe';
 import { RecordWorkoutComponent } from './record-workout/record-workout.component';
 import { RecordedWorkoutService } from './recorded-workout.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { WorkoutDisplayComponent } from './workout-display/workout-display.component';
+import { ExerciseAddEditComponent } from './exercise-add-edit/exercise-add-edit.component';
+import { ExerciseSetAddEditComponent } from './exercise-set-add-edit/exercise-set-add-edit.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     PastWorkoutsComponent,
     RecommendWorkoutComponent,
     FilterContainsPipe,
-    RecordWorkoutComponent
+    RecordWorkoutComponent,
+    WorkoutDisplayComponent,
+    ExerciseAddEditComponent,
+    ExerciseSetAddEditComponent
   ],
   imports: [
     ReactiveFormsModule,

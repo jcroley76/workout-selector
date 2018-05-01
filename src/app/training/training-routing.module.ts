@@ -6,6 +6,7 @@ import { TrainingComponent } from './training.component';
 import { RecordWorkoutComponent } from './record-workout/record-workout.component';
 import { RecommendWorkoutComponent } from './recommend-workout/recommend-workout.component';
 import { PastWorkoutsComponent } from './past-workouts/past-workouts.component';
+import { WorkoutDisplayComponent } from './workout-display/workout-display.component';
 
 const routes: Routes = [
   { path: 'training',
@@ -16,6 +17,7 @@ const routes: Routes = [
     { path: 'past-workouts', component: PastWorkoutsComponent },
     { path: 'record-workout', component: RecordWorkoutComponent },
     { path: 'record-workout/:load/:id', component: RecordWorkoutComponent },
+    { path: 'workout-display/:id', component: WorkoutDisplayComponent },
   ] }
 ];
 
