@@ -57,25 +57,25 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.sourceSubscription = this.dropdownService.sourceListChanged
+    this.sourceSubscription = this.dropdownService.sourceListChanged$
       .subscribe(srcList =>
         (this.sourceList = srcList)
       );
     this.fetchSourceList();
 
-    this.typeSubscription = this.dropdownService.typeListChanged
+    this.typeSubscription = this.dropdownService.typeListChanged$
       .subscribe(typList =>
         (this.typeList = typList)
       );
     this.fetchTypeList();
 
-    this.emphasisSubscription = this.dropdownService.emphasisListChanged
+    this.emphasisSubscription = this.dropdownService.emphasisListChanged$
       .subscribe(empList =>
         (this.emphasisList = empList)
       );
     this.fetchEmphasisList();
 
-    this.measurementTypeSubscription = this.dropdownService.measurementTypeListChanged
+    this.measurementTypeSubscription = this.dropdownService.measurementTypeListChanged$
       .subscribe(meaList =>
         (this.measurementTypeList = meaList)
       );

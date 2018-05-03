@@ -11,28 +11,28 @@ export class DropdownService {
   private fbSubs: Subscription[] = [];
 
   equipmentItem: Equipment;
-  equipmentItemChanged = new Subject<Equipment>();
+  equipmentItemChanged$ = new Subject<Equipment>();
 
   equipmentList: DropDown[] = [];
-  equipmentListChanged = new Subject<DropDown[]>();
+  equipmentListChanged$ = new Subject<DropDown[]>();
 
   sourceList: DropDown[] = [];
-  sourceListChanged = new Subject<DropDown[]>();
+  sourceListChanged$ = new Subject<DropDown[]>();
 
   typeList: DropDown[] = [];
-  typeListChanged = new Subject<DropDown[]>();
+  typeListChanged$ = new Subject<DropDown[]>();
 
   emphasisList: DropDown[] = [];
-  emphasisListChanged = new Subject<DropDown[]>();
+  emphasisListChanged$ = new Subject<DropDown[]>();
 
   measurementTypeList: DropDown[] = [];
-  measurementTypeListChanged = new Subject<DropDown[]>();
+  measurementTypeListChanged$ = new Subject<DropDown[]>();
 
   muscleGroupList: DropDown[] = [];
-  muscleGroupListChanged = new Subject<DropDown[]>();
+  muscleGroupListChanged$ = new Subject<DropDown[]>();
 
   movementPatternList: DropDown[] = [];
-  movementPatternListChanged = new Subject<DropDown[]>();
+  movementPatternListChanged$ = new Subject<DropDown[]>();
 
   constructor(private db: AngularFirestore, private uiService: UIService) {
   }
@@ -54,11 +54,11 @@ export class DropdownService {
       .subscribe((equipmentList: DropDown[]) => {
         this.uiService.loadingStateChanged$.next(false);
         this.equipmentList = equipmentList;
-        this.equipmentListChanged.next([...this.equipmentList]);
+        this.equipmentListChanged$.next([...this.equipmentList]);
       }, error => {
         this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Equipment List failed, please try again later', null, 3000);
-        this.equipmentListChanged.next(null);
+        this.equipmentListChanged$.next(null);
       }));
   }
 
@@ -69,20 +69,19 @@ export class DropdownService {
         ref => ref.where('name', '==', name))
       .valueChanges()
       .subscribe(equipment => {
-        console.log('fetchEquipmentItemByName', equipment);
-        console.log('equipment[\'abbr\']', equipment[0]['abbr']);
-        console.log('equipment[\'name\']', equipment[0]['name']);
+        // console.log('fetchEquipmentItemByName', equipment);
+        // console.log('equipment[\'abbr\']', equipment[0]['abbr']);
+        // console.log('equipment[\'name\']', equipment[0]['name']);
         this.equipmentItem = {
           abbr: equipment[0]['abbr'] ? equipment[0]['abbr'] : '',
           name: equipment[0]['name'] ? equipment[0]['name'] : ''
         };
-        console.log('this.equipmentItem', this.equipmentItem);
-        this.equipmentItemChanged.next(this.equipmentItem);
+        // console.log('this.equipmentItem', this.equipmentItem);
+        this.equipmentItemChanged$.next(this.equipmentItem);
       }, error => {
-        this.equipmentItemChanged.next(null);
+        this.equipmentItemChanged$.next(null);
       }));
-
-    return this.equipmentItem;
+    return this.equipmentItemChanged$;
   }
 
   fetchSourceList() {
@@ -102,11 +101,11 @@ export class DropdownService {
       .subscribe((sourceList: DropDown[]) => {
         this.uiService.loadingStateChanged$.next(false);
         this.sourceList = sourceList;
-        this.sourceListChanged.next([...this.sourceList]);
+        this.sourceListChanged$.next([...this.sourceList]);
       }, error => {
         this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Source List failed, please try again later', null, 3000);
-        this.sourceListChanged.next(null);
+        this.sourceListChanged$.next(null);
       }));
   }
 
@@ -127,11 +126,11 @@ export class DropdownService {
       .subscribe((typeList: DropDown[]) => {
         this.uiService.loadingStateChanged$.next(false);
         this.typeList = typeList;
-        this.typeListChanged.next([...this.typeList]);
+        this.typeListChanged$.next([...this.typeList]);
       }, error => {
         this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Type List failed, please try again later', null, 3000);
-        this.typeListChanged.next(null);
+        this.typeListChanged$.next(null);
       }));
   }
 
@@ -152,11 +151,11 @@ export class DropdownService {
       .subscribe((emphasisList: DropDown[]) => {
         this.uiService.loadingStateChanged$.next(false);
         this.emphasisList = emphasisList;
-        this.emphasisListChanged.next([...this.emphasisList]);
+        this.emphasisListChanged$.next([...this.emphasisList]);
       }, error => {
         this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Emphasis List failed, please try again later', null, 3000);
-        this.emphasisListChanged.next(null);
+        this.emphasisListChanged$.next(null);
       }));
   }
 
@@ -177,11 +176,11 @@ export class DropdownService {
       .subscribe((measurementTypeList: DropDown[]) => {
         this.uiService.loadingStateChanged$.next(false);
         this.measurementTypeList = measurementTypeList;
-        this.measurementTypeListChanged.next([...this.measurementTypeList]);
+        this.measurementTypeListChanged$.next([...this.measurementTypeList]);
       }, error => {
         this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Measurement Type List failed, please try again later', null, 3000);
-        this.measurementTypeListChanged.next(null);
+        this.measurementTypeListChanged$.next(null);
       }));
   }
 
@@ -202,11 +201,11 @@ export class DropdownService {
       .subscribe((muscleGroupList: DropDown[]) => {
         this.uiService.loadingStateChanged$.next(false);
         this.muscleGroupList = muscleGroupList;
-        this.muscleGroupListChanged.next([...this.muscleGroupList]);
+        this.muscleGroupListChanged$.next([...this.muscleGroupList]);
       }, error => {
         this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Body Part List failed, please try again later', null, 3000);
-        this.muscleGroupListChanged.next(null);
+        this.muscleGroupListChanged$.next(null);
       }));
   }
 
@@ -227,11 +226,11 @@ export class DropdownService {
       .subscribe((movementPatternList: DropDown[]) => {
         this.uiService.loadingStateChanged$.next(false);
         this.movementPatternList = movementPatternList;
-        this.movementPatternListChanged.next([...this.movementPatternList]);
+        this.movementPatternListChanged$.next([...this.movementPatternList]);
       }, error => {
         this.uiService.loadingStateChanged$.next(false);
         this.uiService.showSnackbar('Fetching Movement Pattern List failed, please try again later', null, 3000);
-        this.movementPatternListChanged.next(null);
+        this.movementPatternListChanged$.next(null);
       }));
   }
 

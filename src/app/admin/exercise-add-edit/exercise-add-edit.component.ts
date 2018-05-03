@@ -41,19 +41,24 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
         this.isLoading = isLoading;
       }
     );
-    this.equipmentSubscription = this.dropdownService.equipmentListChanged
+    this.equipmentSubscription = this.dropdownService.equipmentListChanged$
       .subscribe(eqipList =>
         (this.equipmentList = eqipList)
       );
     this.fetchEquipmentList();
 
-    this.muscleGroupSubscription = this.dropdownService.muscleGroupListChanged
+    // this.equipmentItemSubscription = this.dropdownService.equipmentItemChanged$
+    //   .subscribe(eqipItem =>
+    //     (this.equipmentItem = eqipItem)
+    //   );
+
+    this.muscleGroupSubscription = this.dropdownService.muscleGroupListChanged$
       .subscribe(empList =>
         (this.muscleGroupList = empList)
       );
     this.fetchMuscleGroupList();
 
-    this.movementPatternSubscription = this.dropdownService.movementPatternListChanged
+    this.movementPatternSubscription = this.dropdownService.movementPatternListChanged$
       .subscribe(meaList =>
         (this.movementPatternList = meaList)
       );
@@ -91,9 +96,9 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
     this.dropdownService.fetchEquipmentList();
   }
 
-  fetchEquipmentItemByName(name: string) {
-    this.dropdownService.fetchEquipmentItemByName(name);
-  }
+  // fetchEquipmentItemByName(name: string) {
+  //   return this.dropdownService.fetchEquipmentItemByName(name);
+  // }
 
   fetchMuscleGroupList() {
     this.dropdownService.fetchMuscleGroupList();
@@ -134,33 +139,26 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
       this.availableWorkoutService.updateDataToDatabase(this.id, this.exForm.value);
     } else {
       console.log('this.exForm.value', this.exForm.value);
-      // Loop over each equipment entry and Format the name for each exercise as equipment.abbr - exercise.name
-      this.exForm.value.equipment.forEach(equip => {
-
-        this.equipmentItemSubscription = this.dropdownService.equipmentItemChanged
-          .subscribe(eqipItem => {
-            // TODO: This loops too many times and saves fucked up records. But the abbr is there :)
-            // TODO: Look at Angular Material lesson to see how to limit looping
-            this.equipmentItem = eqipItem;
-            console.log('eqipItem', eqipItem);
-            if (this.equipmentItem.abbr) {
-              const exName = this.equipmentItem.abbr + ' - ' + this.exForm.value.name;
-              const exercise: Exercise = {
-                id: null,
-                name: exName,
-                description: this.exForm.value.description,
-                movementPattern: this.exForm.value.movementPattern,
-                equipment: equip,
-                muscleGroup: this.exForm.value.muscleGroup,
-              };
+      const exValues = this.exForm.value;
+      let count = 0;
+      // TODO: Loop works but save too many records
+      // TODO: eg - if equipment x 5 then 25 records
+      // TODO: eg - if equipment x 2 then 4 records
+      this.exForm.value.equipment.forEach(equipName => {
+        this.dropdownService.fetchEquipmentItemByName(equipName)
+          .subscribe( (eqItem: Equipment) => {
+            console.log('count', count++);
+            console.warn('eqItem', eqItem);
+            if (eqItem.abbr) {
+              const exName = eqItem.abbr + ' - ' + exValues.name;
+              const exercise: Exercise = {...exValues};
+              exercise.name = exName;
+              exercise.equipment = equipName;
               this.availableWorkoutService.addDataToDatabase(exercise);
             } else {
-              console.warn('No abbr found for ' + equip);
+              console.warn('No abbr found for ' + equipName);
             }
-          });
-        this.fetchEquipmentItemByName(equip);
-
-
+        });
       });
     }
     this.onClear();

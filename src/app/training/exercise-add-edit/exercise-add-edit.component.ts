@@ -28,5 +28,4 @@ export class ExerciseAddEditComponent implements OnInit {
       // TODO: ExerciseSets
     });
   }
-
 }
