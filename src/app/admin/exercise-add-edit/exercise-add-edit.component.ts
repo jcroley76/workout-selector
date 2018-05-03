@@ -7,6 +7,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIService } from '../../shared/ui.service';
 import { Exercise } from '../../shared/models/exercise.model';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import {Equipment} from "../../shared/models/equipment.model";
 
 @Component({
   selector: 'app-exercise-add-edit',
@@ -20,6 +21,8 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
   id: string;
   equipmentList: DropDown[];
   equipmentSubscription: Subscription;
+  equipmentItem: Equipment;
+  equipmentItemSubscription: Subscription;
   muscleGroupList: DropDown[];
   muscleGroupSubscription: Subscription;
   movementPatternList: DropDown[];
@@ -79,10 +82,17 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
     if (this.movementPatternSubscription) {
       this.movementPatternSubscription.unsubscribe();
     }
+    if (this.equipmentItemSubscription) {
+      this.equipmentItemSubscription.unsubscribe();
+    }
   }
 
   fetchEquipmentList() {
     this.dropdownService.fetchEquipmentList();
+  }
+
+  fetchEquipmentItemByName(name: string) {
+    this.dropdownService.fetchEquipmentItemByName(name);
   }
 
   fetchMuscleGroupList() {
@@ -123,7 +133,35 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
       console.log('save available workout', this.exForm.value);
       this.availableWorkoutService.updateDataToDatabase(this.id, this.exForm.value);
     } else {
-      this.availableWorkoutService.addDataToDatabase(this.exForm.value);
+      console.log('this.exForm.value', this.exForm.value);
+      // Loop over each equipment entry and Format the name for each exercise as equipment.abbr - exercise.name
+      this.exForm.value.equipment.forEach(equip => {
+
+        this.equipmentItemSubscription = this.dropdownService.equipmentItemChanged
+          .subscribe(eqipItem => {
+            // TODO: This loops too many times and saves fucked up records. But the abbr is there :)
+            // TODO: Look at Angular Material lesson to see how to limit looping
+            this.equipmentItem = eqipItem;
+            console.log('eqipItem', eqipItem);
+            if (this.equipmentItem.abbr) {
+              const exName = this.equipmentItem.abbr + ' - ' + this.exForm.value.name;
+              const exercise: Exercise = {
+                id: null,
+                name: exName,
+                description: this.exForm.value.description,
+                movementPattern: this.exForm.value.movementPattern,
+                equipment: equip,
+                muscleGroup: this.exForm.value.muscleGroup,
+              };
+              this.availableWorkoutService.addDataToDatabase(exercise);
+            } else {
+              console.warn('No abbr found for ' + equip);
+            }
+          });
+        this.fetchEquipmentItemByName(equip);
+
+
+      });
     }
     this.onClear();
     this.router.navigate(['/admin/exercises']);

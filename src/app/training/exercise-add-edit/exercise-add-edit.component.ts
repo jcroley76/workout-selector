@@ -7,6 +7,7 @@ import {ExerciseSet} from "../../shared/models/recorded-workout.model";
   templateUrl: './exercise-add-edit.component.html',
   styleUrls: ['./exercise-add-edit.component.css']
 })
+// TODO: Rename this
 export class ExerciseAddEditComponent implements OnInit {
   @Input() editMode: boolean;
   @Input() workoutId: string;
@@ -23,6 +24,7 @@ export class ExerciseAddEditComponent implements OnInit {
   initForm() {
     this.exForm = new FormGroup({
       'exercise': new FormControl('', Validators.required),
+      // TODO: Type Ahead Search: https://github.com/AngularFirebase/89-firestore-typeahead-autocomplete
       // TODO: ExerciseSets
     });
   }

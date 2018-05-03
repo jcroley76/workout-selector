@@ -41,9 +41,16 @@
 
         <mat-form-field>
           <mat-select
+            *ngIf="!editMode"
             placeholder="Equipment Used"
             formControlName="equipment"
             multiple>
+            <mat-option *ngFor="let equipment of equipmentList" [value]="equipment.value">{{equipment.name}}</mat-option>
+          </mat-select>
+          <mat-select
+            *ngIf="editMode"
+            placeholder="Equipment Used"
+            formControlName="equipment">
             <mat-option *ngFor="let equipment of equipmentList" [value]="equipment.value">{{equipment.name}}</mat-option>
           </mat-select>
         </mat-form-field>

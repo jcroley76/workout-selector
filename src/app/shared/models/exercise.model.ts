@@ -3,6 +3,6 @@ export interface Exercise {
   name: string;
   description: string;
   movementPattern: string;
-  equipment: string[];
+  equipment: string;
   muscleGroup: string[];
 }
