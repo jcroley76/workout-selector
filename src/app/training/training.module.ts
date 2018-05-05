@@ -10,7 +10,7 @@ import { RecordWorkoutComponent } from './record-workout/record-workout.componen
 import { RecordedWorkoutService } from './recorded-workout.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { WorkoutDisplayComponent } from './workout-display/workout-display.component';
-import { ExerciseAddEditComponent } from './exercise-add-edit/exercise-add-edit.component';
+import { WorkoutExerciseAddEditComponent } from './workout-exercise-add-edit/workout-exercise-add-edit.component';
 import { ExerciseSetAddEditComponent } from './exercise-set-add-edit/exercise-set-add-edit.component';
 
 @NgModule({
@@ -21,7 +21,7 @@ import { ExerciseSetAddEditComponent } from './exercise-set-add-edit/exercise-se
     FilterContainsPipe,
     RecordWorkoutComponent,
     WorkoutDisplayComponent,
-    ExerciseAddEditComponent,
+    WorkoutExerciseAddEditComponent,
     ExerciseSetAddEditComponent
   ],
   imports: [

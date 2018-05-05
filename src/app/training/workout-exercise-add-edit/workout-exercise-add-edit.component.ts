@@ -4,11 +4,10 @@ import {ExerciseSet} from "../../shared/models/recorded-workout.model";
 
 @Component({
   selector: 'app-exercise-add-edit',
-  templateUrl: './exercise-add-edit.component.html',
-  styleUrls: ['./exercise-add-edit.component.css']
+  templateUrl: './workout-exercise-add-edit.component.html',
+  styleUrls: ['./workout-exercise-add-edit.component.css']
 })
-// TODO: Rename this
-export class ExerciseAddEditComponent implements OnInit {
+export class WorkoutExerciseAddEditComponent implements OnInit {
   @Input() editMode: boolean;
   @Input() workoutId: string;
   @Input() inputSets: ExerciseSet[];
