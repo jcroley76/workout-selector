@@ -7,6 +7,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIService } from '../../shared/ui.service';
 import { AvailableWorkout } from '../../shared/models/available-workout.model';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Equipment } from '../../shared/models/equipment.model';
+import { EquipmentService } from '../equipment.service';
 
 @Component({
   selector: 'app-available-workout-add-edit',
@@ -18,7 +20,7 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
   isLoading = true;
   editMode = false;
   id: string;
-  equipmentList: DropDown[];
+  equipmentList: Equipment[];
   equipmentSubscription: Subscription;
   sourceList: DropDown[];
   sourceSubscription: Subscription;
@@ -33,6 +35,7 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
   constructor( private route: ActivatedRoute,
                private router: Router,
                private availableWorkoutService: AvailableWorkoutService,
+               private equipmentService: EquipmentService,
                private dropdownService: DropdownService,
                private uiService: UIService) { }
 
@@ -42,7 +45,7 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
         this.isLoading = isLoading;
       }
     );
-    this.equipmentSubscription = this.dropdownService.equipmentListChanged$
+    this.equipmentSubscription = this.equipmentService.equipmentListChanged$
       .subscribe(eqipList =>
         (this.equipmentList = eqipList)
     );
@@ -104,7 +107,7 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
   }
 
   fetchEquipmentList() {
-    this.dropdownService.fetchEquipmentList();
+    this.equipmentService.fetchEquipmentList();
   }
 
   fetchSourceList() {

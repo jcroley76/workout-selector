@@ -4,17 +4,10 @@ import { Subject } from 'rxjs/Subject';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { UIService } from './ui.service';
 import { Subscription } from 'rxjs/Subscription';
-import { Equipment } from './models/equipment.model';
 
 @Injectable()
 export class DropdownService {
   private fbSubs: Subscription[] = [];
-
-  equipmentItem: Equipment;
-  equipmentItemChanged$ = new Subject<Equipment>();
-
-  equipmentList: DropDown[] = [];
-  equipmentListChanged$ = new Subject<DropDown[]>();
 
   sourceList: DropDown[] = [];
   sourceListChanged$ = new Subject<DropDown[]>();
@@ -35,53 +28,6 @@ export class DropdownService {
   movementPatternListChanged$ = new Subject<DropDown[]>();
 
   constructor(private db: AngularFirestore, private uiService: UIService) {
-  }
-
-  fetchEquipmentList() {
-    this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.db
-      .collection('equipment')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            name: doc.payload.doc.data().name,
-            value: doc.payload.doc.data().name
-          };
-        });
-      })
-      .subscribe((equipmentList: DropDown[]) => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.equipmentList = equipmentList;
-        this.equipmentListChanged$.next([...this.equipmentList]);
-      }, error => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.uiService.showSnackbar('Fetching Equipment List failed, please try again later', null, 3000);
-        this.equipmentListChanged$.next(null);
-      }));
-  }
-
-  // TODO: Move this to Equipment Service
-  fetchEquipmentItemByName(name: string) {
-    this.fbSubs.push(this.db
-      .collection('equipment',
-        ref => ref.where('name', '==', name))
-      .valueChanges()
-      .subscribe(equipment => {
-        // console.log('fetchEquipmentItemByName', equipment);
-        // console.log('equipment[\'abbr\']', equipment[0]['abbr']);
-        // console.log('equipment[\'name\']', equipment[0]['name']);
-        this.equipmentItem = {
-          abbr: equipment[0]['abbr'] ? equipment[0]['abbr'] : '',
-          name: equipment[0]['name'] ? equipment[0]['name'] : ''
-        };
-        // console.log('this.equipmentItem', this.equipmentItem);
-        this.equipmentItemChanged$.next(this.equipmentItem);
-      }, error => {
-        this.equipmentItemChanged$.next(null);
-      }));
-    return this.equipmentItemChanged$;
   }
 
   fetchSourceList() {

@@ -7,7 +7,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIService } from '../../shared/ui.service';
 import { Exercise } from '../../shared/models/exercise.model';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import {Equipment} from "../../shared/models/equipment.model";
+import { Equipment } from '../../shared/models/equipment.model';
+import { EquipmentService } from '../equipment.service';
 
 @Component({
   selector: 'app-exercise-add-edit',
@@ -19,9 +20,9 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
   isLoading = true;
   editMode = false;
   id: string;
-  equipmentList: DropDown[];
+  title: string;
+  equipmentList: Equipment[];
   equipmentSubscription: Subscription;
-  equipmentItem: Equipment;
   equipmentItemSubscription: Subscription;
   muscleGroupList: DropDown[];
   muscleGroupSubscription: Subscription;
@@ -31,7 +32,8 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
 
   constructor( private route: ActivatedRoute,
                private router: Router,
-               private availableWorkoutService: ExerciseService,
+               private exerciseService: ExerciseService,
+               private equipmentService: EquipmentService,
                private dropdownService: DropdownService,
                private uiService: UIService) { }
 
@@ -41,26 +43,21 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
         this.isLoading = isLoading;
       }
     );
-    this.equipmentSubscription = this.dropdownService.equipmentListChanged$
+    this.equipmentSubscription = this.equipmentService.equipmentListChanged$
       .subscribe(eqipList =>
         (this.equipmentList = eqipList)
       );
     this.fetchEquipmentList();
 
-    // this.equipmentItemSubscription = this.dropdownService.equipmentItemChanged$
-    //   .subscribe(eqipItem =>
-    //     (this.equipmentItem = eqipItem)
-    //   );
-
     this.muscleGroupSubscription = this.dropdownService.muscleGroupListChanged$
-      .subscribe(empList =>
-        (this.muscleGroupList = empList)
+      .subscribe(mgList =>
+        (this.muscleGroupList = mgList)
       );
     this.fetchMuscleGroupList();
 
     this.movementPatternSubscription = this.dropdownService.movementPatternListChanged$
-      .subscribe(meaList =>
-        (this.movementPatternList = meaList)
+      .subscribe(mpList =>
+        (this.movementPatternList = mpList)
       );
     this.fetchMovementPatternList();
 
@@ -93,12 +90,8 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
   }
 
   fetchEquipmentList() {
-    this.dropdownService.fetchEquipmentList();
+    this.equipmentService.fetchEquipmentList();
   }
-
-  // fetchEquipmentItemByName(name: string) {
-  //   return this.dropdownService.fetchEquipmentItemByName(name);
-  // }
 
   fetchMuscleGroupList() {
     this.dropdownService.fetchMuscleGroupList();
@@ -118,15 +111,15 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
       'muscleGroup': new FormControl(''),
     });
 
-    console.log('editMode', this.editMode);
     if (this.editMode) {
-      this.availableWorkoutService
+      this.exerciseService
         .fetchExercise(this.id)
         .subscribe(
-          (aw: Exercise) => {
-            console.log('edit aw', aw);
-            if (aw) {
-              this.exForm.patchValue(aw);
+          (ex: Exercise) => {
+            // console.log('edit ex', ex);
+            if (ex) {
+              this.title = ex.name;
+              this.exForm.patchValue(ex);
             }
           }
         );
@@ -135,30 +128,20 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
 
   saveExercise() {
     if (this.editMode) {
-      console.log('save available workout', this.exForm.value);
-      this.availableWorkoutService.updateDataToDatabase(this.id, this.exForm.value);
+      this.exerciseService.updateDataToDatabase(this.id, this.exForm.value);
     } else {
-      console.log('this.exForm.value', this.exForm.value);
       const exValues = this.exForm.value;
-      let count = 0;
-      // TODO: Loop works but save too many records
-      // TODO: eg - if equipment x 5 then 25 records
-      // TODO: eg - if equipment x 2 then 4 records
-      this.exForm.value.equipment.forEach(equipName => {
-        this.dropdownService.fetchEquipmentItemByName(equipName)
-          .subscribe( (eqItem: Equipment) => {
-            console.log('count', count++);
-            console.warn('eqItem', eqItem);
-            if (eqItem.abbr) {
-              const exName = eqItem.abbr + ' - ' + exValues.name;
-              const exercise: Exercise = {...exValues};
-              exercise.name = exName;
-              exercise.equipment = equipName;
-              this.availableWorkoutService.addDataToDatabase(exercise);
-            } else {
-              console.warn('No abbr found for ' + equipName);
-            }
-        });
+      exValues.equipment.forEach(equipItem => {
+        const equipment = equipItem.split('|');
+        const equipAbbr = equipment[0];
+        const equipName = equipment[1];
+        if (equipAbbr) {
+          const exName = equipAbbr + ' - ' + exValues.name;
+          const exercise: Exercise = {...exValues};
+          exercise.name = exName;
+          exercise.equipment = equipName;
+          this.exerciseService.addDataToDatabase(exercise);
+        }
       });
     }
     this.onClear();

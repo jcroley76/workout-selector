@@ -22,6 +22,7 @@ import { AdminModule } from './admin/admin.module';
 import { TrainingModule } from './training/training.module';
 import { ExerciseService } from './admin/exercise.service';
 import { UserService } from './admin/user.service';
+import { EquipmentService } from './admin/equipment.service';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { UserService } from './admin/user.service';
     DropdownService,
     AvailableWorkoutService,
     ExerciseService,
+    EquipmentService,
     UserService,
     UIService
   ],

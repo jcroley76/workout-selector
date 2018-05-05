@@ -1,6 +1,7 @@
 <section fxLayout fxLayoutAlign="center">
   <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
-    <mat-card-title>{{ editMode ? 'Edit' : 'Add' }} an Exercise</mat-card-title>
+    <mat-card-title *ngIf="!editMode">Add an Exercise</mat-card-title>
+    <mat-card-title *ngIf="editMode">Edit {{ title }}</mat-card-title>
     <form
       fxLayout="column"
       fxLayoutGap="10px"
@@ -8,7 +9,11 @@
       (ngSubmit)="saveExercise()">
 
       <mat-card-content>
-        <mat-form-field>
+        <input
+          *ngIf="editMode"
+          type="hidden"
+          formControlName="name">
+        <mat-form-field *ngIf="!editMode">
           <input
             type="text"
             matInput
@@ -39,19 +44,16 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field>
+        <input
+          *ngIf="editMode"
+          type="hidden"
+          formControlName="equipment">
+        <mat-form-field *ngIf="!editMode">
           <mat-select
-            *ngIf="!editMode"
             placeholder="Equipment Used"
             formControlName="equipment"
             multiple>
-            <mat-option *ngFor="let equipment of equipmentList" [value]="equipment.value">{{equipment.name}}</mat-option>
-          </mat-select>
-          <mat-select
-            *ngIf="editMode"
-            placeholder="Equipment Used"
-            formControlName="equipment">
-            <mat-option *ngFor="let equipment of equipmentList" [value]="equipment.value">{{equipment.name}}</mat-option>
+            <mat-option *ngFor="let equipment of equipmentList" [value]="equipment.abbr + '|' + equipment.name">{{equipment.name}}</mat-option>
           </mat-select>
         </mat-form-field>
 
