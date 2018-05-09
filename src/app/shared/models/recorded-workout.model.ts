@@ -19,7 +19,6 @@ export interface WorkoutExercise {
 }
 
 export interface ExerciseSet {
-  exercise: Exercise;
   weight: number;
   reps: number;
   duration: number;

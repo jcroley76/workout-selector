@@ -24,4 +24,5 @@ mat-form-field {
 
 .mat-raised-button.mat-small {
   min-width: 1%;
+  min-height: 1%;
 }

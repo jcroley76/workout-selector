@@ -1,30 +1,117 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ExerciseSet} from "../../shared/models/recorded-workout.model";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ExerciseSet} from '../../shared/models/recorded-workout.model';
+import {ExerciseService} from '../../admin/exercise.service';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {DropDown} from '../../shared/models/dropdown.model';
+import {MatAutocompleteSelectedEvent} from '@angular/material';
+import {ArrayType} from '@angular/compiler/src/output/output_ast';
 
 @Component({
-  selector: 'app-exercise-add-edit',
+  selector: 'app-workout-exercise-add-edit',
   templateUrl: './workout-exercise-add-edit.component.html',
   styleUrls: ['./workout-exercise-add-edit.component.css']
 })
 export class WorkoutExerciseAddEditComponent implements OnInit {
   @Input() editMode: boolean;
   @Input() workoutId: string;
-  @Input() inputSets: ExerciseSet[];
+  @Input() inputSets: ExerciseSet[]; // This may not be needed
   @Output() outputSets: ExerciseSet[];
+  @Input() inputArray: ArrayType[]; // I think this is for incoming sets
   exForm: FormGroup;
+  selectedExercise = '';
+  showSets = false;
+  setCount = 0;
 
-  constructor() { }
+  exerciseList: DropDown[];
+  startAt: BehaviorSubject<string|null> = new BehaviorSubject('');
 
+  constructor(private _fb: FormBuilder,
+              private exerciseService: ExerciseService) { }
+
+  // Inspired By: https://github.com/audiBookning/autocomplete-search-angularfirebase2-5-plus/blob/master/src/app/movie-search/movie-search.component.ts
   ngOnInit() {
     this.initForm();
+
+    this.startAt.subscribe(start => {
+      console.log('start', start);
+      if (start) {
+        this.exerciseService.searchExerciseNames(this.startAt).subscribe(exercises => {
+          console.log('exercises', exercises);
+          this.exerciseList = exercises;
+        });
+      }
+    });
   }
 
+  // inspired by: https://scotch.io/tutorials/how-to-build-nested-model-driven-forms-in-angular-2
   initForm() {
-    this.exForm = new FormGroup({
-      'exercise': new FormControl('', Validators.required),
-      // TODO: Type Ahead Search: https://github.com/AngularFirebase/89-firestore-typeahead-autocomplete
-      // TODO: ExerciseSets
+    const newForm = this._fb.group({
+      searchExercises: ['', [Validators.required, Validators.maxLength(25)]],
+      exerciseSets: this._fb.array([
+        this.initExerciseSet()
+      ])
     });
+
+    if (this.inputArray) {
+      const arrayControl = <FormArray>newForm.controls['exerciseSets'];
+      this.inputArray.forEach(item => {
+        const newGroup = this.initExerciseSet();
+        arrayControl.push(newGroup);
+        this.setCount ++;
+      });
+    }
+
+    this.exForm = newForm;
+  }
+
+  initExerciseSet() {
+    return this._fb.group({
+      weight: ['', [
+        Validators.required,
+        Validators.pattern(/^[1-9]+[0-9]*$/)]
+      ],
+      reps: ['', [
+        Validators.required,
+        Validators.pattern(/^[1-9]+[0-9]*$/)]
+      ]
+    });
+  }
+
+  addExerciseSet() {
+    const control = <FormArray>this.exForm.controls['exerciseSets'];
+    const newGroup = this.initExerciseSet();
+    control.push(newGroup);
+    this.setCount ++;
+    console.log('add', this.setCount);
+  }
+
+  removeExerciseSet() {
+    // remove last exerciseSet from the list
+    console.log('remove', this.setCount);
+    const control = <FormArray>this.exForm.controls['exerciseSets'];
+    control.removeAt(this.setCount);
+    this.setCount --;
+  }
+
+  searchExercises($event) {
+      console.log('searchExercises', $event.target.value);
+      this.startAt.next($event.target.value);
+  }
+
+  exerciseSelected($event: MatAutocompleteSelectedEvent) {
+    console.log('selected exercise', $event.source['value']);
+    this.selectedExercise = $event.source['value'];
+    this.showSets = true;
+  }
+
+  onClear() {
+    this.exForm.reset();
+    this.showSets = false;
+  }
+
+  saveExercise() {
+    console.log('saveExercise', this.exForm.value);
+    // TODO: Retrieve workout and save Exercise and ExerciseSets to workout.
   }
 }

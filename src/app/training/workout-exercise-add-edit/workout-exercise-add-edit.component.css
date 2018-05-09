@@ -1,3 +1,15 @@
 .input-half-width {
   width: 40%;
 }
+.input-quarter-width {
+  width: 20%;
+}
+
+.exerciseSetsContainer {
+  margin-top: -5px;
+  margin-left: 10px;
+}
+
+.mat-small {
+  margin-left: 4px;
+}

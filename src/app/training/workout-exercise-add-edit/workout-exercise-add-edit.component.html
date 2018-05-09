@@ -2,28 +2,77 @@
   <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
     <mat-card-title>{{ editMode ? 'Edit' : 'Add' }} an Exercise</mat-card-title>
     <form
-      fxLayout="row"
       fxLayoutGap="10px"
       [formGroup]="exForm"
-      (ngSubmit)="saveExercise()">
+      (ngSubmit)="saveExercise()" novalidate>
 
-      <mat-form-field class="input-half-width">
-        <input
-          type="text"
-          matInput
-          placeholder="Exercise"
-          formControlName="exercise">
-        <mat-error *ngIf="exForm.get('exercise').hasError('required') && exForm.get('exercise').touched">
-          Exercise is required.
-        </mat-error>
-      </mat-form-field>
+      <mat-card-content fxLayout="row">
+        <mat-form-field class="input-half-width">
+          <input
+            type="text"
+            matInput
+            (keyup)="searchExercises($event)"
+            [matAutocomplete]="auto"
+            placeholder="Search Exercises"
+            formControlName="searchExercises">
+        </mat-form-field>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            (onSelectionChange)="exerciseSelected($event)"
+            *ngFor="let exercise of exerciseList"
+            [value]="exercise?.value">
+            {{ exercise?.value }}
+          </mat-option>
+        </mat-autocomplete>
 
-      <div class="input-half-width">
-        <app-exercise-set-add-edit></app-exercise-set-add-edit>
-      </div>
+        <div formArrayName="exerciseSets" *ngIf="showSets" class="exerciseSetsContainer">
+          <div *ngFor="let exSet of exForm.controls['exerciseSets'].controls; let i=index">
+            <app-exercise-set-add-edit [exerciseSetForm]="exForm.controls.exerciseSets.controls[i]"></app-exercise-set-add-edit>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="end">
+            <button
+              type="button"
+              mat-raised-button
+              class="mat-small"
+              color="accent"
+              title="Add Set"
+              (click)="addExerciseSet()">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button
+              *ngIf="setCount > 0"
+              type="button"
+              mat-raised-button
+              class="mat-small"
+              color="warn"
+              title="Remove Set"
+              (click)="removeExerciseSet()">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
 
-
+      <mat-card-actions fxLayoutAlign="end">
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          fxLayoutAlign="end"
+          (click)="onClear()">
+          <mat-icon>clear</mat-icon>
+          Clear
+        </button>
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          fxLayoutAlign="end"
+          [disabled]="exForm.invalid">
+          <mat-icon>save</mat-icon>
+          Save
+        </button>
+      </mat-card-actions>
     </form>
-
   </mat-card>
 </section>

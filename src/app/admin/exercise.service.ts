@@ -2,9 +2,16 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 import { Exercise } from '../shared/models/exercise.model';
 import { UIService } from '../shared/ui.service';
+import { DropDown } from '../shared/models/dropdown.model';
 
 @Injectable()
 export class ExerciseService {
@@ -13,12 +20,13 @@ export class ExerciseService {
   private exercises: Exercise[] = [];
   private fbSubs: Subscription[] = [];
 
-  constructor(private db: AngularFirestore, private uiService: UIService) {
+  constructor(private afs: AngularFirestore,
+              private uiService: UIService) {
   }
 
   fetchExercises() {
     this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.db
+    this.fbSubs.push(this.afs
       .collection('exercises')
       .snapshotChanges()
       .map(docArray => {
@@ -45,8 +53,36 @@ export class ExerciseService {
       }));
   }
 
+  // Inspired By: https://github.com/audiBookning/autocomplete-search-angularfirebase2-5-plus/blob/master/src/app/movies.service.ts
+  searchExerciseNames(start: BehaviorSubject<string>): Observable<DropDown[]> {
+    console.log('service searchExerciseNames', start);
+    return start.switchMap(startText => {
+      const endText = startText + '\uf8ff';
+      return this.afs
+        .collection('exercises', ref =>
+          ref
+            .orderBy('name')
+            .limit(10)
+            .startAt(startText)
+            .endAt(endText)
+        )
+        .snapshotChanges()
+        .debounceTime(200)
+        .distinctUntilChanged()
+        .map(changes => {
+          // console.log('changes', changes);
+          return changes.map(c => {
+            // console.log('c.payload.doc.id', c.payload.doc.id);
+            // console.log('c.payload.doc.name', c.payload.doc.data().name);
+            // TODO: Maybe figure out how to return a full Exercise object.
+            return { name: c.payload.doc.id, value: c.payload.doc.data().name };
+          });
+        });
+    });
+  }
+
   fetchExercise(id: string) {
-    this.fbSubs.push(this.db
+    this.fbSubs.push(this.afs
       .collection('exercises')
       .doc(id)
       .valueChanges()
@@ -62,7 +98,7 @@ export class ExerciseService {
   }
 
   addDataToDatabase(exercise: Exercise) {
-    this.db.collection('exercises').add(exercise)
+    this.afs.collection('exercises').add(exercise)
       .then(function(docRef) {
         console.log('Exercise Added with ID: ', docRef.id);
       })
@@ -72,7 +108,7 @@ export class ExerciseService {
   }
 
   updateDataToDatabase(id: string, exercise: Exercise) {
-    const exRef = this.db.collection('exercises').doc(id);
+    const exRef = this.afs.collection('exercises').doc(id);
     console.log('exRef: ', exRef);
     exRef.update(exercise)
       .then(function() {
@@ -85,7 +121,7 @@ export class ExerciseService {
   }
 
   deleteFromDatabase(exercise: Exercise) {
-    this.db.collection('exercises')
+    this.afs.collection('exercises')
       .doc(exercise.id)
       .delete()
       .then(function() {

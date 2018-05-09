@@ -12,6 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { WorkoutDisplayComponent } from './workout-display/workout-display.component';
 import { WorkoutExerciseAddEditComponent } from './workout-exercise-add-edit/workout-exercise-add-edit.component';
 import { ExerciseSetAddEditComponent } from './exercise-set-add-edit/exercise-set-add-edit.component';
+import { ExerciseService } from '../admin/exercise.service';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,11 @@ import { ExerciseSetAddEditComponent } from './exercise-set-add-edit/exercise-se
     SharedModule,
     TrainingRoutingModule
   ],
-  providers: [FilterContainsPipe, RecordedWorkoutService]
+  providers: [
+    FilterContainsPipe,
+    RecordedWorkoutService,
+    ExerciseService,
+    WorkoutExerciseAddEditComponent
+  ]
 })
 export class TrainingModule {}

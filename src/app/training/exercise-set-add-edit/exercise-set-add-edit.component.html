@@ -1,3 +1,23 @@
-<p>
-  exercise-set-add-edit works!
-</p>
+<div [formGroup]="exerciseSetForm">
+  <!--weight-->
+  <mat-form-field class="input-half-width">
+    <input
+      type="text"
+      matInput
+      type="number"
+      required
+      placeholder="Weight"
+      formControlName="weight">
+  </mat-form-field>
+
+  <!--reps-->
+  <mat-form-field class="input-half-width">
+    <input
+      type="text"
+      matInput
+      type="number"
+      required
+      placeholder="Reps"
+      formControlName="reps">
+  </mat-form-field>
+</div>

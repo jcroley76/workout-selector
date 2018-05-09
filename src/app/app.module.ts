@@ -23,6 +23,7 @@ import { TrainingModule } from './training/training.module';
 import { ExerciseService } from './admin/exercise.service';
 import { UserService } from './admin/user.service';
 import { EquipmentService } from './admin/equipment.service';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { EquipmentService } from './admin/equipment.service';
     FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
+    AngularFireDatabaseModule,
     AuthModule,
     AdminModule,
     TrainingModule
