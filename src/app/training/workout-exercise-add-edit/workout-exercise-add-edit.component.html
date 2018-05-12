@@ -32,8 +32,7 @@
           <div fxLayout="row" fxLayoutAlign="end">
             <button
               type="button"
-              mat-raised-button
-              class="mat-small"
+              mat-mini-fab
               color="accent"
               title="Add Set"
               (click)="addExerciseSet()">
@@ -42,8 +41,7 @@
             <button
               *ngIf="setCount > 0"
               type="button"
-              mat-raised-button
-              class="mat-small"
+              mat-mini-fab
               color="warn"
               title="Remove Set"
               (click)="removeExerciseSet()">
@@ -53,7 +51,7 @@
         </div>
       </mat-card-content>
 
-      <mat-card-actions fxLayoutAlign="end">
+      <mat-card-actions fxLayoutAlign="end" *ngIf="selectedExercise.length > 0">
         <button
           type="button"
           mat-raised-button

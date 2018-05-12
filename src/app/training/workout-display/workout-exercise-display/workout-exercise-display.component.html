@@ -1,0 +1,43 @@
+<section fxLayout fxLayoutAlign="center">
+  <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title><b>Exercise Name</b></mat-card-title>
+        <mat-card-subtitle>Movement Pattern</mat-card-subtitle>
+      </mat-card-title-group>
+      <div fxFlex></div>
+      <button
+        type="button"
+        mat-mini-fab
+        color="accent"
+        title="Edit Exercise"
+        (click)="editExercise()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      &nbsp;&nbsp;
+      <button
+        type="button"
+        mat-mini-fab
+        color="warn"
+        title="Remove Exercise"
+        (click)="removeExercise()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxFlex></div>
+      <table width="50%">
+        <tr>
+          <th align="left">Weight</th>
+          <th align="left">Reps</th>
+        </tr>
+        <tr><td>150</td><td>5</td></tr>
+        <tr><td>150</td><td>5</td></tr>
+        <tr><td>150</td><td>5</td></tr>
+        <tr><td>150</td><td>5</td></tr>
+      </table>
+
+    </mat-card-content>
+
+  </mat-card>
+</section>

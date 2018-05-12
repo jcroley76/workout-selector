@@ -11,8 +11,9 @@ import { RecordedWorkoutService } from './recorded-workout.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { WorkoutDisplayComponent } from './workout-display/workout-display.component';
 import { WorkoutExerciseAddEditComponent } from './workout-exercise-add-edit/workout-exercise-add-edit.component';
-import { ExerciseSetAddEditComponent } from './exercise-set-add-edit/exercise-set-add-edit.component';
+import { ExerciseSetAddEditComponent } from './workout-exercise-add-edit/exercise-set-add-edit/exercise-set-add-edit.component';
 import { ExerciseService } from '../admin/exercise.service';
+import { WorkoutExerciseDisplayComponent } from './workout-display/workout-exercise-display/workout-exercise-display.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ExerciseService } from '../admin/exercise.service';
     RecordWorkoutComponent,
     WorkoutDisplayComponent,
     WorkoutExerciseAddEditComponent,
-    ExerciseSetAddEditComponent
+    ExerciseSetAddEditComponent,
+    WorkoutExerciseDisplayComponent
   ],
   imports: [
     ReactiveFormsModule,

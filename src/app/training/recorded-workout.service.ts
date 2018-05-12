@@ -30,7 +30,7 @@ export class RecordedWorkoutService {
       .map(docArray => {
         // throw(new Error());
         return docArray.map(doc => {
-          return {
+          return  {
             id: doc.payload.doc.id,
             date: doc.payload.doc.data().date,
             title: doc.payload.doc.data().title,
