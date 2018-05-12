@@ -20,8 +20,8 @@
           <mat-option
             (onSelectionChange)="exerciseSelected($event)"
             *ngFor="let exercise of exerciseList"
-            [value]="exercise?.value">
-            {{ exercise?.value }}
+            [value]="exercise">
+            {{ exercise?.name }}
           </mat-option>
         </mat-autocomplete>
 
@@ -30,14 +30,7 @@
             <app-exercise-set-add-edit [exerciseSetForm]="exForm.controls.exerciseSets.controls[i]"></app-exercise-set-add-edit>
           </div>
           <div fxLayout="row" fxLayoutAlign="end">
-            <button
-              type="button"
-              mat-mini-fab
-              color="accent"
-              title="Add Set"
-              (click)="addExerciseSet()">
-              <mat-icon>add</mat-icon>
-            </button>
+            <!-- TODO: Create Copy set functionality -->
             <button
               *ngIf="setCount > 0"
               type="button"
@@ -47,11 +40,20 @@
               (click)="removeExerciseSet()">
               <mat-icon>delete</mat-icon>
             </button>
+            &nbsp;&nbsp;
+            <button
+              type="button"
+              mat-mini-fab
+              color="accent"
+              title="Add Set"
+              (click)="addExerciseSet()">
+              <mat-icon>add</mat-icon>
+            </button>
           </div>
         </div>
       </mat-card-content>
 
-      <mat-card-actions fxLayoutAlign="end" *ngIf="selectedExercise.length > 0">
+      <mat-card-actions fxLayoutAlign="end" *ngIf="selectedExercise">
         <button
           type="button"
           mat-raised-button

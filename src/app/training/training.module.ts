@@ -36,7 +36,8 @@ import { WorkoutExerciseDisplayComponent } from './workout-display/workout-exerc
     FilterContainsPipe,
     RecordedWorkoutService,
     ExerciseService,
-    WorkoutExerciseAddEditComponent
+    WorkoutExerciseAddEditComponent,
+    WorkoutExerciseDisplayComponent
   ]
 })
 export class TrainingModule {}

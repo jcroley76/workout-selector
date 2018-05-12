@@ -2,19 +2,10 @@
   <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
     <mat-card-header>
       <mat-card-title-group>
-        <mat-card-title><b>Exercise Name</b></mat-card-title>
-        <mat-card-subtitle>Movement Pattern</mat-card-subtitle>
+        <mat-card-title><b>{{workoutExercise?.exercise.name}}</b></mat-card-title>
+        <mat-card-subtitle>{{workoutExercise?.exercise.movementPattern}}</mat-card-subtitle>
       </mat-card-title-group>
       <div fxFlex></div>
-      <button
-        type="button"
-        mat-mini-fab
-        color="accent"
-        title="Edit Exercise"
-        (click)="editExercise()">
-        <mat-icon>edit</mat-icon>
-      </button>
-      &nbsp;&nbsp;
       <button
         type="button"
         mat-mini-fab
@@ -22,6 +13,15 @@
         title="Remove Exercise"
         (click)="removeExercise()">
         <mat-icon>delete</mat-icon>
+      </button>
+      &nbsp;&nbsp;
+      <button
+        type="button"
+        mat-mini-fab
+        color="accent"
+        title="Edit Exercise"
+        (click)="editExercise()">
+        <mat-icon>edit</mat-icon>
       </button>
     </mat-card-header>
     <mat-card-content>
@@ -31,10 +31,8 @@
           <th align="left">Weight</th>
           <th align="left">Reps</th>
         </tr>
-        <tr><td>150</td><td>5</td></tr>
-        <tr><td>150</td><td>5</td></tr>
-        <tr><td>150</td><td>5</td></tr>
-        <tr><td>150</td><td>5</td></tr>
+        <tr *ngFor="let exerciseSet of workoutExercise?.sets"><td>{{exerciseSet.weight}}</td><td>{{exerciseSet.reps}}</td></tr>
+
       </table>
 
     </mat-card-content>

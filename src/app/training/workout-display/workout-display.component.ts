@@ -5,7 +5,6 @@ import { RecordedWorkoutService } from '../recorded-workout.service';
 import { UIService } from '../../shared/ui.service';
 import { Subscription } from 'rxjs/Subscription';
 import { RecordedWorkout } from '../../shared/models/recorded-workout.model';
-import { WorkoutExerciseAddEditComponent } from '../workout-exercise-add-edit/workout-exercise-add-edit.component';
 
 
 @Component({
@@ -26,8 +25,7 @@ export class WorkoutDisplayComponent implements OnInit {
               private router: Router,
               private authService: AuthService,
               private recordedWorkoutService: RecordedWorkoutService,
-              private uiService: UIService,
-              private exerciseAddEdit: WorkoutExerciseAddEditComponent) { }
+              private uiService: UIService) { }
 
   ngOnInit() {
     this.loadingSubscription = this.uiService.loadingStateChanged$.subscribe(

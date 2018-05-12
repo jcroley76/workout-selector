@@ -54,7 +54,7 @@ export class ExerciseService {
   }
 
   // Inspired By: https://github.com/audiBookning/autocomplete-search-angularfirebase2-5-plus/blob/master/src/app/movies.service.ts
-  searchExerciseNames(start: BehaviorSubject<string>): Observable<DropDown[]> {
+  searchExerciseNames(start: BehaviorSubject<string>): Observable<Exercise[]> {
     console.log('service searchExerciseNames', start);
     return start.switchMap(startText => {
       const endText = startText + '\uf8ff';
@@ -72,10 +72,14 @@ export class ExerciseService {
         .map(changes => {
           // console.log('changes', changes);
           return changes.map(c => {
-            // console.log('c.payload.doc.id', c.payload.doc.id);
-            // console.log('c.payload.doc.name', c.payload.doc.data().name);
-            // TODO: Maybe figure out how to return a full Exercise object.
-            return { name: c.payload.doc.id, value: c.payload.doc.data().name };
+            return {
+              id: c.payload.doc.id,
+              name: c.payload.doc.data().name,
+              description: c.payload.doc.data().description,
+              movementPattern: c.payload.doc.data().movementPattern,
+              equipment: c.payload.doc.data().equipment,
+              muscleGroup: c.payload.doc.data().muscleGroup
+            };
           });
         });
     });
