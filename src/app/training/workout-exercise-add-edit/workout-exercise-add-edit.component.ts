@@ -154,4 +154,5 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
     this.recordedWorkoutService.saveExerciseSets(this.currentWorkout);
     this.onClear();
   }
+
 }
