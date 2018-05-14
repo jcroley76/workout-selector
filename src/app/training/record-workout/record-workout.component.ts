@@ -139,7 +139,6 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
         ]
       }),
       'emphasis': new FormControl(''),
-      // TODO: ExerciseSets
     });
 
     console.log('editMode', this.editMode);

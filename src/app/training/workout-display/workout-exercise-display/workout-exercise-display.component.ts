@@ -13,13 +13,16 @@ export class WorkoutExerciseDisplayComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log('WorkoutExerciseDisplayComponent workoutExercise', this.workoutExercise);
   }
 
   removeExercise() {
+    // TODO:
     console.log('removeExercise', this.workoutExercise);
   }
 
   editExercise() {
+    // TODO:
     console.log('editExercise', this.workoutExercise);
   }
 

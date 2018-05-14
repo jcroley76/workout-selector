@@ -8,6 +8,7 @@ import {RecordedWorkoutService} from '../recorded-workout.service';
 import {RecordedWorkout, WorkoutExercise} from '../../shared/models/recorded-workout.model';
 import {Subscription} from 'rxjs/Subscription';
 import {Exercise} from '../../shared/models/exercise.model';
+import {ActivatedRoute, Params} from '@angular/router';
 
 @Component({
   selector: 'app-workout-exercise-add-edit',
@@ -18,10 +19,11 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
   @Input() editMode: boolean;
   @Input() inputArray: ArrayType[]; // I think this is for incoming sets
   exForm: FormGroup;
+  id: string;
   showSets = false;
   setCount = 0;
 
-  recordedWorkoutSubscription: Subscription;
+  currentWorkoutSubscription: Subscription;
   currentWorkout: RecordedWorkout;
 
   exerciseList: Exercise[];
@@ -29,17 +31,16 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
   startAt: BehaviorSubject<string | null> = new BehaviorSubject('');
 
   constructor(private _fb: FormBuilder,
+              private route: ActivatedRoute,
               private exerciseService: ExerciseService,
               private recordedWorkoutService: RecordedWorkoutService) {
   }
 
 
-  // TODO: Inspired By:
+  // Inspired By:
   // https://github.com/audiBookning/autocomplete-search-angularfirebase2-5-plus/blob/master/src/app/movie-search/movie-search.component.ts
 
   ngOnInit() {
-    this.initForm();
-
     this.startAt.subscribe(start => {
       if (start) {
         this.exerciseService.searchExerciseNames(this.startAt).subscribe(exercises => {
@@ -48,19 +49,32 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.recordedWorkoutSubscription = this.recordedWorkoutService.recordedWorkoutToEdit$.subscribe(
-      workout => {
-        if (workout) {
-          console.warn('currentWorkout', workout);
-          this.currentWorkout = workout;
+    // TODO: This works but the same code appears in workout-display-component.ts.
+    this.route.params.subscribe(
+      (params: Params) => {
+        this.id = params['id'];
+      }
+    );
+
+    this.currentWorkoutSubscription = this.recordedWorkoutService.currentWorkoutSubject$.subscribe(
+      rw => {
+        if (rw) {
+          this.currentWorkout = rw;
         }
       });
+    this.fetchCurrentWorkout();
+
+    this.initForm();
   }
 
   ngOnDestroy() {
-    if (this.recordedWorkoutSubscription) {
-      this.recordedWorkoutSubscription.unsubscribe();
+    if (this.currentWorkoutSubscription) {
+      this.currentWorkoutSubscription.unsubscribe();
     }
+  }
+
+  fetchCurrentWorkout() {
+    this.recordedWorkoutService.setCurrentWorkout(this.id);
   }
 
   // inspired by: https://scotch.io/tutorials/how-to-build-nested-model-driven-forms-in-angular-2
@@ -135,9 +149,9 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
     };
     this.currentWorkout.exercises = [];
     this.currentWorkout.exercises.push(workoutExercise);
-    // TODO: This is still not saving correctly. Workout if formatted correctly but the DB doesn't like it :(
+
     console.log('currentWorkout', this.currentWorkout);
-    this.recordedWorkoutService.updateDataToDatabase(this.currentWorkout.id, this.currentWorkout);
+    this.recordedWorkoutService.saveExerciseSets(this.currentWorkout);
     this.onClear();
   }
 }

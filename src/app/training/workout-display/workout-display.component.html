@@ -3,19 +3,19 @@
   <mat-expansion-panel fxFlex.xs="100%" fxFlex="600px" style="margin-top: 10px;">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <b>{{ recordedWorkout?.date | date:'shortDate' }}</b>&nbsp; {{ recordedWorkout?.title }}
+        <b>{{ currentWorkout?.date | date:'shortDate' }}</b>&nbsp; {{ currentWorkout?.title }}
       </mat-panel-title>
-      <mat-panel-description *ngIf="recordedWorkout?.sources">
-        {{ recordedWorkout?.sources }}
+      <mat-panel-description *ngIf="currentWorkout?.sources">
+        {{ currentWorkout?.sources }}
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <div>{{recordedWorkout?.description}}</div>
+    <div>{{currentWorkout?.description}}</div>
     <div>
       <table style="margin-top: 10px;">
-        <tr><td><b>Workout Type:</b></td><td>{{recordedWorkout?.type}}</td></tr>
-        <tr><td><b>Area of Emphasis:</b></td><td>{{recordedWorkout?.emphasis}}</td></tr>
-        <tr><td><b>Duration:</b></td><td>{{recordedWorkout?.duration}}</td></tr>
+        <tr><td><b>Workout Type:</b></td><td>{{currentWorkout?.type}}</td></tr>
+        <tr><td><b>Area of Emphasis:</b></td><td>{{currentWorkout?.emphasis}}</td></tr>
+        <tr><td><b>Duration:</b></td><td>{{currentWorkout?.duration}}</td></tr>
       </table>
     </div>
 
@@ -36,7 +36,10 @@
 
 <app-workout-exercise-add-edit editMode="false"></app-workout-exercise-add-edit>
 
-<app-workout-exercise-display *ngFor="let workoutExercise of recordedWorkout?.exercises" workoutExercise="workoutExercise"></app-workout-exercise-display>
+<app-workout-exercise-display
+  *ngFor="let workoutExercise of currentWorkout?.exercises"
+  [workoutExercise]="workoutExercise">
+</app-workout-exercise-display>
 
 
 

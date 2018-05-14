@@ -1,4 +1,4 @@
-import { AngularFirestore } from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs';
@@ -10,9 +10,12 @@ import { RecordedWorkout } from '../shared/models/recorded-workout.model';
 export class RecordedWorkoutService {
   recordedWorkoutsChanged$ = new Subject<RecordedWorkout[]>();
   recordedWorkoutToEdit$ = new Subject<RecordedWorkout>();
+  currentWorkoutSubject$ = new Subject<RecordedWorkout>();
 
   private recordedWorkouts: RecordedWorkout[] = [];
   private fbSubs: Subscription[] = [];
+
+  currentWorkout: RecordedWorkout;
 
   constructor(private db: AngularFirestore, private uiService: UIService) {
   }
@@ -39,7 +42,6 @@ export class RecordedWorkoutService {
             sources: doc.payload.doc.data().sources,
             type: doc.payload.doc.data().type,
             emphasis: doc.payload.doc.data().emphasis,
-            record: doc.payload.doc.data().record,
             exercises: doc.payload.doc.data().exercises,
             userId: doc.payload.doc.data().userId
           };
@@ -56,6 +58,9 @@ export class RecordedWorkoutService {
       });
   }
 
+// .snapshotChanges() returns a DocumentChangeAction[], which contains
+// a lot of information about "what happened" with each change. If you want to
+// get the data and the id use the map operator.
   fetchRecordedWorkouts() {
     this.uiService.loadingStateChanged$.next(true);
     this.fbSubs.push(this.db
@@ -73,7 +78,6 @@ export class RecordedWorkoutService {
             sources: doc.payload.doc.data().sources,
             type: doc.payload.doc.data().type,
             emphasis: doc.payload.doc.data().emphasis,
-            record: doc.payload.doc.data().record,
             exercises: doc.payload.doc.data().exercises,
             userId: doc.payload.doc.data().userId
           };
@@ -95,11 +99,43 @@ export class RecordedWorkoutService {
       .collection('recorded-workouts')
       .doc(id)
       .valueChanges()
-      .subscribe((aw: RecordedWorkout) => {
-        this.recordedWorkoutToEdit$.next(aw);
+      .subscribe((rw: RecordedWorkout) => {
+        this.recordedWorkoutToEdit$.next(rw);
       })
     );
     return this.recordedWorkoutToEdit$;
+  }
+
+  setCurrentWorkout(selectedId: string) {
+    this.currentWorkout = this.recordedWorkouts.find(
+      rw => rw.id === selectedId
+    );
+    console.log('setCurrentWorkout', this.currentWorkout);
+    this.currentWorkoutSubject$.next({ ...this.currentWorkout });
+    return this.currentWorkoutSubject$;
+  }
+
+  // https://stackoverflow.com/questions/47514419/how-to-add-subcollection-to-a-document-in-firebase-cloud-firestore
+  saveExerciseSets(recordedWorkout: RecordedWorkout) {
+    // TODO: This is working but may need optimization.
+    const rwRef = this.db.collection('recorded-workouts').doc(recordedWorkout.id);
+    const workoutExercises = recordedWorkout.exercises.map(wktEx => {
+      wktEx.sets.map( exSet => Object.assign({}, exSet));
+      return Object.assign({}, wktEx);
+    });
+    const workout: RecordedWorkout = {
+      ...recordedWorkout,
+      exercises: workoutExercises
+    };
+    console.log('workout', workout);
+
+    rwRef.update(workout)
+      .then(function(docRef) {
+        console.log('Recorded Workout Added Exercise Sets: ', docRef);
+      })
+      .catch(function(error) {
+        console.error('Error adding Recorded Workout Exercise Sets: ', error);
+      });
   }
 
   deleteRecordedWorkout(recordedWorkout: RecordedWorkout) {
@@ -117,9 +153,10 @@ export class RecordedWorkoutService {
   }
 
   updateDataToDatabase(id: string, recordedWorkout: RecordedWorkout) {
-    const awRef = this.db.collection('recorded-workouts').doc(id);
-    console.log('awRef: ', awRef);
-    awRef.update(recordedWorkout)
+    console.log('updateDataToDatabase: ', id, recordedWorkout);
+    const rwRef = this.db.collection('recorded-workouts').doc(id);
+    console.log('awRef: ', rwRef);
+    rwRef.update(recordedWorkout)
       .then(function() {
         console.log('Recorded Workout successfully updated!');
       })
