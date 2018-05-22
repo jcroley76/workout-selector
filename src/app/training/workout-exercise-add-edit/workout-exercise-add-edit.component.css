@@ -6,10 +6,28 @@
 }
 
 .exerciseSetsContainer {
-  margin-top: -5px;
   margin-left: 10px;
 }
 
 .mat-small {
   margin-left: 4px;
+}
+
+.floatingButton {
+  float: left;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.iconButtonRow {
+  margin-bottom: 10px;
+}
+
+.expansionPanel {
+  margin-top: 10px;
+}
+
+.expansionPanelHeaderButtons {
+  padding-top: 15px;
+  margin-right: -5px;
 }

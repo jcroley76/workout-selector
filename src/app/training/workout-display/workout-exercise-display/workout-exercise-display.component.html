@@ -5,7 +5,18 @@
         <mat-card-title><b>{{workoutExercise?.exercise.name}}</b></mat-card-title>
         <mat-card-subtitle>{{workoutExercise?.exercise.movementPattern}}</mat-card-subtitle>
       </mat-card-title-group>
-      <div fxFlex></div>
+      <div fxFlex>
+        <table align="center">
+          <tr>
+            <th align="left">Weight</th>
+            <th align="left">Reps</th>
+          </tr>
+          <tr *ngFor="let exerciseSet of workoutExercise?.sets">
+            <td>{{exerciseSet.weight}}</td>
+            <td>{{exerciseSet.reps}}</td>
+          </tr>
+        </table>
+      </div>
       <button
         type="button"
         mat-mini-fab
@@ -24,18 +35,11 @@
         <mat-icon>edit</mat-icon>
       </button>
     </mat-card-header>
-    <mat-card-content>
-      <div fxFlex></div>
-      <table width="50%">
-        <tr>
-          <th align="left">Weight</th>
-          <th align="left">Reps</th>
-        </tr>
-        <tr *ngFor="let exerciseSet of workoutExercise?.sets"><td>{{exerciseSet.weight}}</td><td>{{exerciseSet.reps}}</td></tr>
+    <!--<mat-card-content>-->
+      <!--<div fxFlex></div>-->
 
-      </table>
 
-    </mat-card-content>
+    <!--</mat-card-content>-->
 
   </mat-card>
 </section>

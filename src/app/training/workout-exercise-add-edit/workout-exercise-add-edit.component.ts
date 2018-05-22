@@ -16,8 +16,8 @@ import {ActivatedRoute, Params} from '@angular/router';
   styleUrls: ['./workout-exercise-add-edit.component.css']
 })
 export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
-  @Input() editMode: boolean;
   @Input() inputArray: ArrayType[]; // I think this is for incoming sets
+  panelOpenState = false;
   exForm: FormGroup;
   id: string;
   showSets = false;
@@ -111,9 +111,23 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  togglePanel() {
+    this.panelOpenState = !this.panelOpenState;
+    console.log('panelOpenState', this.panelOpenState);
+  }
+
   addExerciseSet() {
     const control = <FormArray>this.exForm.controls['exerciseSets'];
     const newGroup = this.initExerciseSet();
+    control.push(newGroup);
+    this.setCount++;
+  }
+
+  copyExerciseSet() {
+    const control = <FormArray>this.exForm.controls['exerciseSets'];
+    console.log('copy set', control);
+    const newGroup = this.initExerciseSet();
+    // TODO: Figure out how to copy last control group
     control.push(newGroup);
     this.setCount++;
   }
@@ -147,12 +161,17 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
       exercise: this.selectedExercise,
       sets: this.exForm.value['exerciseSets'],
     };
-    this.currentWorkout.exercises = [];
+    // console.log('currentWorkout.exercises.length', this.currentWorkout.exercises.length);
+    if (!this.currentWorkout.exercises || this.currentWorkout.exercises.length === 0) {
+      this.currentWorkout.exercises = [];
+    }
     this.currentWorkout.exercises.push(workoutExercise);
 
     console.log('currentWorkout', this.currentWorkout);
     this.recordedWorkoutService.saveExerciseSets(this.currentWorkout);
     this.onClear();
+    // TODO: This will cause and endless loop because of the [expanded] property of the expansion panel
+    // this.togglePanel();
   }
 
 }

@@ -1,12 +1,30 @@
 <section fxLayout fxLayoutAlign="center">
-  <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
-    <mat-card-title>{{ editMode ? 'Edit' : 'Add' }} an Exercise</mat-card-title>
+
+  <mat-expansion-panel
+    fxFlex.xs="100%"
+    fxFlex="600px"
+    (opened)="togglePanel()"
+    (closed)="togglePanel()"
+    [expanded]="panelOpenState"
+    hideToggle="true"
+    class="expansionPanel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h2>Add an Exercise</h2>
+      </mat-panel-title>
+      <mat-panel-description fxLayoutAlign="end" class="expansionPanelHeaderButtons">
+        <div fxFlex></div>
+        <mat-icon *ngIf="!panelOpenState">add</mat-icon>
+        <mat-icon *ngIf="panelOpenState">clear</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
     <form
       fxLayoutGap="10px"
       [formGroup]="exForm"
       (ngSubmit)="saveExercise()" novalidate>
 
-      <mat-card-content fxLayout="row">
+      <div fxLayout="row">
         <mat-form-field class="input-half-width">
           <input
             type="text"
@@ -27,10 +45,20 @@
 
         <div formArrayName="exerciseSets" *ngIf="showSets" class="exerciseSetsContainer">
           <div *ngFor="let exSet of exForm.controls['exerciseSets'].controls; let i=index">
-            <app-exercise-set-add-edit [exerciseSetForm]="exForm.controls.exerciseSets.controls[i]"></app-exercise-set-add-edit>
+            <app-exercise-set-add-edit
+              [exerciseSetForm]="exForm.controls.exerciseSets.controls[i]"></app-exercise-set-add-edit>
           </div>
-          <div fxLayout="row" fxLayoutAlign="end">
-            <!-- TODO: Create Copy set functionality -->
+          <div fxLayout="row" fxLayoutAlign="end" class="iconButtonRow">
+            <button
+              *ngIf="setCount > 0"
+              type="button"
+              mat-mini-fab
+              color="basic"
+              title="Copy Set"
+              (click)="copyExerciseSet()">
+              <mat-icon>repeat</mat-icon>
+            </button>
+            &nbsp;&nbsp;
             <button
               *ngIf="setCount > 0"
               type="button"
@@ -51,9 +79,9 @@
             </button>
           </div>
         </div>
-      </mat-card-content>
+      </div>
 
-      <mat-card-actions fxLayoutAlign="end" *ngIf="selectedExercise">
+      <mat-action-row fxLayoutAlign="end" *ngIf="selectedExercise">
         <button
           type="button"
           mat-raised-button
@@ -63,6 +91,7 @@
           <mat-icon>clear</mat-icon>
           Clear
         </button>
+        &nbsp;&nbsp;
         <button
           type="submit"
           mat-raised-button
@@ -72,7 +101,9 @@
           <mat-icon>save</mat-icon>
           Save
         </button>
-      </mat-card-actions>
+      </mat-action-row>
     </form>
-  </mat-card>
+
+  </mat-expansion-panel>
+
 </section>

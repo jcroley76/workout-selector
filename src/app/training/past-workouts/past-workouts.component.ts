@@ -31,7 +31,7 @@ export class PastWorkoutsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.loggedInUserSubscription = this.authService.loggedInUser$.subscribe(user => {
-      console.log('loggedInUser', user);
+      // console.log('loggedInUser', user);
       if (user) {
         this.userId = user.uid;
         this.recordedWorkoutService.fetchRecordedWorkoutsByUser(this.userId);
@@ -40,7 +40,7 @@ export class PastWorkoutsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.rwChangedSubscription = this.recordedWorkoutService.recordedWorkoutsChanged$.subscribe(
       (recordedWorkouts: RecordedWorkout[]) => {
-        console.log('recordedWorkouts', recordedWorkouts);
+        // console.log('recordedWorkouts', recordedWorkouts);
         this.dataSource.data = recordedWorkouts;
       }
     );
@@ -62,8 +62,11 @@ export class PastWorkoutsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onEditItem(rw: RecordedWorkout) {
-    console.log('list onEditItem', rw);
     this.router.navigate(['/training/record-workout', {load: 'rw', id: rw.id}]);
+  }
+
+  onDisplayItem(rw: RecordedWorkout) {
+    this.router.navigate(['/training/workout-display', rw.id]);
   }
 
   onDeleteItem(rw: RecordedWorkout) {

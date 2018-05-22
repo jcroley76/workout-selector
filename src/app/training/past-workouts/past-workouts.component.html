@@ -42,6 +42,15 @@
         type="button"
         mat-raised-button
         class="mat-small"
+        color="primary"
+        title="Display"
+        (click)="onDisplayItem(element)">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button
+        type="button"
+        mat-raised-button
+        class="mat-small"
         color="accent"
         title="Edit"
         (click)="onEditItem(element)">
