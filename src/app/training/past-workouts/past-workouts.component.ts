@@ -1,12 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { RecordedWorkout } from '../../shared/models/recorded-workout.model';
 import { MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { RecordedWorkoutService } from '../recorded-workout.service';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.component';
-import {AuthService} from "../../auth/auth.service";
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-past-workouts',

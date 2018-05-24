@@ -5,7 +5,40 @@
         <mat-card-title><b>{{workoutExercise?.exercise.name}}</b></mat-card-title>
         <mat-card-subtitle>{{workoutExercise?.exercise.movementPattern}}</mat-card-subtitle>
       </mat-card-title-group>
-      <div fxFlex>
+
+      <!-- TODO: Use exercise-set-manager-componenet to edit exercise sets here -->
+      <form
+        fxLayoutGap="10px"
+        [formGroup]="exForm"
+        (ngSubmit)="saveExercise()"
+        novalidate
+        *ngIf="editMode">
+        <app-exercise-set-manager
+          formArrayName="exerciseSets"
+          [(exerciseSets)]="exerciseSetControls"
+        ></app-exercise-set-manager>
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          fxLayoutAlign="end"
+          (click)="onClear()">
+          <mat-icon>clear</mat-icon>
+          Clear
+        </button>
+        &nbsp;&nbsp;
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          fxLayoutAlign="end"
+          [disabled]="exForm.invalid">
+          <mat-icon>save</mat-icon>
+          Save
+        </button>
+      </form>
+
+      <div fxFlex *ngIf="!editMode">
         <table align="center">
           <tr>
             <th align="left">Weight</th>
@@ -22,7 +55,8 @@
         mat-mini-fab
         color="warn"
         title="Remove Exercise"
-        (click)="removeExercise()">
+        (click)="removeExercise()"
+        *ngIf="!editMode">
         <mat-icon>delete</mat-icon>
       </button>
       &nbsp;&nbsp;
@@ -31,15 +65,11 @@
         mat-mini-fab
         color="accent"
         title="Edit Exercise"
-        (click)="editExercise()">
+        (click)="editExercise()"
+        *ngIf="!editMode">
         <mat-icon>edit</mat-icon>
       </button>
     </mat-card-header>
-    <!--<mat-card-content>-->
-      <!--<div fxFlex></div>-->
-
-
-    <!--</mat-card-content>-->
 
   </mat-card>
 </section>

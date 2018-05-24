@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs';
 
 import { UIService } from '../shared/ui.service';
-import { RecordedWorkout } from '../shared/models/recorded-workout.model';
+import {RecordedWorkout, WorkoutExercise} from '../shared/models/recorded-workout.model';
 
 @Injectable()
 export class RecordedWorkoutService {
@@ -113,9 +113,8 @@ export class RecordedWorkoutService {
   }
 
   // https://stackoverflow.com/questions/47514419/how-to-add-subcollection-to-a-document-in-firebase-cloud-firestore
+  // TODO: May be able to use currentWorkout like deleteExerciseFromWorkout
   saveExerciseSets(recordedWorkout: RecordedWorkout) {
-    // TODO: This is working but may need optimization.
-    const rwRef = this.db.collection('recorded-workouts').doc(recordedWorkout.id);
     const workoutExercises = recordedWorkout.exercises.map(wktEx => {
       wktEx.sets.map( exSet => Object.assign({}, exSet));
       return Object.assign({}, wktEx);
@@ -124,18 +123,19 @@ export class RecordedWorkoutService {
       ...recordedWorkout,
       exercises: workoutExercises
     };
-
-    rwRef.update(workout)
-      .then(function(docRef) {
-        console.log('Recorded Workout Added Exercise Sets: ', docRef);
-      })
-      .catch(function(error) {
-        console.error('Error adding Recorded Workout Exercise Sets: ', error);
-      });
+    this.updateDataToDatabase(workout.id, workout);
   }
 
   deleteRecordedWorkout(recordedWorkout: RecordedWorkout) {
     this.deleteFromDatabase(recordedWorkout);
+  }
+
+  deleteExerciseFromWorkout(workoutExercise: WorkoutExercise) {
+    if (this.currentWorkout) {
+      const index = this.currentWorkout.exercises.indexOf(workoutExercise);
+      this.currentWorkout.exercises.splice(index, 1);
+      this.updateDataToDatabase(this.currentWorkout.id, this.currentWorkout);
+    }
   }
 
   addDataToDatabase(recordedWorkout: RecordedWorkout) {

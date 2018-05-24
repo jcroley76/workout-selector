@@ -42,42 +42,10 @@
             {{ exercise?.name }}
           </mat-option>
         </mat-autocomplete>
-
-        <div formArrayName="exerciseSets" *ngIf="showSets" class="exerciseSetsContainer">
-          <div *ngFor="let exSet of exForm.controls['exerciseSets'].controls; let i=index">
-            <app-exercise-set-add-edit
-              [exerciseSetForm]="exForm.controls.exerciseSets.controls[i]"></app-exercise-set-add-edit>
-          </div>
-          <div fxLayout="row" fxLayoutAlign="end" class="iconButtonRow">
-            <button
-              *ngIf="setCount > 0"
-              type="button"
-              mat-mini-fab
-              color="warn"
-              title="Remove Set"
-              (click)="removeExerciseSet()">
-              <mat-icon>delete</mat-icon>
-            </button>
-            &nbsp;&nbsp;
-            <button
-              type="button"
-              mat-mini-fab
-              color="basic"
-              title="Copy Set"
-              (click)="copyExerciseSet()">
-              <mat-icon>repeat</mat-icon>
-            </button>
-            &nbsp;&nbsp;
-            <button
-              type="button"
-              mat-mini-fab
-              color="accent"
-              title="Add Set"
-              (click)="addExerciseSet()">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-        </div>
+        <app-exercise-set-manager
+          formArrayName="exerciseSets"
+          [(exerciseSets)]="exerciseSetControls"
+          *ngIf="showSets"></app-exercise-set-manager>
       </div>
 
       <mat-action-row fxLayoutAlign="end" *ngIf="selectedExercise">

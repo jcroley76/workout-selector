@@ -1,24 +1,25 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ExerciseService} from '../../admin/exercise.service';
+import {ExerciseService} from '../../../admin/exercise.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {MatAutocompleteSelectedEvent} from '@angular/material';
 import {ArrayType} from '@angular/compiler/src/output/output_ast';
-import {RecordedWorkoutService} from '../recorded-workout.service';
-import {RecordedWorkout, WorkoutExercise} from '../../shared/models/recorded-workout.model';
+import {RecordedWorkoutService} from '../../recorded-workout.service';
+import {RecordedWorkout, WorkoutExercise} from '../../../shared/models/recorded-workout.model';
 import {Subscription} from 'rxjs/Subscription';
-import {Exercise} from '../../shared/models/exercise.model';
+import {Exercise} from '../../../shared/models/exercise.model';
 import {ActivatedRoute, Params} from '@angular/router';
 
 @Component({
-  selector: 'app-workout-exercise-add-edit',
-  templateUrl: './workout-exercise-add-edit.component.html',
-  styleUrls: ['./workout-exercise-add-edit.component.css']
+  selector: 'app-add-exercise-to-workout',
+  templateUrl: './add-exercise-to-workout.component.html',
+  styleUrls: ['./add-exercise-to-workout.component.css']
 })
-export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
-  @Input() inputArray: ArrayType[]; // I think this is for incoming sets
+export class AddExerciseToWorkoutComponent implements OnInit, OnDestroy {
+  @Input() inputArray: ArrayType[];
   panelOpenState = false;
   exForm: FormGroup;
+  exerciseSetControls: FormArray;
   id: string;
   showSets = false;
   setCount = 0;
@@ -35,7 +36,6 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
               private exerciseService: ExerciseService,
               private recordedWorkoutService: RecordedWorkoutService) {
   }
-
 
   // Inspired By:
   // https://github.com/audiBookning/autocomplete-search-angularfirebase2-5-plus/blob/master/src/app/movie-search/movie-search.component.ts
@@ -96,8 +96,10 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
     }
 
     this.exForm = newForm;
+    this.exerciseSetControls = <FormArray>this.exForm.controls['exerciseSets'];
   }
 
+  // TODO: THis is repeated in 3 places. REFACTOR!!
   initExerciseSet() {
     return this._fb.group({
       weight: ['', [
@@ -118,28 +120,6 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  addExerciseSet() {
-    const control = <FormArray>this.exForm.controls['exerciseSets'];
-    const newGroup = this.initExerciseSet();
-    control.push(newGroup);
-    this.setCount++;
-  }
-
-  copyExerciseSet() {
-    const control = <FormArray>this.exForm.controls['exerciseSets'];
-    const newGroup = this.initExerciseSet();
-    const copiedGroup = Object.assign(newGroup, control.controls[this.setCount]);
-    control.push(copiedGroup);
-    this.setCount++;
-  }
-
-  removeExerciseSet() {
-    // remove last exerciseSet from the list
-    const control = <FormArray>this.exForm.controls['exerciseSets'];
-    control.removeAt(this.setCount);
-    this.setCount--;
-  }
-
   searchExercises($event) {
     this.startAt.next($event.target.value);
   }
@@ -152,6 +132,7 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
 
   onClear() {
     this.exForm.reset();
+    this.exerciseSetControls.reset();
     this.showSets = false;
   }
 
