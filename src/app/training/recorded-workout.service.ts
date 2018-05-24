@@ -26,12 +26,9 @@ export class RecordedWorkoutService {
           ref => ref.where('userId', '==', userId)
       );
 
-    console.log('rwRef', rwRef);
-
     rwRef
       .snapshotChanges()
       .map(docArray => {
-        // throw(new Error());
         return docArray.map(doc => {
           return  {
             id: doc.payload.doc.id,
@@ -127,7 +124,6 @@ export class RecordedWorkoutService {
       ...recordedWorkout,
       exercises: workoutExercises
     };
-    console.log('workout', workout);
 
     rwRef.update(workout)
       .then(function(docRef) {
@@ -153,9 +149,7 @@ export class RecordedWorkoutService {
   }
 
   updateDataToDatabase(id: string, recordedWorkout: RecordedWorkout) {
-    console.log('updateDataToDatabase: ', id, recordedWorkout);
     const rwRef = this.db.collection('recorded-workouts').doc(id);
-    console.log('awRef: ', rwRef);
     rwRef.update(recordedWorkout)
       .then(function() {
         console.log('Recorded Workout successfully updated!');

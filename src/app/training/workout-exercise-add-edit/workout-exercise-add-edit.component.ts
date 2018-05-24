@@ -111,9 +111,11 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  togglePanel() {
-    this.panelOpenState = !this.panelOpenState;
-    console.log('panelOpenState', this.panelOpenState);
+  setPanelOpenState(val: boolean) {
+    this.panelOpenState = val;
+    if (this.panelOpenState === false) {
+      this.onClear();
+    }
   }
 
   addExerciseSet() {
@@ -154,23 +156,18 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveExercise() {
-    console.log('saveExercise', this.exForm.value);
-
     const workoutExercise: WorkoutExercise = {
       exercise: this.selectedExercise,
       sets: this.exForm.value['exerciseSets'],
     };
-    // console.log('currentWorkout.exercises.length', this.currentWorkout.exercises.length);
     if (!this.currentWorkout.exercises || this.currentWorkout.exercises.length === 0) {
       this.currentWorkout.exercises = [];
     }
     this.currentWorkout.exercises.push(workoutExercise);
 
-    console.log('currentWorkout', this.currentWorkout);
+    console.log('saving Workout', this.currentWorkout);
     this.recordedWorkoutService.saveExerciseSets(this.currentWorkout);
-    this.onClear();
-    // TODO: This will cause and endless loop because of the [expanded] property of the expansion panel
-    // this.togglePanel();
+    this.setPanelOpenState(false);
   }
 
 }

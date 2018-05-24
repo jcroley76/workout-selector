@@ -3,8 +3,8 @@
   <mat-expansion-panel
     fxFlex.xs="100%"
     fxFlex="600px"
-    (opened)="togglePanel()"
-    (closed)="togglePanel()"
+    (opened)="setPanelOpenState(true)"
+    (closed)="setPanelOpenState(false)"
     [expanded]="panelOpenState"
     hideToggle="true"
     class="expansionPanel">
