@@ -125,10 +125,9 @@ export class WorkoutExerciseAddEditComponent implements OnInit, OnDestroy {
 
   copyExerciseSet() {
     const control = <FormArray>this.exForm.controls['exerciseSets'];
-    console.log('copy set', control);
     const newGroup = this.initExerciseSet();
-    // TODO: Figure out how to copy last control group
-    control.push(newGroup);
+    const copiedGroup = Object.assign(newGroup, control.controls[this.setCount]);
+    control.push(copiedGroup);
     this.setCount++;
   }
 

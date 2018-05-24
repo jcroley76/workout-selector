@@ -53,20 +53,19 @@
               *ngIf="setCount > 0"
               type="button"
               mat-mini-fab
-              color="basic"
-              title="Copy Set"
-              (click)="copyExerciseSet()">
-              <mat-icon>repeat</mat-icon>
-            </button>
-            &nbsp;&nbsp;
-            <button
-              *ngIf="setCount > 0"
-              type="button"
-              mat-mini-fab
               color="warn"
               title="Remove Set"
               (click)="removeExerciseSet()">
               <mat-icon>delete</mat-icon>
+            </button>
+            &nbsp;&nbsp;
+            <button
+              type="button"
+              mat-mini-fab
+              color="basic"
+              title="Copy Set"
+              (click)="copyExerciseSet()">
+              <mat-icon>repeat</mat-icon>
             </button>
             &nbsp;&nbsp;
             <button
