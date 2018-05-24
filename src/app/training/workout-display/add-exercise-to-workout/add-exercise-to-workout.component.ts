@@ -9,6 +9,7 @@ import {RecordedWorkout, WorkoutExercise} from '../../../shared/models/recorded-
 import {Subscription} from 'rxjs/Subscription';
 import {Exercise} from '../../../shared/models/exercise.model';
 import {ActivatedRoute, Params} from '@angular/router';
+import {TrainingUtils} from '../../training.utils';
 
 @Component({
   selector: 'app-add-exercise-to-workout',
@@ -34,6 +35,7 @@ export class AddExerciseToWorkoutComponent implements OnInit, OnDestroy {
   constructor(private _fb: FormBuilder,
               private route: ActivatedRoute,
               private exerciseService: ExerciseService,
+              private trainingUtils: TrainingUtils,
               private recordedWorkoutService: RecordedWorkoutService) {
   }
 
@@ -82,35 +84,21 @@ export class AddExerciseToWorkoutComponent implements OnInit, OnDestroy {
     const newForm = this._fb.group({
       searchExercises: ['', [Validators.required, Validators.maxLength(25)]],
       exerciseSets: this._fb.array([
-        this.initExerciseSet()
+        this.trainingUtils.initExerciseSetControls(null)
       ])
     });
 
-    if (this.inputArray) {
-      const arrayControl = <FormArray>newForm.controls['exerciseSets'];
-      this.inputArray.forEach(item => {
-        const newGroup = this.initExerciseSet();
-        arrayControl.push(newGroup);
-        this.setCount++;
-      });
-    }
+    // if (this.inputArray) {
+    //   const arrayControl = <FormArray>newForm.controls['exerciseSets'];
+    //   this.inputArray.forEach(item => {
+    //     const newGroup = this.initExerciseSet();
+    //     arrayControl.push(newGroup);
+    //     this.setCount++;
+    //   });
+    // }
 
     this.exForm = newForm;
     this.exerciseSetControls = <FormArray>this.exForm.controls['exerciseSets'];
-  }
-
-  // TODO: THis is repeated in 3 places. REFACTOR!!
-  initExerciseSet() {
-    return this._fb.group({
-      weight: ['', [
-        Validators.required,
-        Validators.pattern(/^[1-9]+[0-9]*$/)]
-      ],
-      reps: ['', [
-        Validators.required,
-        Validators.pattern(/^[1-9]+[0-9]*$/)]
-      ]
-    });
   }
 
   setPanelOpenState(val: boolean) {

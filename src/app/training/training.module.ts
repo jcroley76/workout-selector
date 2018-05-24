@@ -15,6 +15,7 @@ import { ExerciseSetAddEditComponent } from './workout-display/add-exercise-to-w
 import { ExerciseService } from '../admin/exercise.service';
 import { WorkoutExerciseDisplayComponent } from './workout-display/workout-exercise-display/workout-exercise-display.component';
 import { ExerciseSetManagerComponent } from './workout-display/exercise-set-manager/exercise-set-manager.component';
+import { TrainingUtils } from './training.utils';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ExerciseSetManagerComponent } from './workout-display/exercise-set-mana
     ExerciseService,
     AddExerciseToWorkoutComponent,
     WorkoutExerciseDisplayComponent,
-    ExerciseSetManagerComponent
+    ExerciseSetManagerComponent,
+    TrainingUtils
   ]
 })
 export class TrainingModule {}

@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import {ExerciseSet, WorkoutExercise} from '../../../shared/models/recorded-workout.model';
+import { WorkoutExercise} from '../../../shared/models/recorded-workout.model';
 import { DeleteDialogComponent } from '../../../shared/delete-dialog/delete-dialog.component';
 import { RecordedWorkoutService } from '../../recorded-workout.service';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { TrainingUtils } from '../../training.utils';
 
 @Component({
   selector: 'app-workout-exercise-display',
@@ -19,7 +20,8 @@ export class WorkoutExerciseDisplayComponent implements OnInit {
 
   constructor(private recordedWorkoutService: RecordedWorkoutService,
               private _fb: FormBuilder,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private trainingUtils: TrainingUtils) { }
 
   ngOnInit() {
     // console.log('WorkoutExerciseDisplayComponent workoutExercise', this.workoutExercise);
@@ -60,14 +62,14 @@ export class WorkoutExerciseDisplayComponent implements OnInit {
     const exerciseSets = this.workoutExercise.sets;
     const newForm = this._fb.group({
       exerciseSets: this._fb.array([
-        this.initExerciseSet(null)
+        // this.trainingUtils.initExerciseSetControls(null)
       ])
     });
 
     if (exerciseSets) {
       const arrayControl = <FormArray>newForm.controls['exerciseSets'];
       exerciseSets.forEach(exSet => {
-        const newGroup = this.initExerciseSet(exSet);
+        const newGroup = this.trainingUtils.initExerciseSetControls(exSet);
         arrayControl.push(newGroup);
         // this.setCount++;
       });
@@ -75,22 +77,6 @@ export class WorkoutExerciseDisplayComponent implements OnInit {
 
     this.exForm = newForm;
     this.exerciseSetControls = <FormArray>this.exForm.controls['exerciseSets'];
-  }
-
-  // TODO: THis is repeated in 3 places. REFACTOR!!
-  initExerciseSet(exSet: ExerciseSet) {
-    const weightVal = exSet ? exSet.weight : '';
-    const repsVal = exSet ? exSet.reps : '';
-    return this._fb.group({
-      weight: [weightVal, [
-        Validators.required,
-        Validators.pattern(/^[1-9]+[0-9]*$/)]
-      ],
-      reps: [repsVal, [
-        Validators.required,
-        Validators.pattern(/^[1-9]+[0-9]*$/)]
-      ]
-    });
   }
 
   onClear() {
