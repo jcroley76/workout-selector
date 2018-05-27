@@ -11,7 +11,7 @@ import { RecordedWorkoutService } from './recorded-workout.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { WorkoutDisplayComponent } from './workout-display/workout-display.component';
 import { AddExerciseToWorkoutComponent } from './workout-display/add-exercise-to-workout/add-exercise-to-workout.component';
-import { ExerciseSetAddEditComponent } from './workout-display/add-exercise-to-workout/exercise-set-add-edit/exercise-set-add-edit.component';
+import { ExerciseSetAddEditComponent } from './workout-display/exercise-set-manager/exercise-set-add-edit/exercise-set-add-edit.component';
 import { ExerciseService } from '../admin/exercise.service';
 import { WorkoutExerciseDisplayComponent } from './workout-display/workout-exercise-display/workout-exercise-display.component';
 import { ExerciseSetManagerComponent } from './workout-display/exercise-set-manager/exercise-set-manager.component';

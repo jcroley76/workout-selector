@@ -19,13 +19,12 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <form
-      fxLayoutGap="10px"
-      [formGroup]="exForm"
-      (ngSubmit)="saveExercise()" novalidate>
 
-      <div fxLayout="row">
-        <mat-form-field class="input-half-width">
+    <div fxLayout="row">
+      <form
+        fxLayoutGap="10px"
+        [formGroup]="exForm">
+        <mat-form-field>
           <input
             type="text"
             matInput
@@ -42,34 +41,14 @@
             {{ exercise?.name }}
           </mat-option>
         </mat-autocomplete>
-        <app-exercise-set-manager
-          formArrayName="exerciseSets"
-          [(exerciseSets)]="exerciseSetControls"
-          *ngIf="showSets"></app-exercise-set-manager>
-      </div>
+      </form>
 
-      <mat-action-row fxLayoutAlign="end" *ngIf="selectedExercise">
-        <button
-          type="button"
-          mat-raised-button
-          color="warn"
-          fxLayoutAlign="end"
-          (click)="onClear()">
-          <mat-icon>clear</mat-icon>
-          Clear
-        </button>
-        &nbsp;&nbsp;
-        <button
-          type="submit"
-          mat-raised-button
-          color="primary"
-          fxLayoutAlign="end"
-          [disabled]="exForm.invalid">
-          <mat-icon>save</mat-icon>
-          Save
-        </button>
-      </mat-action-row>
-    </form>
+      <app-exercise-set-manager
+        [workoutExercise]="workoutExercise"
+        (close)="closeExerciseSets($event)"
+        *ngIf="showSets"></app-exercise-set-manager>
+
+    </div>
 
   </mat-expansion-panel>
 

@@ -72,7 +72,6 @@ export class WorkoutDisplayComponent implements OnInit, OnDestroy {
 
   onEditWorkout() {
     console.log('onEditWorkout', this.id);
-    // this.exerciseAddEdit.workoutId = this.id;
     this.router.navigate(['/training/record-workout', {load: 'rw', id: this.id}]);
   }
 

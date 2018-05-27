@@ -9,5 +9,4 @@ import {FormGroup} from '@angular/forms';
 export class ExerciseSetAddEditComponent {
   // Inspired by: https://stackoverflow.com/questions/38007236/how-to-dynamically-add-and-remove-form-fields-in-angular-2
   @Input() exerciseSetForm: FormGroup;
-
 }

@@ -1,9 +1,9 @@
-import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs';
+import {AngularFirestore} from 'angularfire2/firestore';
+import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs';
 
-import { UIService } from '../shared/ui.service';
+import {UIService} from '../shared/ui.service';
 import {RecordedWorkout, WorkoutExercise} from '../shared/models/recorded-workout.model';
 
 @Injectable()
@@ -23,14 +23,14 @@ export class RecordedWorkoutService {
   fetchRecordedWorkoutsByUser(userId: string) {
     const rwRef = this.db
       .collection<RecordedWorkout>('recorded-workouts',
-          ref => ref.where('userId', '==', userId)
+        ref => ref.where('userId', '==', userId)
       );
 
     rwRef
       .snapshotChanges()
       .map(docArray => {
         return docArray.map(doc => {
-          return  {
+          return {
             id: doc.payload.doc.id,
             date: doc.payload.doc.data().date,
             title: doc.payload.doc.data().title,
@@ -108,22 +108,33 @@ export class RecordedWorkoutService {
       rw => rw.id === selectedId
     );
     console.log('setCurrentWorkout', this.currentWorkout);
-    this.currentWorkoutSubject$.next({ ...this.currentWorkout });
+    this.currentWorkoutSubject$.next({...this.currentWorkout});
     return this.currentWorkoutSubject$;
   }
 
   // https://stackoverflow.com/questions/47514419/how-to-add-subcollection-to-a-document-in-firebase-cloud-firestore
-  // TODO: May be able to use currentWorkout like deleteExerciseFromWorkout
-  saveExerciseSets(recordedWorkout: RecordedWorkout) {
-    const workoutExercises = recordedWorkout.exercises.map(wktEx => {
-      wktEx.sets.map( exSet => Object.assign({}, exSet));
-      return Object.assign({}, wktEx);
-    });
-    const workout: RecordedWorkout = {
-      ...recordedWorkout,
-      exercises: workoutExercises
-    };
-    this.updateDataToDatabase(workout.id, workout);
+  saveExerciseSets(workoutExercise: WorkoutExercise) {
+    if (this.currentWorkout) {
+      const foundEx = this.currentWorkout.exercises
+        ? this.currentWorkout.exercises.find(wktEx => wktEx.exercise.id === workoutExercise.exercise.id)
+        : null;
+
+      if (foundEx) {
+        const index = this.currentWorkout.exercises.indexOf(foundEx);
+        this.currentWorkout.exercises[index] = workoutExercise;
+      } else {
+        if (!this.currentWorkout.exercises) {
+          this.currentWorkout.exercises = [];
+        }
+        this.currentWorkout.exercises.push(workoutExercise);
+      }
+      // TODO: When adding 1st exercise to workout, display doesn't refresh after save.
+      // This may be due to the currentWorkout.exercises being uninitiated
+      this.updateDataToDatabase(this.currentWorkout.id, this.currentWorkout);
+
+    } else {
+      console.error('No current workout for saveExerciseSets');
+    }
   }
 
   deleteRecordedWorkout(recordedWorkout: RecordedWorkout) {
@@ -135,15 +146,17 @@ export class RecordedWorkoutService {
       const index = this.currentWorkout.exercises.indexOf(workoutExercise);
       this.currentWorkout.exercises.splice(index, 1);
       this.updateDataToDatabase(this.currentWorkout.id, this.currentWorkout);
+    } else {
+      console.error('No current workout for deleteExerciseFromWorkout');
     }
   }
 
   addDataToDatabase(recordedWorkout: RecordedWorkout) {
     this.db.collection('recorded-workouts').add(recordedWorkout)
-      .then(function(docRef) {
+      .then(function (docRef) {
         console.log('Recorded Workout Added with ID: ', docRef.id);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error('Error adding Recorded Workout: ', error);
       });
   }
@@ -151,10 +164,10 @@ export class RecordedWorkoutService {
   updateDataToDatabase(id: string, recordedWorkout: RecordedWorkout) {
     const rwRef = this.db.collection('recorded-workouts').doc(id);
     rwRef.update(recordedWorkout)
-      .then(function() {
+      .then(function () {
         console.log('Recorded Workout successfully updated!');
       })
-      .catch(function(error) {
+      .catch(function (error) {
         // The document probably doesn't exist.
         console.error('Error updating Recorded Workout: ', error);
       });
@@ -164,9 +177,9 @@ export class RecordedWorkoutService {
     this.db.collection('recorded-workouts')
       .doc(recordedWorkout.id)
       .delete()
-      .then(function() {
+      .then(function () {
         console.log('Recorded Workout successfully deleted!');
-      }).catch(function(error) {
+      }).catch(function (error) {
       console.error('Error removing Recorded Workout: ', error);
     });
   }

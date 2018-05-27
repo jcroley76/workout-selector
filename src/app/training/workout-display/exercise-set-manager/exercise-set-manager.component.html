@@ -1,35 +1,67 @@
 <div class="exerciseSetsContainer">
-  <div *ngFor="let exSet of exerciseSets.controls; let i=index">
-    <app-exercise-set-add-edit
-      [exerciseSetForm]="exerciseSets.controls[i]"></app-exercise-set-add-edit>
-  </div>
-  <div fxLayout="row" fxLayoutAlign="end" class="iconButtonRow">
-    <button
-      *ngIf="setCount > 0"
-      type="button"
-      mat-mini-fab
-      color="warn"
-      title="Remove Set"
-      (click)="removeExerciseSet()">
-      <mat-icon>delete</mat-icon>
-    </button>
-    &nbsp;&nbsp;
-    <button
-      type="button"
-      mat-mini-fab
-      color="basic"
-      title="Copy Set"
-      (click)="copyExerciseSet()">
-      <mat-icon>repeat</mat-icon>
-    </button>
-    &nbsp;&nbsp;
-    <button
-      type="button"
-      mat-mini-fab
-      color="accent"
-      title="Add Set"
-      (click)="addExerciseSet()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
+  <form
+    fxLayoutGap="10px"
+    [formGroup]="exSetFormGroup"
+    (ngSubmit)="saveExercise()"
+    novalidate>
+
+    <div>
+      <div *ngFor="let exSet of exerciseSetControls.controls; let i=index">
+        <app-exercise-set-add-edit
+          [exerciseSetForm]="exerciseSetControls.controls[i]">
+        </app-exercise-set-add-edit>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="end" class="iconButtonRow">
+        <button
+          *ngIf="setCount > 0"
+          type="button"
+          mat-mini-fab
+          color="warn"
+          title="Remove Set"
+          (click)="removeExerciseSet()">
+          <mat-icon>delete</mat-icon>
+        </button>
+        &nbsp;&nbsp;
+        <button
+          type="button"
+          mat-mini-fab
+          color="basic"
+          title="Copy Set"
+          (click)="copyExerciseSet()">
+          <mat-icon>repeat</mat-icon>
+        </button>
+        &nbsp;&nbsp;
+        <button
+          type="button"
+          mat-mini-fab
+          color="accent"
+          title="Add Set"
+          (click)="addExerciseSet()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <mat-action-row fxLayoutAlign="end">
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        fxLayoutAlign="end"
+        (click)="onClear()">
+        <mat-icon>clear</mat-icon>
+        Close
+      </button>
+      &nbsp;&nbsp;
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        fxLayoutAlign="end"
+        [disabled]="exSetFormGroup.invalid">
+        <mat-icon>save</mat-icon>
+        Save
+      </button>
+    </mat-action-row>
+  </form>
 </div>

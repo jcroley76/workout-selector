@@ -1,6 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormArray, FormBuilder} from '@angular/forms';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {TrainingUtils} from '../../training.utils';
+import {WorkoutExercise} from '../../../shared/models/recorded-workout.model';
+import {RecordedWorkoutService} from '../../recorded-workout.service';
 
 @Component({
   selector: 'app-exercise-set-manager',
@@ -8,37 +10,75 @@ import {TrainingUtils} from '../../training.utils';
   styleUrls: ['./exercise-set-manager.component.css']
 })
 export class ExerciseSetManagerComponent implements OnInit {
-  @Input() exerciseSets: FormArray;
+  @Input() workoutExercise: WorkoutExercise;
+  @Output() close = new EventEmitter();
+  exSetFormGroup: FormGroup;
+  exerciseSetControls: FormArray;
   setCount = 0;
 
-  constructor(private trainingUtils: TrainingUtils) { }
+  constructor(private trainingUtils: TrainingUtils,
+              private _fb: FormBuilder,
+              private recordedWorkoutService: RecordedWorkoutService) { }
 
   ngOnInit() {
-    console.log('exerciseSets', this.exerciseSets);
+    this.initForm();
   }
 
-  // TODO: There may be something funky going on here. It needs testing.
+  initForm() {
+    const exerciseSets = this.workoutExercise.sets;
+    const newForm = this._fb.group({
+      exerciseSets: this._fb.array([])
+    });
+
+    const arrayControl = <FormArray>newForm.controls['exerciseSets'];
+    if (exerciseSets.length > 0) {
+      exerciseSets.forEach(exSet => {
+        const newGroup = this.trainingUtils.initExerciseSetControls(exSet);
+        arrayControl.push(newGroup);
+      });
+    } else {
+      arrayControl.push( this.trainingUtils.initExerciseSetControls(null) );
+    }
+
+    this.setCount = arrayControl.controls.length - 1;
+    console.log('setCount', this.setCount);
+
+    this.exSetFormGroup = newForm;
+    this.exerciseSetControls = <FormArray>this.exSetFormGroup.controls['exerciseSets'];
+  }
 
   addExerciseSet() {
-    // const control = <FormArray>this.exForm.controls['exerciseSets'];
     const newGroup = this.trainingUtils.initExerciseSetControls(null);
-    this.exerciseSets.push(newGroup);
+    this.exerciseSetControls.push(newGroup);
     this.setCount++;
   }
 
+  // TODO: If copying multiple times weirdness occurs
   copyExerciseSet() {
-    // const control = <FormArray>this.exForm.controls['exerciseSets'];
     const newGroup = this.trainingUtils.initExerciseSetControls(null);
-    const copiedGroup = Object.assign(newGroup, this.exerciseSets.controls[this.setCount]);
-    this.exerciseSets.push(copiedGroup);
+    const copiedGroup = Object.assign(newGroup, this.exerciseSetControls.controls[this.setCount]);
+    this.exerciseSetControls.push(copiedGroup);
     this.setCount++;
   }
 
   removeExerciseSet() {
-    // remove last exerciseSet from the list
-    // const control = <FormArray>this.exForm.controls['exerciseSets'];
-    this.exerciseSets.removeAt(this.setCount);
+    this.exerciseSetControls.removeAt(this.setCount);
     this.setCount--;
   }
 
+  onClear() {
+    this.exSetFormGroup.reset();
+    this.exerciseSetControls.reset();
+    this.close.emit('true');
+  }
+
+  saveExercise() {
+    const workoutExercise: WorkoutExercise = {
+      exercise: this.workoutExercise.exercise,
+      sets: this.exSetFormGroup.value['exerciseSets'],
+    };
+
+    this.recordedWorkoutService.saveExerciseSets(workoutExercise);
+    this.onClear();
+  }
 }
