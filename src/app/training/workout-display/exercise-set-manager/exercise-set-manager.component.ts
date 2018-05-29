@@ -41,7 +41,7 @@ export class ExerciseSetManagerComponent implements OnInit {
     }
 
     this.setCount = arrayControl.controls.length - 1;
-    console.log('setCount', this.setCount);
+    // console.log('setCount', this.setCount);
 
     this.exSetFormGroup = newForm;
     this.exerciseSetControls = <FormArray>this.exSetFormGroup.controls['exerciseSets'];
@@ -53,10 +53,9 @@ export class ExerciseSetManagerComponent implements OnInit {
     this.setCount++;
   }
 
-  // TODO: If copying multiple times weirdness occurs
   copyExerciseSet() {
-    const newGroup = this.trainingUtils.initExerciseSetControls(null);
-    const copiedGroup = Object.assign(newGroup, this.exerciseSetControls.controls[this.setCount]);
+    const exSet = this.exerciseSetControls.controls[this.setCount].value;
+    const copiedGroup = this.trainingUtils.initExerciseSetControls(exSet);
     this.exerciseSetControls.push(copiedGroup);
     this.setCount++;
   }
