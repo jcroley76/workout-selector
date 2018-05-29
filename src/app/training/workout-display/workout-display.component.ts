@@ -58,7 +58,7 @@ export class WorkoutDisplayComponent implements OnInit, OnDestroy {
   }
 
   fetchCurrentWorkout() {
-    this.recordedWorkoutService.setCurrentWorkout(this.id);
+    this.recordedWorkoutService.fetchCurrentWorkout(this.id);
   }
 
   ngOnDestroy() {

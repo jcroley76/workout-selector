@@ -5,7 +5,7 @@
       fxLayout="column"
       fxLayoutGap="10px"
       [formGroup]="rwForm"
-      (ngSubmit)="saveRecordedWorkout()">
+      (ngSubmit)="saveRecordedWorkout(false)">
 
       <mat-form-field>
         <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="date">
@@ -63,6 +63,7 @@
           </mat-error>
         </mat-form-field>
 
+        <!-- TODO: Put input mask on this 00:00:00 -->
         <mat-form-field>
           <input
             type="text"
@@ -109,7 +110,7 @@
           mat-raised-button
           color="accent"
           fxLayoutAlign="end"
-          (click)="addExercises()">
+          (click)="saveRecordedWorkout(true)">
           <mat-icon>fitness_center</mat-icon>
           Add Exercises
         </button>

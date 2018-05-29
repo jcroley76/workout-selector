@@ -24,6 +24,8 @@ import { ExerciseService } from './admin/exercise.service';
 import { UserService } from './admin/user.service';
 import { EquipmentService } from './admin/equipment.service';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { FirestoreService } from './shared/firestore.service';
+import { DocPipe } from './shared/utils/doc.pipe';
 
 
 @NgModule({
@@ -31,7 +33,8 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
     AppComponent,
     WelcomeComponent,
     HeaderComponent,
-    SidenavListComponent
+    SidenavListComponent,
+    DocPipe
   ],
   imports: [
     BrowserModule,
@@ -48,13 +51,15 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
     TrainingModule
   ],
   providers: [
+    FirestoreService,
     AuthService,
     DropdownService,
     AvailableWorkoutService,
     ExerciseService,
     EquipmentService,
     UserService,
-    UIService
+    UIService,
+    DocPipe
   ],
   bootstrap: [AppComponent]
 })

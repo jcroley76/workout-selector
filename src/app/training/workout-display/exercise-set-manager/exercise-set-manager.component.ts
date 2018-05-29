@@ -78,7 +78,7 @@ export class ExerciseSetManagerComponent implements OnInit {
       sets: this.exSetFormGroup.value['exerciseSets'],
     };
 
-    this.recordedWorkoutService.saveExerciseSets(workoutExercise);
-    this.onClear();
+    this.recordedWorkoutService.saveExerciseSets(workoutExercise)
+      .then( val => this.onClear() );
   }
 }

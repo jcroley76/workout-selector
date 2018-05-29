@@ -55,7 +55,7 @@ export class ExerciseService {
 
   // Inspired By: https://github.com/audiBookning/autocomplete-search-angularfirebase2-5-plus/blob/master/src/app/movies.service.ts
   searchExerciseNames(start: BehaviorSubject<string>): Observable<Exercise[]> {
-    console.log('service searchExerciseNames', start);
+    // console.log('service searchExerciseNames', start);
     return start.switchMap(startText => {
       const endText = startText + '\uf8ff';
       return this.afs
@@ -113,7 +113,7 @@ export class ExerciseService {
 
   updateDataToDatabase(id: string, exercise: Exercise) {
     const exRef = this.afs.collection('exercises').doc(id);
-    console.log('exRef: ', exRef);
+    // console.log('exRef: ', exRef);
     exRef.update(exercise)
       .then(function() {
         console.log('Exercise successfully updated!');
@@ -131,7 +131,7 @@ export class ExerciseService {
       .then(function() {
         console.log('Exercise successfully deleted!');
       }).catch(function(error) {
-      console.error('Error removing Exercise: ', error);
+        console.error('Error removing Exercise: ', error);
     });
   }
 
