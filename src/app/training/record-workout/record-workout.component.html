@@ -69,12 +69,11 @@
             type="text"
             matInput
             placeholder="Duration (hh:mm:ss)"
+            mask="00:00:00"
+            [dropSpecialCharacters]="false"
             formControlName="duration">
           <mat-error *ngIf="rwForm.get('duration').hasError('required') && rwForm.get('duration').touched">
             Duration is required.
-          </mat-error>
-          <mat-error *ngIf="rwForm.get('duration').hasError('pattern') && rwForm.get('duration').touched">
-            Duration must have an hh:mm:ss format.
           </mat-error>
         </mat-form-field>
 

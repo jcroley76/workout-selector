@@ -35,13 +35,12 @@
           <input
             type="text"
             matInput
+            mask="00:00:00"
+            [dropSpecialCharacters]="false"
             placeholder="Duration (hh:mm:ss)"
             formControlName="duration">
           <mat-error *ngIf="awForm.get('duration').hasError('required') && awForm.get('duration').touched">
             Duration is required.
-          </mat-error>
-          <mat-error *ngIf="awForm.get('duration').hasError('pattern') && awForm.get('duration').touched">
-            Duration must have an hh:mm:ss format.
           </mat-error>
         </mat-form-field>
 

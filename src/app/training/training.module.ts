@@ -8,7 +8,6 @@ import { RecommendWorkoutComponent } from './recommend-workout/recommend-workout
 import { FilterContainsPipe } from '../shared/utils/filterContains.pipe';
 import { RecordWorkoutComponent } from './record-workout/record-workout.component';
 import { RecordedWorkoutService } from './recorded-workout.service';
-import { ReactiveFormsModule } from '@angular/forms';
 import { WorkoutDisplayComponent } from './workout-display/workout-display.component';
 import { AddExerciseToWorkoutComponent } from './workout-display/add-exercise-to-workout/add-exercise-to-workout.component';
 import { ExerciseSetAddEditComponent } from './workout-display/exercise-set-manager/exercise-set-add-edit/exercise-set-add-edit.component';
@@ -31,7 +30,6 @@ import { TrainingUtils } from './training.utils';
     ExerciseSetManagerComponent
   ],
   imports: [
-    ReactiveFormsModule,
     SharedModule,
     TrainingRoutingModule
   ],

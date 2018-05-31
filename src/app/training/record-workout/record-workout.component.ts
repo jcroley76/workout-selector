@@ -134,11 +134,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
       'type': new FormControl('', Validators.required),
       'description': new FormControl(''),
       'sources': new FormControl(''),
-      'duration': new FormControl('', {
-        validators: [
-          Validators.pattern('^(?:(?:([01]?\\d|2[0-3]):)?([0-5]?\\d):)?([0-5]?\\d)$')
-        ]
-      }),
+      'duration': new FormControl(''),
       'emphasis': new FormControl(''),
     });
 

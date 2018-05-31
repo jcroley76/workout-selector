@@ -9,7 +9,7 @@ import { UsersComponent } from './users/users.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { ExercisesComponent } from './exercises/exercises.component';
 import { ExerciseAddEditComponent } from './exercise-add-edit/exercise-add-edit.component';
-import { ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -23,7 +23,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     UserEditComponent
   ],
   imports: [
-    ReactiveFormsModule,
     SharedModule,
     AdminRoutingModule
   ],

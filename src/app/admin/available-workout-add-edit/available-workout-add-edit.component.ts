@@ -106,6 +106,8 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  // TODO: Console errors when loading in edit mode
+  // ERROR Error: Value must be an array in multiple-selection mode.
   fetchEquipmentList() {
     this.equipmentService.fetchEquipmentList();
   }
@@ -133,12 +135,7 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
       'description': new FormControl('', Validators.required),
       'record': new FormControl('', Validators.required),
       'sources': new FormControl('', Validators.required),
-      'duration': new FormControl('', {
-        validators: [
-          Validators.required,
-          Validators.pattern('^(?:(?:([01]?\\d|2[0-3]):)?([0-5]?\\d):)?([0-5]?\\d)$')
-        ]
-      }),
+      'duration': new FormControl('', Validators.required),
       'emphasis': new FormControl(''),
       'equipment': new FormControl(''),
       'type': new FormControl(''),
