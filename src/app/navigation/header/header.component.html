@@ -10,9 +10,29 @@
       <li *ngIf="userName"><small>  Welcome back {{userName}}</small></li>
       <li *ngIf="!isAuth"><a routerLink="/signup">Signup</a></li>
       <li *ngIf="!isAuth"><a routerLink="/login">Login</a></li>
-      <li *ngIf="isAdmin"><a routerLink="/admin">Admin</a></li>
-      <li *ngIf="isAuth"><a routerLink="/training">Training</a></li>
-      <li *ngIf="isAuth"><a style="cursor: pointer" (click)="onLogout()">Logout</a></li>
+      <li *ngIf="isAdmin">
+        <button mat-button [matMenuTriggerFor]="admin">Admin</button>
+      </li>
+      <li *ngIf="isAuth">
+        <button mat-button [matMenuTriggerFor]="training">Training</button>
+      </li>
+      <li *ngIf="isAuth">
+        <button mat-button (click)="onLogout()">Logout</button>
+      </li>
     </ul>
   </div>
 </mat-toolbar>
+
+<mat-menu #admin="matMenu">
+  <button mat-menu-item><a routerLink="/admin/available-workouts">Available Workouts</a></button>
+  <button mat-menu-item><a routerLink="/admin/available-workout-add-edit">Add Available Workouts</a></button>
+  <button mat-menu-item><a routerLink="/admin/exercises">Exercises</a></button>
+  <button mat-menu-item><a routerLink="/admin/exercise-add-edit">Add Exercise</a></button>
+  <button mat-menu-item><a routerLink="/admin/users">Users</a></button>
+</mat-menu>
+
+<mat-menu #training="matMenu">
+  <button mat-menu-item><a routerLink="/training/record-workout">Record a Workout</a></button>
+  <button mat-menu-item><a routerLink="/training/recommend-workout">Recommend a Workout</a></button>
+  <button mat-menu-item><a routerLink="/training/past-workouts">Completed Workouts</a></button>
+</mat-menu>

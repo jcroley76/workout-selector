@@ -17,3 +17,8 @@ a:hover, a:active {
   display: inline-block;
   padding-left: 6px;
 }
+
+/* TODO: Change if theme is changed */
+.mat-menu-item > a {
+  color: #673ab7;
+}

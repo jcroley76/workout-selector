@@ -26,3 +26,8 @@ mat-form-field {
   min-width: 1%;
   min-height: 1%;
 }
+
+.list-page-header {
+  margin-top: 15px;
+  margin-left: 15px;
+}
