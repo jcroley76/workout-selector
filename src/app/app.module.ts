@@ -26,6 +26,7 @@ import { EquipmentService } from './admin/equipment.service';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { FirestoreService } from './shared/firestore.service';
 import { DocPipe } from './shared/utils/doc.pipe';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { DocPipe } from './shared/utils/doc.pipe';
     AngularFireDatabaseModule,
     AuthModule,
     AdminModule,
-    TrainingModule
+    TrainingModule,
+    NgxSpinnerModule
   ],
   providers: [
     FirestoreService,

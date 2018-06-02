@@ -1,14 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { AvailableWorkoutService } from '../available-workout.service';
-import { DropdownService } from '../../shared/dropdown.service';
-import { DropDown } from '../../shared/models/dropdown.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { UIService } from '../../shared/ui.service';
-import { AvailableWorkout } from '../../shared/models/available-workout.model';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Equipment } from '../../shared/models/equipment.model';
-import { EquipmentService } from '../equipment.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {AvailableWorkoutService} from '../available-workout.service';
+import {DropdownService} from '../../shared/dropdown.service';
+import {DropDown} from '../../shared/models/dropdown.model';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UIService} from '../../shared/ui.service';
+import {AvailableWorkout} from '../../shared/models/available-workout.model';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Equipment} from '../../shared/models/equipment.model';
+import {EquipmentService} from '../equipment.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-available-workout-add-edit',
@@ -32,12 +33,14 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
   measurementTypeSubscription: Subscription;
   private loadingSubscription: Subscription;
 
-  constructor( private route: ActivatedRoute,
-               private router: Router,
-               private availableWorkoutService: AvailableWorkoutService,
-               private equipmentService: EquipmentService,
-               private dropdownService: DropdownService,
-               private uiService: UIService) { }
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private availableWorkoutService: AvailableWorkoutService,
+              private equipmentService: EquipmentService,
+              private dropdownService: DropdownService,
+              private uiService: UIService,
+              private spinner: NgxSpinnerService) {
+  }
 
   ngOnInit() {
     this.loadingSubscription = this.uiService.loadingStateChanged$.subscribe(
@@ -48,13 +51,13 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
     this.equipmentSubscription = this.equipmentService.equipmentListChanged$
       .subscribe(eqipList =>
         (this.equipmentList = eqipList)
-    );
+      );
     this.fetchEquipmentList();
 
     this.sourceSubscription = this.dropdownService.sourceListChanged$
       .subscribe(srcList =>
         (this.sourceList = srcList)
-    );
+      );
     this.fetchSourceList();
 
     this.typeSubscription = this.dropdownService.typeListChanged$
@@ -106,8 +109,6 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  // TODO: Console errors when loading in edit mode
-  // ERROR Error: Value must be an array in multiple-selection mode.
   fetchEquipmentList() {
     this.equipmentService.fetchEquipmentList();
   }
@@ -134,20 +135,18 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
       'title': new FormControl('', Validators.required),
       'description': new FormControl('', Validators.required),
       'record': new FormControl('', Validators.required),
-      'sources': new FormControl('', Validators.required),
+      'source': new FormControl('', Validators.required),
       'duration': new FormControl('', Validators.required),
       'emphasis': new FormControl(''),
       'equipment': new FormControl(''),
       'type': new FormControl(''),
     });
 
-    console.log('editMode', this.editMode);
     if (this.editMode) {
       this.availableWorkoutService
         .fetchAvailableWorkout(this.id)
         .subscribe(
           (aw: AvailableWorkout) => {
-            console.log('edit aw', aw);
             if (aw) {
               this.awForm.patchValue(aw);
             }
@@ -157,14 +156,15 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
   }
 
   saveAvailableWorkout() {
-    if (this.editMode) {
-      console.log('save available workout', this.awForm.value);
-      this.availableWorkoutService.updateDataToDatabase(this.id, this.awForm.value);
-    } else {
-      this.availableWorkoutService.addDataToDatabase(this.awForm.value);
+    this.spinner.show();
+    if (this.id) {
+      this.awForm.value.id = this.id;
     }
-    this.onClear();
-    this.router.navigate(['/admin/available-workouts']);
+    this.availableWorkoutService.saveAvailableWorkout(this.awForm.value).then( value => {
+      this.onClear();
+      this.router.navigate(['/admin/available-workouts']);
+    });
+
   }
 
   onClear() {

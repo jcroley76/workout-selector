@@ -41,11 +41,15 @@
     class="form-card">
     <mat-list>
       <mat-list-item *ngFor="let aw of filteredWorkouts | filterContains : searchText">
-        <h3 mat-line>{{ aw.title }}</h3>
+        <h3 mat-line>
+          <span *ngIf="aw.source">{{aw.source}} - </span>
+          {{ aw.title }}
+        </h3>
         <div mat-line><pre>{{aw.description}}</pre></div>
-        <div mat-line><b>Workout Type: </b>{{aw.type}}</div>
-        <div mat-line><b>Area of Emphasis: </b>{{aw.emphasis}}</div>
-        <div mat-line><b>Duration: </b>{{aw.duration}}</div>
+        <div mat-line *ngIf="aw.type"><b>Workout Type: </b>{{aw.type}}</div>
+        <div mat-line *ngIf="aw.emphasis"><b>Area of Emphasis: </b>{{aw.emphasis}}</div>
+        <div mat-line *ngIf="aw.duration"><b>Duration: </b>{{aw.duration}}</div>
+        <div mat-line *ngIf="aw.equipment"><b>Equipment: </b>{{aw.equipment}}</div>
         <div mat-line fxLayoutAlign="end">
           <button
             type="button"

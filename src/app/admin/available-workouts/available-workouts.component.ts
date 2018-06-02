@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./available-workouts.component.css']
 })
 export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDestroy {
-  displayedColumns = ['sources', 'title', 'emphasis', 'record', 'duration', 'actions'];
+  displayedColumns = ['source', 'title', 'emphasis', 'record', 'duration', 'actions'];
   dataSource = new MatTableDataSource<AvailableWorkout>();
   private awChangedSubscription: Subscription;
 
@@ -49,7 +49,6 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   onEditItem(aw: AvailableWorkout) {
-    console.log('list onEditItem', aw);
     this.router.navigate(['/admin/available-workout-add-edit', aw.id]);
   }
 

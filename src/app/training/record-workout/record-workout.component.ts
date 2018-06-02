@@ -10,6 +10,7 @@ import {RecordedWorkout} from '../../shared/models/recorded-workout.model';
 import {AvailableWorkoutService} from '../../admin/available-workout.service';
 import {AvailableWorkout} from '../../shared/models/available-workout.model';
 import {AuthService} from '../../auth/auth.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-record-workout',
@@ -35,6 +36,8 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
   measurementTypeSubscription: Subscription;
   private loadingSubscription: Subscription;
   private loggedInUserSubscription: Subscription;
+  private availableWorkoutsSubscription: Subscription;
+  private availableWorkoutList: AvailableWorkout[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -42,7 +45,8 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
               private recordedWorkoutService: RecordedWorkoutService,
               private availableWorkoutService: AvailableWorkoutService,
               private dropdownService: DropdownService,
-              private uiService: UIService) {
+              private uiService: UIService,
+              private spinner: NgxSpinnerService) {
   }
 
   ngOnInit() {
@@ -82,6 +86,11 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
       );
     this.fetchMeasurementTypeList();
 
+    this.availableWorkoutsSubscription = this.availableWorkoutService.availableWorkoutsChanged$
+      .subscribe(aws =>
+        (this.availableWorkoutList = aws)
+      );
+
     this.route.params
       .subscribe(
         (params: Params) => {
@@ -109,6 +118,9 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
     if (this.measurementTypeSubscription) {
       this.measurementTypeSubscription.unsubscribe();
     }
+    if (this.availableWorkoutsSubscription) {
+      this.availableWorkoutsSubscription.unsubscribe();
+    }
   }
 
   fetchSourceList() {
@@ -127,22 +139,35 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
     this.dropdownService.fetchMeasurementTypeList();
   }
 
+  fetchAvailableWorkoutList(event) {
+    console.log('fetchAvailableWorkoutList', event.value);
+    this.availableWorkoutService.fetchAvailableWorkoutsBySource(event.value);
+  }
+
+  availableWorkoutSelected(event) {
+    const aw = event.value;
+    console.log('availableWorkoutSelected', aw);
+    // TODO: fill in appropriate values
+  }
+
+  // TODO: If coming into form in Add mode make more dynamic. Only show fields as they are needed.
   initForm() {
     this.rwForm = new FormGroup({
       'date': new FormControl(new Date(), Validators.required),
       'title': new FormControl('', Validators.required),
       'type': new FormControl('', Validators.required),
       'description': new FormControl(''),
-      'sources': new FormControl(''),
+      'source': new FormControl(''),
+      'availableWorkouts': new FormControl(''),
       'duration': new FormControl(''),
       'emphasis': new FormControl(''),
     });
 
     if (this.editMode) {
       if (this.loadComponent === 'rw') {
-        this.recordedWorkoutService
-          .fetchCurrentWorkout(this.id)
-          .subscribe((rw: RecordedWorkout) => {
+        this.recordedWorkoutService.fetchCurrentWorkout(this.id);
+        this.recordedWorkoutService.currentWorkoutSubject$.subscribe(rw => {
+          console.log('edit workout', rw);
               if (rw) {
                 this.rwForm.patchValue(rw);
                 this.canAddExercises = this.isLiftingWorkout(rw.emphasis) || this.isLiftingWorkout(rw.type);
@@ -151,6 +176,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
             }
           );
       } else if (this.loadComponent === 'aw') {
+        // TODO: Title, Type, Source are not coming over. Also don't make description editable.
         this.availableWorkoutService
           .fetchAvailableWorkout(this.id)
           .subscribe((aw: AvailableWorkout) => {
@@ -164,6 +190,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
   }
 
   saveRecordedWorkout(gotoExercises: boolean) {
+    this.spinner.show();
     this.rwForm.value.userId = this.userId;
     if (this.id) {
       this.rwForm.value.id = this.id;
@@ -213,6 +240,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
 
   onClear() {
     this.rwForm.reset();
+    this.spinner.hide();
   }
 
 }

@@ -7,7 +7,7 @@ a:hover, a:active {
   color: lightgray;
 }
 
-/* TODO: Change if theme is changed */
+/* Change if theme is changed */
 .mat-menu-item > a {
   color: #673ab7;
 }

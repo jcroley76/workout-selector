@@ -13,7 +13,7 @@ import { AuthService } from '../../auth/auth.service';
   styleUrls: ['./past-workouts.component.css']
 })
 export class PastWorkoutsComponent implements OnInit, AfterViewInit, OnDestroy {
-  displayedColumns = ['date', 'sources', 'title', 'emphasis', 'record', 'duration', 'actions'];
+  displayedColumns = ['date', 'source', 'title', 'emphasis', 'record', 'duration', 'actions'];
   dataSource = new MatTableDataSource<RecordedWorkout>();
   userId = '';
   loggedInUserSubscription: Subscription;

@@ -6,7 +6,6 @@ import {MatAutocompleteSelectedEvent} from '@angular/material';
 import {ArrayType} from '@angular/compiler/src/output/output_ast';
 import {WorkoutExercise} from '../../../shared/models/recorded-workout.model';
 import {Exercise} from '../../../shared/models/exercise.model';
-import {ActivatedRoute, Params} from '@angular/router';
 
 @Component({
   selector: 'app-add-exercise-to-workout',
@@ -18,14 +17,12 @@ export class AddExerciseToWorkoutComponent implements OnInit {
   panelOpenState = false;
   exForm: FormGroup;
   workoutExercise: WorkoutExercise;
-  id: string;
   showSets = false;
   exerciseList: Exercise[];
   selectedExercise: Exercise;
   startAt: BehaviorSubject<string | null> = new BehaviorSubject('');
 
   constructor(private _fb: FormBuilder,
-              private route: ActivatedRoute,
               private exerciseService: ExerciseService) {
   }
 
@@ -41,17 +38,9 @@ export class AddExerciseToWorkoutComponent implements OnInit {
       }
     });
 
-    // TODO: This works but the same code appears in workout-display-component.ts.
-    this.route.params.subscribe(
-      (params: Params) => {
-        this.id = params['id'];
-      }
-    );
-
     this.initForm();
   }
 
-  // inspired by: https://scotch.io/tutorials/how-to-build-nested-model-driven-forms-in-angular-2
   initForm() {
     const newForm = this._fb.group({
       searchExercises: ['', [Validators.required, Validators.maxLength(25)]],

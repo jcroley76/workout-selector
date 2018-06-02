@@ -13,14 +13,27 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
+      <!--TODO: Check Available Workouts for list of workouts for source selected. Remove multiple selection-->
       <mat-form-field>
         <mat-select
           placeholder="Source"
-          formControlName="sources"
-          multiple>
+          formControlName="source"
+          (change)="fetchAvailableWorkoutList($event)">
           <mat-option *ngFor="let source of sourceList" [value]="source.value">{{source.name}}</mat-option>
         </mat-select>
-        <mat-error *ngIf="rwForm.get('sources').hasError('required') && rwForm.get('sources').touched">
+        <mat-error *ngIf="rwForm.get('source').hasError('required') && rwForm.get('source').touched">
+          Source is required.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="availableWorkoutList?.length > 0">
+        <mat-select
+          placeholder="Workouts"
+          formControlName="availableWorkouts"
+          (change)="availableWorkoutSelected($event)">
+          <mat-option *ngFor="let availableWorkout of availableWorkoutList" [value]="availableWorkout.id">{{availableWorkout.title}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="rwForm.get('availableWorkouts').hasError('required') && rwForm.get('availableWorkouts').touched">
           Source is required.
         </mat-error>
       </mat-form-field>
@@ -51,6 +64,7 @@
           </mat-error>
         </mat-form-field>
 
+        <!--TODO: Rename to notes. Only use description for AW and read only -->
         <mat-form-field>
           <textarea
             rows="5"
@@ -63,7 +77,6 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- TODO: Put input mask on this 00:00:00 -->
         <mat-form-field>
           <input
             type="text"

@@ -3,6 +3,7 @@ import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {TrainingUtils} from '../../training.utils';
 import {WorkoutExercise} from '../../../shared/models/recorded-workout.model';
 import {RecordedWorkoutService} from '../../recorded-workout.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-exercise-set-manager',
@@ -18,7 +19,8 @@ export class ExerciseSetManagerComponent implements OnInit {
 
   constructor(private trainingUtils: TrainingUtils,
               private _fb: FormBuilder,
-              private recordedWorkoutService: RecordedWorkoutService) { }
+              private recordedWorkoutService: RecordedWorkoutService,
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
     this.initForm();
@@ -69,15 +71,19 @@ export class ExerciseSetManagerComponent implements OnInit {
     this.exSetFormGroup.reset();
     this.exerciseSetControls.reset();
     this.close.emit('true');
+    this.spinner.hide();
   }
 
   saveExercise() {
+    this.spinner.show();
     const workoutExercise: WorkoutExercise = {
       exercise: this.workoutExercise.exercise,
       sets: this.exSetFormGroup.value['exerciseSets'],
     };
 
     this.recordedWorkoutService.saveExerciseSets(workoutExercise)
-      .then( val => this.onClear() );
+      .then( val => {
+        this.onClear();
+      } );
   }
 }

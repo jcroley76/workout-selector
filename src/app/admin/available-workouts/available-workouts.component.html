@@ -7,9 +7,9 @@
 </div>
 
 <mat-table [dataSource]="dataSource" matSort>
-  <ng-container matColumnDef="sources">
+  <ng-container matColumnDef="source">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Source</mat-header-cell>
-    <mat-cell *matCellDef="let element">{{ element.sources }}</mat-cell>
+    <mat-cell *matCellDef="let element">{{ element.source }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="title">

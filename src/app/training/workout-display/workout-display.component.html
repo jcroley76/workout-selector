@@ -5,8 +5,8 @@
       <mat-panel-title>
         <b>{{ currentWorkout?.date | date:'shortDate' }}</b>&nbsp; {{ currentWorkout?.title }}
       </mat-panel-title>
-      <mat-panel-description *ngIf="currentWorkout?.sources">
-        {{ currentWorkout?.sources }}
+      <mat-panel-description *ngIf="currentWorkout?.source">
+        {{ currentWorkout?.source }}
       </mat-panel-description>
     </mat-expansion-panel-header>
 
