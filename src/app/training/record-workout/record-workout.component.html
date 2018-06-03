@@ -13,7 +13,6 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
-      <!--TODO: Check Available Workouts for list of workouts for source selected. Remove multiple selection-->
       <mat-form-field>
         <mat-select
           placeholder="Source"
@@ -64,17 +63,16 @@
           </mat-error>
         </mat-form-field>
 
-        <!--TODO: Rename to notes. Only use description for AW and read only -->
+        <mat-card-subtitle *ngIf="selectedAvailableWorkout?.description">Description:</mat-card-subtitle>
+        <pre *ngIf="selectedAvailableWorkout?.description">{{selectedAvailableWorkout.description}}</pre>
+
         <mat-form-field>
           <textarea
             rows="5"
             cols="50"
             matInput
-            placeholder="Description"
-            formControlName="description"></textarea>
-          <mat-error *ngIf="rwForm.get('description').hasError('required') && rwForm.get('description').touched">
-            Description is required.
-          </mat-error>
+            placeholder="Notes"
+            formControlName="notes"></textarea>
         </mat-form-field>
 
         <mat-form-field>

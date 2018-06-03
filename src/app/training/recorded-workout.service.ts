@@ -39,8 +39,6 @@ export class RecordedWorkoutService {
     console.log('fetchCurrentWorkout entry', this.currentWorkout);
     if (this.currentWorkout && this.currentWorkout.id === selectedId) {
       this.currentWorkoutSubject$.next({...this.currentWorkout});
-    } else if (this.recordedWorkouts.length > 0) {
-      this.findCurrentWorkout(selectedId);
     } else {
       this.getCurrentWorkout(selectedId);
     }
@@ -55,13 +53,13 @@ export class RecordedWorkoutService {
     });
   }
 
-  private findCurrentWorkout(id: string) {
-    console.log('findCurrentWorkout');
-    this.currentWorkout = this.recordedWorkouts.find(
-      rw => rw.id === id
-    );
-    this.currentWorkoutSubject$.next({...this.currentWorkout});
-  }
+  // private findCurrentWorkout(id: string) {
+  //   console.log('findCurrentWorkout');
+  //   this.currentWorkout = this.recordedWorkouts.find(
+  //     rw => rw.id === id
+  //   );
+  //   this.currentWorkoutSubject$.next({...this.currentWorkout});
+  // }
 
   // https://stackoverflow.com/questions/47514419/how-to-add-subcollection-to-a-document-in-firebase-cloud-firestore
   saveExerciseSets(workoutExercise: WorkoutExercise) {

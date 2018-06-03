@@ -77,7 +77,7 @@ export class PastWorkoutsComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogConfig.closeOnNavigation = false;
     dialogConfig.data = {
       title: rw.title,
-      description: rw.description
+      description: rw.notes
     };
 
     const dialogRef = this.dialog.open(DeleteDialogComponent, dialogConfig);

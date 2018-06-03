@@ -4,7 +4,6 @@ export interface RecordedWorkout {
   id: string;
   date: Date;
   title: string;
-  description: string;
   notes: string;
   duration: string;
   source: string;
