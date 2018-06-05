@@ -11,9 +11,9 @@ export class AdminComponent implements OnInit {
   ngOnInit(): void {
     this.routeLinks = [
       {label: 'Available Workouts', link: 'available-workouts'},
-      {label: 'Add Workout', link: 'available-workout-add-edit'},
+      // {label: 'Add Workout', link: 'available-workout-add-edit'},
       {label: 'Exercises', link: 'exercises'},
-      {label: 'Add Exercise', link: 'exercise-add-edit'},
+      // {label: 'Add Exercise', link: 'exercise-add-edit'},
       {label: 'Users', link: 'users'}
     ];
   }

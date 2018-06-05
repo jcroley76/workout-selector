@@ -1,6 +1,16 @@
 <section fxLayout fxLayoutAlign="center">
   <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
     <mat-card-title>{{ editMode ? 'Edit' : 'Add' }} a Workout</mat-card-title>
+    <div fxLayoutAlign="end" class="top-right-button">
+      <button
+        mat-raised-button
+        color="primary"
+        title="List"
+        (click)="backToList()">
+        <mat-icon>list</mat-icon>
+        List
+      </button>
+    </div>
     <form
       fxLayout="column"
       fxLayoutGap="10px"

@@ -2,6 +2,16 @@
   <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
     <mat-card-title *ngIf="!editMode">Add an Exercise</mat-card-title>
     <mat-card-title *ngIf="editMode">Edit {{ title }}</mat-card-title>
+    <div fxLayoutAlign="end" class="top-right-button">
+      <button
+        mat-raised-button
+        color="primary"
+        title="List"
+        (click)="backToList()">
+        <mat-icon>list</mat-icon>
+        List
+      </button>
+    </div>
     <form
       fxLayout="column"
       fxLayoutGap="10px"

@@ -1,4 +1,14 @@
 <div class="mat-card-title list-page-header">Available Workouts</div>
+<div fxLayoutAlign="end" class="top-right-button">
+    <button
+      mat-raised-button
+      color="primary"
+      title="Add"
+      (click)="onAddItem()">
+      <mat-icon>add</mat-icon>
+      Add a Workout
+    </button>
+</div>
 
 <div fxLayoutAlign="center center">
   <mat-form-field fxFlex="40%">
@@ -33,7 +43,7 @@
   </ng-container>
 
   <ng-container matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
     <mat-cell *matCellDef="let element">
       <button
         type="button"

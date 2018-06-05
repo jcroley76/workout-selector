@@ -53,6 +53,10 @@ export class ExercisesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['/admin/exercise-add-edit', ex.id]);
   }
 
+  onAddItem() {
+    this.router.navigate(['/admin/exercise-add-edit']);
+  }
+
   onDeleteItem(ex: Exercise) {
     // Open Warning dialog then delete item
     const dialogConfig = new MatDialogConfig();

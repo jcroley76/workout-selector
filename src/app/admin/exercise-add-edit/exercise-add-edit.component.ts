@@ -104,6 +104,10 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
     this.dropdownService.fetchMovementPatternList();
   }
 
+  backToList() {
+    this.router.navigate(['/admin/exercises']);
+  }
+
   // Example: https://toddmotto.com/angular-2-form-controls-patch-value-set-value
   initForm() {
     this.exForm = new FormGroup({

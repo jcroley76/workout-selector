@@ -52,6 +52,10 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
     this.router.navigate(['/admin/available-workout-add-edit', aw.id]);
   }
 
+  onAddItem() {
+    this.router.navigate(['/admin/available-workout-add-edit']);
+  }
+
   onDeleteItem(aw: AvailableWorkout) {
     // Open Warning dialog then delete item
     const dialogConfig = new MatDialogConfig();

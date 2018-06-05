@@ -155,6 +155,10 @@ export class AvailableWorkoutAddEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  backToList() {
+    this.router.navigate(['/admin/available-workouts']);
+  }
+
   saveAvailableWorkout() {
     this.spinner.show();
     if (this.id) {
