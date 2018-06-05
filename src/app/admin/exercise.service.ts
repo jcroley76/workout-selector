@@ -1,61 +1,48 @@
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import {AngularFirestore} from 'angularfire2/firestore';
+import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
-
-import { Exercise } from '../shared/models/exercise.model';
-import { UIService } from '../shared/ui.service';
-import { DropDown } from '../shared/models/dropdown.model';
+import {Exercise} from '../shared/models/exercise.model';
+import {UIService} from '../shared/ui.service';
+import {FirestoreService} from '../shared/firestore.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Injectable()
 export class ExerciseService {
-  exercisesChanged = new Subject<Exercise[]>();
-  exerciseToEdit = new Subject<Exercise>();
+  exercisesChanged$ = new Subject<Exercise[]>();
+  exerciseToEdit$ = new Subject<Exercise>();
   private exercises: Exercise[] = [];
   private fbSubs: Subscription[] = [];
 
-  constructor(private afs: AngularFirestore,
+  constructor(private fss: FirestoreService,
+              private spinner: NgxSpinnerService,
+              private afs: AngularFirestore,
               private uiService: UIService) {
   }
 
   fetchExercises() {
-    this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.afs
-      .collection('exercises')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            id: doc.payload.doc.id,
-            name: doc.payload.doc.data().name,
-            description: doc.payload.doc.data().description,
-            movementPattern: doc.payload.doc.data().movementPattern,
-            equipment: doc.payload.doc.data().equipment,
-            muscleGroup: doc.payload.doc.data().muscleGroup,
-          };
-        });
-      })
+    this.spinner.show();
+    this.fbSubs.push(this.fss.colWithIds$('exercises')
       .subscribe((exercises: Exercise[]) => {
-        this.uiService.loadingStateChanged$.next(false);
+        this.spinner.hide();
         this.exercises = exercises;
-        this.exercisesChanged.next([...this.exercises]);
+        this.exercisesChanged$.next([...this.exercises]);
       }, error => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.uiService.showSnackbar('Fetching Exercises failed, please try again later', null, 3000);
-        this.exercisesChanged.next(null);
+        this.spinner.hide();
+        console.error('Fetching Exercises failed, please try again later', error);
+        this.exercisesChanged$.next(null);
       }));
   }
 
+  // TODO: Improve search: https://angularfirebase.com/lessons/algolia-firestore-quickstart-with-firebase-cloud-functions/
   // Inspired By: https://github.com/audiBookning/autocomplete-search-angularfirebase2-5-plus/blob/master/src/app/movies.service.ts
   searchExerciseNames(start: BehaviorSubject<string>): Observable<Exercise[]> {
-    // console.log('service searchExerciseNames', start);
     return start.switchMap(startText => {
       const endText = startText + '\uf8ff';
       return this.afs
@@ -86,53 +73,36 @@ export class ExerciseService {
   }
 
   fetchExercise(id: string) {
-    this.fbSubs.push(this.afs
-      .collection('exercises')
-      .doc(id)
-      .valueChanges()
+    this.fbSubs.push(
+      this.fss.doc$('exercises/' + id)
       .subscribe((ex: Exercise) => {
-        this.exerciseToEdit.next(ex);
+        this.exerciseToEdit$.next(ex);
       })
     );
-    return this.exerciseToEdit;
+    return this.exerciseToEdit$;
   }
 
   deleteExercise(exercise: Exercise) {
-    this.deleteFromDatabase(exercise);
+    this.spinner.show();
+    const docRef = this.fss.doc('exercises/' + exercise.id);
+    return this.fss.delete(docRef).then(val => this.spinner.hide());
   }
 
-  addDataToDatabase(exercise: Exercise) {
-    this.afs.collection('exercises').add(exercise)
-      .then(function(docRef) {
-        console.log('Exercise Added with ID: ', docRef.id);
-      })
-      .catch(function(error) {
-        console.error('Error adding Exercise: ', error);
+  saveExercise(exercise: Exercise) {
+    console.log('saveExercise', exercise);
+    if (exercise.id) {
+      const docRef = this.fss.doc('exercises/' + exercise.id);
+      return this.fss.upsert(docRef, exercise).then(data => {
+        console.log('saveExercise upsert', data);
+        return exercise.id;
       });
-  }
-
-  updateDataToDatabase(id: string, exercise: Exercise) {
-    const exRef = this.afs.collection('exercises').doc(id);
-    // console.log('exRef: ', exRef);
-    exRef.update(exercise)
-      .then(function() {
-        console.log('Exercise successfully updated!');
-      })
-      .catch(function(error) {
-        // The document probably doesn't exist.
-        console.error('Error updating Exercise: ', error);
+    } else {
+      const colRef = this.fss.col('exercises');
+      return this.fss.add(colRef, exercise).then(data => {
+        console.log('saveExercise add', data);
+        return data.id;
       });
-  }
-
-  deleteFromDatabase(exercise: Exercise) {
-    this.afs.collection('exercises')
-      .doc(exercise.id)
-      .delete()
-      .then(function() {
-        console.log('Exercise successfully deleted!');
-      }).catch(function(error) {
-        console.error('Error removing Exercise: ', error);
-    });
+    }
   }
 
   cancelSubscriptions() {

@@ -45,12 +45,11 @@
         </mat-form-field>
 
         <br />
-        * The below fields will be saved as an attribute cloud on the available-workout document
         <mat-form-field>
           <mat-select
             placeholder="Source"
             formControlName="source">
-            <mat-option *ngFor="let source of sourceList" [value]="source.value">{{source.name}}</mat-option>
+            <mat-option *ngFor="let source of sourceList" [value]="source.name">{{source.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="awForm.get('source').hasError('required') && awForm.get('source').touched">
             Source is required.
@@ -71,7 +70,7 @@
             placeholder="Workout Type"
             formControlName="type"
             multiple>
-            <mat-option *ngFor="let type of typeList" [value]="type.value">{{type.value}}</mat-option>
+            <mat-option *ngFor="let type of typeList" [value]="type.name">{{type.name}}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -80,7 +79,7 @@
             placeholder="Area of Emphasis"
             formControlName="emphasis"
             multiple>
-            <mat-option *ngFor="let emphasis of emphasisList" [value]="emphasis.value">{{emphasis.value}}</mat-option>
+            <mat-option *ngFor="let emphasis of emphasisList" [value]="emphasis.name">{{emphasis.name}}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -88,7 +87,7 @@
           <mat-select
             placeholder="Record"
             formControlName="record">
-            <mat-option *ngFor="let measurementType of measurementTypeList" [value]="measurementType.value">{{measurementType.value}}</mat-option>
+            <mat-option *ngFor="let measurementType of measurementTypeList" [value]="measurementType.name">{{measurementType.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="awForm.get('record').hasError('required') && awForm.get('record').touched">
             Record is required.

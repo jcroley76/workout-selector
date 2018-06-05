@@ -93,7 +93,7 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
           if (aws.length > 0) {
             this.availableWorkoutList = aws;
           } else {
-            this.initForm();
+            this.noWorkoutsFound();
           }
         }
       );
@@ -161,7 +161,15 @@ export class RecordWorkoutComponent implements OnInit, OnDestroy {
     this.availableWorkoutService.fetchAvailableWorkout(event.value);
   }
 
-  // TODO: If coming into form in Add mode make more dynamic. Only show fields as they are needed.
+  noWorkoutsFound() {
+    this.availableWorkoutList = [];
+    this.selectedAvailableWorkout = null;
+    this.rwForm.controls['title'].setValue('');
+    this.rwForm.controls['type'].setValue('');
+    this.rwForm.controls['duration'].setValue('');
+    this.rwForm.controls['emphasis'].setValue('');
+  }
+
   initForm() {
     this.selectedAvailableWorkout = null;
     this.rwForm = new FormGroup({

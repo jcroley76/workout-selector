@@ -16,18 +16,6 @@ type CollectionPredicate<T>   = string |  AngularFirestoreCollection<T>;
 type DocPredicate<T>          = string |  AngularFirestoreDocument<T>;
 
 // FROM: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#4-Upsert-Update-or-Create-Method
-// TODO: Refactor other services to use this. See recorded-workout.ts
-/*
-    Service to Refactor:
-    Auth.Service
-    AvailableWorkout.Service  -Done-
-    DropDown.Service
-    Equipment.Service
-    Exercise.Service
-    RecordedWorkout.Service   -Done-
-    User.Service
- */
-
 @Injectable()
 export class FirestoreService {
 

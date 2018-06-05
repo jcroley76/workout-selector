@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 import { DropDown } from './models/dropdown.model';
 import { Subject } from 'rxjs/Subject';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { UIService } from './ui.service';
-import { Subscription } from 'rxjs/Subscription';
+import { FirestoreService } from './firestore.service';
 
 @Injectable()
 export class DropdownService {
-  private fbSubs: Subscription[] = [];
 
   sourceList: DropDown[] = [];
   sourceListChanged$ = new Subject<DropDown[]>();
@@ -27,157 +24,73 @@ export class DropdownService {
   movementPatternList: DropDown[] = [];
   movementPatternListChanged$ = new Subject<DropDown[]>();
 
-  constructor(private db: AngularFirestore, private uiService: UIService) {
+  constructor(private fss: FirestoreService) {
   }
 
   fetchSourceList() {
-    this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.db
-      .collection('workout-source')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            name: doc.payload.doc.data().name,
-            value: doc.payload.doc.data().name
-          };
-        });
-      })
+    this.fss.colWithIds$('workout-source')
       .subscribe((sourceList: DropDown[]) => {
-        this.uiService.loadingStateChanged$.next(false);
         this.sourceList = sourceList;
         this.sourceListChanged$.next([...this.sourceList]);
       }, error => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.uiService.showSnackbar('Fetching Source List failed, please try again later', null, 3000);
+        console.error('Fetching Source List failed, please try again later', error);
         this.sourceListChanged$.next(null);
-      }));
+      });
   }
 
   fetchTypeList() {
-    this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.db
-      .collection('workout-type')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            name: doc.payload.doc.data().name,
-            value: doc.payload.doc.data().name
-          };
-        });
-      })
+    this.fss.colWithIds$('workout-type')
       .subscribe((typeList: DropDown[]) => {
-        this.uiService.loadingStateChanged$.next(false);
         this.typeList = typeList;
         this.typeListChanged$.next([...this.typeList]);
       }, error => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.uiService.showSnackbar('Fetching Type List failed, please try again later', null, 3000);
+        console.error('Fetching Type List failed, please try again later', error);
         this.typeListChanged$.next(null);
-      }));
+      });
   }
 
   fetchEmphasisList() {
-    this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.db
-      .collection('workout-emphasis')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            name: doc.payload.doc.data().name,
-            value: doc.payload.doc.data().name
-          };
-        });
-      })
+    this.fss.colWithIds$('workout-emphasis')
       .subscribe((emphasisList: DropDown[]) => {
-        this.uiService.loadingStateChanged$.next(false);
         this.emphasisList = emphasisList;
         this.emphasisListChanged$.next([...this.emphasisList]);
       }, error => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.uiService.showSnackbar('Fetching Emphasis List failed, please try again later', null, 3000);
+        console.error('Fetching Emphasis List failed, please try again later', error);
         this.emphasisListChanged$.next(null);
-      }));
+      });
   }
 
   fetchMeasurementTypeList() {
-    this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.db
-      .collection('measurement-types')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            name: doc.payload.doc.data().name,
-            value: doc.payload.doc.data().name
-          };
-        });
-      })
+    this.fss.colWithIds$('measurement-types')
       .subscribe((measurementTypeList: DropDown[]) => {
-        this.uiService.loadingStateChanged$.next(false);
         this.measurementTypeList = measurementTypeList;
         this.measurementTypeListChanged$.next([...this.measurementTypeList]);
       }, error => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.uiService.showSnackbar('Fetching Measurement Type List failed, please try again later', null, 3000);
+        console.error('Fetching Measurement Type List failed, please try again later', error);
         this.measurementTypeListChanged$.next(null);
-      }));
+      });
   }
 
   fetchMuscleGroupList() {
-    this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.db
-      .collection('muscle-groups')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            name: doc.payload.doc.data().name,
-            value: doc.payload.doc.data().name
-          };
-        });
-      })
+    this.fss.colWithIds$('muscle-groups')
       .subscribe((muscleGroupList: DropDown[]) => {
-        this.uiService.loadingStateChanged$.next(false);
         this.muscleGroupList = muscleGroupList;
         this.muscleGroupListChanged$.next([...this.muscleGroupList]);
       }, error => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.uiService.showSnackbar('Fetching Body Part List failed, please try again later', null, 3000);
+        console.error('Fetching Body Part List failed, please try again later', error);
         this.muscleGroupListChanged$.next(null);
-      }));
+      });
   }
 
   fetchMovementPatternList() {
-    this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.db
-      .collection('movement-patterns')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            name: doc.payload.doc.data().name,
-            value: doc.payload.doc.data().name
-          };
-        });
-      })
+    this.fss.colWithIds$('movement-patterns')
       .subscribe((movementPatternList: DropDown[]) => {
-        this.uiService.loadingStateChanged$.next(false);
         this.movementPatternList = movementPatternList;
         this.movementPatternListChanged$.next([...this.movementPatternList]);
       }, error => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.uiService.showSnackbar('Fetching Movement Pattern List failed, please try again later', null, 3000);
+        console.error('Fetching Movement Pattern List failed, please try again later', error);
         this.movementPatternListChanged$.next(null);
-      }));
+      });
   }
 
 }

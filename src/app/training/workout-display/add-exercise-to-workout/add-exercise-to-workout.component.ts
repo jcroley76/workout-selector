@@ -52,6 +52,8 @@ export class AddExerciseToWorkoutComponent implements OnInit {
     this.panelOpenState = val;
   }
 
+  // TODO: Improve search functionality - Major undertaking
+  // https://angularfirebase.com/lessons/algolia-firestore-quickstart-with-firebase-cloud-functions/
   searchExercises($event) {
     this.startAt.next($event.target.value);
   }

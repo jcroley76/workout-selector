@@ -34,6 +34,7 @@ export class RecommendWorkoutComponent implements OnInit, OnDestroy {
     }
   }
 
+  // TODO: Improve search functionality: https://angularfirebase.com/lessons/algolia-firestore-quickstart-with-firebase-cloud-functions/
   onSelectWorkout(aw: AvailableWorkout) {
     console.log('Selected Workout', aw);
     this.router.navigate(['/training/record-workout', {load: 'aw', id: aw.id}]);

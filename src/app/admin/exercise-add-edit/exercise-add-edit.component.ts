@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { ExerciseService } from '../exercise.service';
-import { DropdownService } from '../../shared/dropdown.service';
-import { DropDown } from '../../shared/models/dropdown.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { UIService } from '../../shared/ui.service';
-import { Exercise } from '../../shared/models/exercise.model';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Equipment } from '../../shared/models/equipment.model';
-import { EquipmentService } from '../equipment.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {ExerciseService} from '../exercise.service';
+import {DropdownService} from '../../shared/dropdown.service';
+import {DropDown} from '../../shared/models/dropdown.model';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UIService} from '../../shared/ui.service';
+import {Exercise} from '../../shared/models/exercise.model';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Equipment} from '../../shared/models/equipment.model';
+import {EquipmentService} from '../equipment.service';
 
 @Component({
   selector: 'app-exercise-add-edit',
@@ -22,42 +22,45 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
   id: string;
   title: string;
   equipmentList: Equipment[];
-  equipmentSubscription: Subscription;
-  equipmentItemSubscription: Subscription;
+  equipmentSubscription$: Subscription;
+  equipmentItemSubscription$: Subscription;
   muscleGroupList: DropDown[];
-  muscleGroupSubscription: Subscription;
+  muscleGroupSubscription$: Subscription;
   movementPatternList: DropDown[];
-  movementPatternSubscription: Subscription;
-  private loadingSubscription: Subscription;
+  movementPatternSubscription$: Subscription;
+  private loadingSubscription$: Subscription;
 
-  constructor( private route: ActivatedRoute,
-               private router: Router,
-               private exerciseService: ExerciseService,
-               private equipmentService: EquipmentService,
-               private dropdownService: DropdownService,
-               private uiService: UIService) { }
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private exerciseService: ExerciseService,
+              private equipmentService: EquipmentService,
+              private dropdownService: DropdownService,
+              private uiService: UIService) {
+  }
 
   ngOnInit() {
-    this.loadingSubscription = this.uiService.loadingStateChanged$.subscribe(
+    this.loadingSubscription$ = this.uiService.loadingStateChanged$.subscribe(
       isLoading => {
         this.isLoading = isLoading;
       }
     );
-    this.equipmentSubscription = this.equipmentService.equipmentListChanged$
+    this.equipmentSubscription$ = this.equipmentService.equipmentListChanged$
       .subscribe(eqipList =>
         (this.equipmentList = eqipList)
       );
     this.fetchEquipmentList();
 
-    this.muscleGroupSubscription = this.dropdownService.muscleGroupListChanged$
-      .subscribe(mgList =>
-        (this.muscleGroupList = mgList)
+    this.muscleGroupSubscription$ = this.dropdownService.muscleGroupListChanged$
+      .subscribe(mgList => {
+          this.muscleGroupList = mgList;
+        }
       );
     this.fetchMuscleGroupList();
 
-    this.movementPatternSubscription = this.dropdownService.movementPatternListChanged$
-      .subscribe(mpList =>
-        (this.movementPatternList = mpList)
+    this.movementPatternSubscription$ = this.dropdownService.movementPatternListChanged$
+      .subscribe(mpList => {
+          this.movementPatternList = mpList;
+        }
       );
     this.fetchMovementPatternList();
 
@@ -72,20 +75,20 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.loadingSubscription) {
-      this.loadingSubscription.unsubscribe();
+    if (this.loadingSubscription$) {
+      this.loadingSubscription$.unsubscribe();
     }
-    if (this.equipmentSubscription) {
-      this.equipmentSubscription.unsubscribe();
+    if (this.equipmentSubscription$) {
+      this.equipmentSubscription$.unsubscribe();
     }
-    if (this.muscleGroupSubscription) {
-      this.muscleGroupSubscription.unsubscribe();
+    if (this.muscleGroupSubscription$) {
+      this.muscleGroupSubscription$.unsubscribe();
     }
-    if (this.movementPatternSubscription) {
-      this.movementPatternSubscription.unsubscribe();
+    if (this.movementPatternSubscription$) {
+      this.movementPatternSubscription$.unsubscribe();
     }
-    if (this.equipmentItemSubscription) {
-      this.equipmentItemSubscription.unsubscribe();
+    if (this.equipmentItemSubscription$) {
+      this.equipmentItemSubscription$.unsubscribe();
     }
   }
 
@@ -128,7 +131,8 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
 
   saveExercise() {
     if (this.editMode) {
-      this.exerciseService.updateDataToDatabase(this.id, this.exForm.value);
+      this.exForm.value.id = this.id;
+      this.exerciseService.saveExercise(this.exForm.value);
     } else {
       const exValues = this.exForm.value;
       exValues.equipment.forEach(equipItem => {
@@ -140,7 +144,7 @@ export class ExerciseAddEditComponent implements OnInit, OnDestroy {
           const exercise: Exercise = {...exValues};
           exercise.name = exName;
           exercise.equipment = equipName;
-          this.exerciseService.addDataToDatabase(exercise);
+          this.exerciseService.saveExercise(exercise);
         }
       });
     }

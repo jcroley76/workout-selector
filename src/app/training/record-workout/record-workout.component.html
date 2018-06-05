@@ -18,7 +18,7 @@
           placeholder="Source"
           formControlName="source"
           (change)="fetchAvailableWorkoutList($event)">
-          <mat-option *ngFor="let source of sourceList" [value]="source.value">{{source.name}}</mat-option>
+          <mat-option *ngFor="let source of sourceList" [value]="source.name">{{source.name}}</mat-option>
         </mat-select>
         <mat-error *ngIf="rwForm.get('source').hasError('required') && rwForm.get('source').touched">
           Source is required.
@@ -45,8 +45,8 @@
           multiple>
           <mat-option
             *ngFor="let type of typeList"
-            [value]="type.value">
-            {{type.value}}
+            [value]="type.name">
+            {{type.name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -96,8 +96,8 @@
             multiple>
             <mat-option
               *ngFor="let emphasis of emphasisList"
-              [value]="emphasis.value">
-              {{emphasis.value}}
+              [value]="emphasis.name">
+              {{emphasis.name}}
             </mat-option>
           </mat-select>
         </mat-form-field>

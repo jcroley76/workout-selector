@@ -1,86 +1,69 @@
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs';
+import {AngularFirestore} from 'angularfire2/firestore';
+import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs';
 
-import { User } from '../auth/user.model';
-import { UIService } from '../shared/ui.service';
+import {User} from '../auth/user.model';
+import {UIService} from '../shared/ui.service';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {FirestoreService} from '../shared/firestore.service';
 
 @Injectable()
 export class UserService {
-  usersChanged = new Subject<User[]>();
-  userToEdit = new Subject<User>();
+  usersChanged$ = new Subject<User[]>();
+  userToEdit$ = new Subject<User>();
   private users: User[] = [];
   private fbSubs: Subscription[] = [];
 
-  constructor(private db: AngularFirestore, private uiService: UIService) {
+  constructor(private fss: FirestoreService,
+              private spinner: NgxSpinnerService,
+              private db: AngularFirestore,
+              private uiService: UIService) {
   }
 
   fetchUsers() {
-    this.uiService.loadingStateChanged$.next(true);
-    this.fbSubs.push(this.db
-      .collection('users')
-      .snapshotChanges()
-      .map(docArray => {
-        // throw(new Error());
-        return docArray.map(doc => {
-          return {
-            uid: doc.payload.doc.id,
-            displayName: doc.payload.doc.data().displayName,
-            email: doc.payload.doc.data().email,
-            roles: doc.payload.doc.data().roles
-          };
-        });
-      })
+    this.spinner.show();
+    this.fss.colWithIds$('users')
       .subscribe((users: User[]) => {
-        this.uiService.loadingStateChanged$.next(false);
+        this.spinner.hide();
         this.users = users;
-        this.usersChanged.next([...this.users]);
+        this.usersChanged$.next([...this.users]);
       }, error => {
-        this.uiService.loadingStateChanged$.next(false);
-        this.uiService.showSnackbar('Fetching Users failed, please try again later', null, 3000);
-        this.usersChanged.next(null);
-      }));
-  }
-
-  fetchUser(id: string) {
-    this.fbSubs.push(this.db
-      .collection('users')
-      .doc(id)
-      .valueChanges()
-      .subscribe((us: User) => {
-        this.userToEdit.next(us);
-      })
-    );
-    return this.userToEdit;
-  }
-
-  deleteUser(user: User) {
-    this.deleteFromDatabase(user);
-  }
-
-  updateDataToDatabase(id: string, user: User) {
-    const usRef = this.db.collection('users').doc(id);
-    console.log('usRef: ', usRef);
-    usRef.update(user)
-      .then(function() {
-        console.log('User successfully updated!');
-      })
-      .catch(function(error) {
-        // The document probably doesn't exist.
-        console.error('Error updating User: ', error);
+        this.spinner.hide();
+        console.error('Fetching Users failed, please try again later', error);
+        this.usersChanged$.next(null);
       });
   }
 
-  deleteFromDatabase(user: User) {
-    this.db.collection('users')
-      .doc(user.uid)
-      .delete()
-      .then(function() {
-        console.log('User successfully deleted!');
-      }).catch(function(error) {
-      console.error('Error removing User: ', error);
-    });
+  fetchUser(id: string) {
+    this.fss.doc$('users/' + id)
+      .subscribe((us: User) => {
+        this.userToEdit$.next(us);
+      });
+    return this.userToEdit$;
+  }
+
+  deleteUser(user: User) {
+    this.spinner.show();
+    const docRef = this.fss.doc('users/' + user.uid);
+    return this.fss.delete(docRef).then(val => this.spinner.hide());
+  }
+
+  saveUser(user: User) {
+    console.log('saveUser', user);
+    if (user.uid) {
+      const docRef = this.fss.doc('users/' + user.uid);
+      return this.fss.upsert(docRef, user).then(data => {
+        console.log('saveUser upsert', data);
+        return user.uid;
+      });
+    } else {
+      const colRef = this.fss.col('users');
+      return this.fss.add(colRef, user).then(data => {
+        console.log('saveUser add', data);
+        return data.id;
+      });
+    }
   }
 
   cancelSubscriptions() {

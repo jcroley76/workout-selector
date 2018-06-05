@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
               private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.usChangedSubscription = this.userService.usersChanged.subscribe(
+    this.usChangedSubscription = this.userService.usersChanged$.subscribe(
       (users: User[]) => {
         console.log('users', users);
         this.dataSource.data = users;
@@ -62,7 +62,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
       data => {
         console.log('data', data);
         if (data.action === 'save') {
-          this.userService.updateDataToDatabase(data.user.uid, data.user);
+          this.userService.saveUser(data.user);
         }
       }
     );

@@ -37,7 +37,7 @@
           <mat-select
             placeholder="Primary Movement Pattern"
             formControlName="movementPattern">
-            <mat-option *ngFor="let movementPattern of movementPatternList" [value]="movementPattern.value">{{movementPattern.value}}</mat-option>
+            <mat-option *ngFor="let movementPattern of movementPatternList" [value]="movementPattern.name">{{movementPattern.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="exForm.get('movementPattern').hasError('movementPattern') && exForm.get('movementPattern').touched">
             Movement Pattern is required.
@@ -62,7 +62,7 @@
             placeholder="Muscle Groups Worked"
             formControlName="muscleGroup"
             multiple>
-            <mat-option *ngFor="let muscleGroup of muscleGroupList" [value]="muscleGroup.value">{{muscleGroup.value}}</mat-option>
+            <mat-option *ngFor="let muscleGroup of muscleGroupList" [value]="muscleGroup.name">{{muscleGroup.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="exForm.get('muscleGroup').hasError('muscleGroup') && exForm.get('muscleGroup').touched">
             Muscle Groups is required.

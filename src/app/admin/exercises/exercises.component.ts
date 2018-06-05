@@ -24,7 +24,7 @@ export class ExercisesComponent implements OnInit, AfterViewInit, OnDestroy {
               private router: Router) { }
 
   ngOnInit() {
-    this.exChangedSubscription = this.exerciseService.exercisesChanged.subscribe(
+    this.exChangedSubscription = this.exerciseService.exercisesChanged$.subscribe(
       (exercises: Exercise[]) => {
         console.log('exercises', exercises);
         this.dataSource.data = exercises;
