@@ -6,7 +6,6 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {RecordedWorkoutService} from '../recorded-workout.service';
 import {DropdownService} from '../../shared/dropdown.service';
 import {UIService} from '../../shared/ui.service';
-import {RecordedWorkout} from '../../shared/models/recorded-workout.model';
 import {AvailableWorkoutService} from '../../admin/available-workout.service';
 import {AvailableWorkout} from '../../shared/models/available-workout.model';
 import {AuthService} from '../../auth/auth.service';

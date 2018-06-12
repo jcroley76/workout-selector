@@ -1,68 +1,57 @@
-<form>
+<ais-instantsearch [config]="searchConfigAW">
   <section fxLayout fxLayoutAlign="center">
     <mat-card fxFlex.xs="100%" fxFlex="600px" class="form-card">
       <mat-card-title>Recommend a Workout</mat-card-title>
       <mat-card-content>
         <b>What are you looking for today?</b>
-        <mat-form-field>
-          <input
-            type="text"
-            matInput
-            placeholder="Enter text to search by"
-            name="searchText"
-            [(ngModel)]="searchText"
-            (change)="filterContains()">
-          </mat-form-field>
-
+        <app-ais-mat-search-box
+          (change)="searchChangedAW($event)"
+          placeholder="Search Workouts by"
+          submitTitle="Find">
+        </app-ais-mat-search-box>
       </mat-card-content>
-
-      <mat-card-actions fxLayoutAlign="end">
-        <button
-          type="button"
-          mat-raised-button
-          class="mat-small"
-          color="warn"
-          title="Clear"
-          *ngIf="filteredWorkouts"
-          (click)="removeFilter('title')"
-          fxLayoutAlign="end">
-          <mat-icon>highlight_off</mat-icon>
-          Clear
-        </button>
-      </mat-card-actions>
     </mat-card>
   </section>
-</form>
 
-<section fxLayout fxLayoutAlign="center" *ngIf="filteredWorkouts">
-  <mat-card
-    fxFlex.xs="100%"
-    fxFlex="600px"
-    class="form-card">
-    <mat-list>
-      <mat-list-item *ngFor="let aw of filteredWorkouts | filterContains : searchText">
-        <h3 mat-line>
-          <span *ngIf="aw.source">{{aw.source}} - </span>
-          {{ aw.title }}
-        </h3>
-        <div mat-line><pre>{{aw.description}}</pre></div>
-        <div mat-line *ngIf="aw.type"><b>Workout Type: </b>{{aw.type}}</div>
-        <div mat-line *ngIf="aw.emphasis"><b>Area of Emphasis: </b>{{aw.emphasis}}</div>
-        <div mat-line *ngIf="aw.duration"><b>Duration: </b>{{aw.duration}}</div>
-        <div mat-line *ngIf="aw.equipment"><b>Equipment: </b>{{aw.equipment}}</div>
-        <div mat-line fxLayoutAlign="end">
-          <button
-            type="button"
-            mat-raised-button
-            color="primary"
-            fxLayoutAlign="end"
-            (click)="onSelectWorkout(aw)">
-            <mat-icon>directions_run</mat-icon>
-            Go!
-          </button>
-        </div>
-        <mat-divider></mat-divider>
-      </mat-list-item>
-    </mat-list>
-  </mat-card>
-</section>
+  <section fxLayout fxLayoutAlign="center" *ngIf="showResultsAW">
+    <ais-hits *ngIf="showResultsAW">
+      <ng-template let-hits="hits">
+        <mat-card
+          fxFlex.xs="100%"
+          fxFlex="600px"
+          class="form-card">
+          <mat-list>
+            <mat-list-item *ngFor="let hit of hits">
+              <h3 mat-line>
+                <span *ngIf="hit.source">{{hit.source}} - </span>
+                <ais-highlight attribute="title" [hit]="hit"></ais-highlight>
+              </h3>
+              <div mat-line>
+                <pre>
+                  <ais-highlight attribute="description" [hit]="hit"></ais-highlight>
+                </pre>
+              </div>
+              <div mat-line *ngIf="hit.type"><b>Workout Type: </b><ais-highlight attribute="type" [hit]="hit"></ais-highlight></div>
+              <div mat-line *ngIf="hit.emphasis"><b>Area of Emphasis: </b><ais-highlight attribute="emphasis" [hit]="hit"></ais-highlight></div>
+              <div mat-line *ngIf="hit.duration"><b>Duration: </b><ais-highlight attribute="duration" [hit]="hit"></ais-highlight></div>
+              <div mat-line *ngIf="hit.equipment"><b>Equipment: </b><ais-highlight attribute="equipment" [hit]="hit"></ais-highlight></div>
+              <div mat-line fxLayoutAlign="end">
+                <button
+                  type="button"
+                  mat-raised-button
+                  color="primary"
+                  fxLayoutAlign="end"
+                  (click)="onSelectWorkout(hit)">
+                  <mat-icon>directions_run</mat-icon>
+                  Go!
+                </button>
+              </div>
+              <mat-divider *ngIf="hits.length > 1"></mat-divider>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+      </ng-template>
+    </ais-hits>
+  </section>
+
+</ais-instantsearch>

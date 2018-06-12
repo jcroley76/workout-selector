@@ -1,11 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ExerciseService} from '../../../admin/exercise.service';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {MatAutocompleteSelectedEvent} from '@angular/material';
 import {ArrayType} from '@angular/compiler/src/output/output_ast';
 import {WorkoutExercise} from '../../../shared/models/recorded-workout.model';
 import {Exercise} from '../../../shared/models/exercise.model';
+import {environment} from '../../../../environments/environment';
+import {ExerciseService} from '../../../admin/exercise.service';
 
 @Component({
   selector: 'app-add-exercise-to-workout',
@@ -15,64 +13,46 @@ import {Exercise} from '../../../shared/models/exercise.model';
 export class AddExerciseToWorkoutComponent implements OnInit {
   @Input() inputArray: ArrayType[];
   panelOpenState = false;
-  exForm: FormGroup;
   workoutExercise: WorkoutExercise;
   showSets = false;
-  exerciseList: Exercise[];
-  selectedExercise: Exercise;
-  startAt: BehaviorSubject<string | null> = new BehaviorSubject('');
 
-  constructor(private _fb: FormBuilder,
-              private exerciseService: ExerciseService) {
-  }
+  searchConfigEX = {
+    ...environment.algolia,
+    indexName: 'ngFitnessLog_Exercises'
+  };
 
   // Inspired By:
   // https://github.com/audiBookning/autocomplete-search-angularfirebase2-5-plus/blob/master/src/app/movie-search/movie-search.component.ts
 
-  ngOnInit() {
-    this.startAt.subscribe(start => {
-      if (start) {
-        this.exerciseService.searchExerciseNames(this.startAt).subscribe(exercises => {
-          this.exerciseList = exercises;
-        });
-      }
-    });
-
-    this.initForm();
+  constructor(private exerciseService: ExerciseService) {
   }
 
-  initForm() {
-    const newForm = this._fb.group({
-      searchExercises: ['', [Validators.required, Validators.maxLength(25)]],
-    });
-    this.exForm = newForm;
+  ngOnInit() {
   }
 
   setPanelOpenState(val: boolean) {
     this.panelOpenState = val;
   }
 
-  // TODO: Improve search functionality - Major undertaking
-  // https://angularfirebase.com/lessons/algolia-firestore-quickstart-with-firebase-cloud-functions/
-  searchExercises($event) {
-    this.startAt.next($event.target.value);
-  }
-
-  exerciseSelected($event: MatAutocompleteSelectedEvent) {
-    this.selectedExercise = $event.source['value'];
-    this.exForm.controls['searchExercises'].setValue(this.selectedExercise.name);
-    this.workoutExercise = {
-      exercise: this.selectedExercise,
-      sets: []
-    };
-    this.showSets = true;
+  exerciseSelected(event) {
+    // console.log(event);
+    this.exerciseService.fetchExercise(event.item.id)
+      .subscribe((ex: Exercise) => {
+          // console.log('edit ex', ex);
+          if (ex) {
+            this.workoutExercise = {
+              exercise: ex,
+              sets: []
+            };
+            this.showSets = true;
+          }
+        }
+      );
   }
 
   closeExerciseSets(event) {
     this.showSets = false;
-    this.selectedExercise = null;
     this.workoutExercise = null;
-    this.exForm.reset();
     this.setPanelOpenState(false);
   }
 }

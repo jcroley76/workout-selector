@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { AuthService } from './auth/auth.service';
@@ -35,7 +35,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     WelcomeComponent,
     HeaderComponent,
     SidenavListComponent,
-    DocPipe
+    DocPipe,
   ],
   imports: [
     BrowserModule,
@@ -61,7 +61,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     EquipmentService,
     UserService,
     UIService,
-    DocPipe
+    DocPipe,
   ],
   bootstrap: [AppComponent]
 })

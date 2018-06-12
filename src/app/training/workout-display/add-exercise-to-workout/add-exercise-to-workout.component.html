@@ -19,29 +19,13 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-
     <div fxLayout="row">
-      <form
-        fxLayoutGap="10px"
-        [formGroup]="exForm">
-        <mat-form-field>
-          <input
-            type="text"
-            matInput
-            (keyup)="searchExercises($event)"
-            [matAutocomplete]="auto"
-            placeholder="Search Exercises"
-            formControlName="searchExercises">
-        </mat-form-field>
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option
-            (onSelectionChange)="exerciseSelected($event)"
-            *ngFor="let exercise of exerciseList"
-            [value]="exercise">
-            {{ exercise?.name }}
-          </mat-option>
-        </mat-autocomplete>
-      </form>
+      <ais-instantsearch [config]="searchConfigEX">
+        <app-ais-autocomplete
+          placeholder="Search Exercises"
+          (select)="exerciseSelected($event)">
+        </app-ais-autocomplete>
+      </ais-instantsearch>
 
       <app-exercise-set-manager
         [workoutExercise]="workoutExercise"

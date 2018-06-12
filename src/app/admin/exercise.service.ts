@@ -2,14 +2,11 @@ import {AngularFirestore} from 'angularfire2/firestore';
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import {Exercise} from '../shared/models/exercise.model';
-import {UIService} from '../shared/ui.service';
 import {FirestoreService} from '../shared/firestore.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 
@@ -21,9 +18,7 @@ export class ExerciseService {
   private fbSubs: Subscription[] = [];
 
   constructor(private fss: FirestoreService,
-              private spinner: NgxSpinnerService,
-              private afs: AngularFirestore,
-              private uiService: UIService) {
+              private spinner: NgxSpinnerService) {
   }
 
   fetchExercises() {
@@ -40,39 +35,8 @@ export class ExerciseService {
       }));
   }
 
-  // TODO: Improve search: https://angularfirebase.com/lessons/algolia-firestore-quickstart-with-firebase-cloud-functions/
-  // Inspired By: https://github.com/audiBookning/autocomplete-search-angularfirebase2-5-plus/blob/master/src/app/movies.service.ts
-  searchExerciseNames(start: BehaviorSubject<string>): Observable<Exercise[]> {
-    return start.switchMap(startText => {
-      const endText = startText + '\uf8ff';
-      return this.afs
-        .collection('exercises', ref =>
-          ref
-            .orderBy('name')
-            .limit(10)
-            .startAt(startText)
-            .endAt(endText)
-        )
-        .snapshotChanges()
-        .debounceTime(200)
-        .distinctUntilChanged()
-        .map(changes => {
-          // console.log('changes', changes);
-          return changes.map(c => {
-            return {
-              id: c.payload.doc.id,
-              name: c.payload.doc.data().name,
-              description: c.payload.doc.data().description,
-              movementPattern: c.payload.doc.data().movementPattern,
-              equipment: c.payload.doc.data().equipment,
-              muscleGroup: c.payload.doc.data().muscleGroup
-            };
-          });
-        });
-    });
-  }
-
   fetchExercise(id: string) {
+    console.log('fetchExercise', id);
     this.fbSubs.push(
       this.fss.doc$('exercises/' + id)
       .subscribe((ex: Exercise) => {

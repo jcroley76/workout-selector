@@ -1,52 +1,36 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import { AvailableWorkoutService } from '../../admin/available-workout.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, OnInit } from '@angular/core';
 import { AvailableWorkout } from '../../shared/models/available-workout.model';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-recommend-workout',
   templateUrl: './recommend-workout.component.html',
   styleUrls: ['./recommend-workout.component.css']
 })
-export class RecommendWorkoutComponent implements OnInit, OnDestroy {
-  private awChangedSubscription: Subscription;
-  searchText = '';
-  availableWorkouts: AvailableWorkout[];
-  filteredWorkouts: AvailableWorkout[];
+export class RecommendWorkoutComponent implements OnInit {
+  searchConfigAW = {
+    ...environment.algolia,
+    indexName: 'ngFitnessLog_AvailableWorkouts'
+  };
+  showResultsAW = false;
 
-  constructor( private availableWorkoutService: AvailableWorkoutService,
-               private router: Router) { }
+  constructor( private router: Router) { }
 
   ngOnInit() {
-    this.awChangedSubscription = this.availableWorkoutService.availableWorkoutsChanged$.subscribe(
-      (availableWorkouts: AvailableWorkout[]) => {
-        console.log('availableWorkouts', availableWorkouts);
-        this.availableWorkouts = availableWorkouts;
-      }
-    );
-    this.availableWorkoutService.fetchAvailableWorkouts();
   }
 
-  ngOnDestroy() {
-    if (this.awChangedSubscription) {
-      this.awChangedSubscription.unsubscribe();
-    }
+  searchChangedAW(query) {
+    this.showResultsAW = true;
+    // if (query.length) {
+    //   this.showResultsAW = true;
+    // } else {
+    //   this.showResultsAW = false;
+    // }
   }
 
-  // TODO: Improve search functionality: https://angularfirebase.com/lessons/algolia-firestore-quickstart-with-firebase-cloud-functions/
   onSelectWorkout(aw: AvailableWorkout) {
     console.log('Selected Workout', aw);
     this.router.navigate(['/training/record-workout', {load: 'aw', id: aw.id}]);
-  }
-
-  filterContains() {
-    this.filteredWorkouts = this.availableWorkouts;
-  }
-
-  /// removes filter
-  removeFilter() {
-    this.filteredWorkouts = [];
-    this.searchText = '';
   }
 }

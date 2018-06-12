@@ -12,5 +12,9 @@ export const environment = {
     projectId: "ng-fitness-log",
     storageBucket: "ng-fitness-log.appspot.com",
     messagingSenderId: "1011324218036"
+  },
+  algolia: {
+    appId: 'Y0U3KHVP6S',
+    apiKey: '1ae4d785cf7d7b4c149badbb5a2b81a2'
   }
 };

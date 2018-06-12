@@ -27,7 +27,8 @@ export class FilterContainsPipe implements PipeTransform {
               }
             });
           } else {
-            if (it[prop].toLowerCase().includes(searchText)) {
+            if (typeof it[prop] === 'string'
+                && it[prop].toLowerCase().includes(searchText)) {
               if (!this.isPresent(filteredObjects, it)) {
                 filteredObjects.push(it);
               }
