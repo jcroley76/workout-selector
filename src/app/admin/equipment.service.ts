@@ -14,11 +14,19 @@ export class EquipmentService {
   fetchEquipmentList() {
     this.fss.colWithIds$('equipment')
       .subscribe((equipmentList: Equipment[]) => {
-        this.equipmentList = equipmentList;
+        this.equipmentList = equipmentList.sort((v1, v2) => {
+          return this.orderEquipmentList(v1, v2);
+        });
         this.equipmentListChanged$.next([...this.equipmentList]);
       }, error => {
         console.error('Fetching Equipment List failed, please try again later');
         this.equipmentListChanged$.next(null);
       });
+  }
+
+  orderEquipmentList(a: Equipment, b: Equipment) {
+    if (a.name < b.name) { return -1; }
+    if (a.name > b.name) { return 1; }
+    return 0;
   }
 }

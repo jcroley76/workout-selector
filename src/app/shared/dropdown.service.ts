@@ -30,7 +30,9 @@ export class DropdownService {
   fetchSourceList() {
     this.fss.colWithIds$('workout-source')
       .subscribe((sourceList: DropDown[]) => {
-        this.sourceList = sourceList;
+        this.sourceList = sourceList.sort((v1, v2) => {
+          return this.orderDropDowns(v1, v2);
+        });
         this.sourceListChanged$.next([...this.sourceList]);
       }, error => {
         console.error('Fetching Source List failed, please try again later', error);
@@ -41,7 +43,9 @@ export class DropdownService {
   fetchTypeList() {
     this.fss.colWithIds$('workout-type')
       .subscribe((typeList: DropDown[]) => {
-        this.typeList = typeList;
+        this.typeList = typeList.sort((v1, v2) => {
+          return this.orderDropDowns(v1, v2);
+        });
         this.typeListChanged$.next([...this.typeList]);
       }, error => {
         console.error('Fetching Type List failed, please try again later', error);
@@ -52,7 +56,9 @@ export class DropdownService {
   fetchEmphasisList() {
     this.fss.colWithIds$('workout-emphasis')
       .subscribe((emphasisList: DropDown[]) => {
-        this.emphasisList = emphasisList;
+        this.emphasisList = emphasisList.sort((v1, v2) => {
+          return this.orderDropDowns(v1, v2);
+        });
         this.emphasisListChanged$.next([...this.emphasisList]);
       }, error => {
         console.error('Fetching Emphasis List failed, please try again later', error);
@@ -63,7 +69,9 @@ export class DropdownService {
   fetchMeasurementTypeList() {
     this.fss.colWithIds$('measurement-types')
       .subscribe((measurementTypeList: DropDown[]) => {
-        this.measurementTypeList = measurementTypeList;
+        this.measurementTypeList = measurementTypeList.sort((v1, v2) => {
+          return this.orderDropDowns(v1, v2);
+        });
         this.measurementTypeListChanged$.next([...this.measurementTypeList]);
       }, error => {
         console.error('Fetching Measurement Type List failed, please try again later', error);
@@ -74,7 +82,9 @@ export class DropdownService {
   fetchMuscleGroupList() {
     this.fss.colWithIds$('muscle-groups')
       .subscribe((muscleGroupList: DropDown[]) => {
-        this.muscleGroupList = muscleGroupList;
+        this.muscleGroupList = muscleGroupList.sort((v1, v2) => {
+          return this.orderDropDowns(v1, v2);
+        });
         this.muscleGroupListChanged$.next([...this.muscleGroupList]);
       }, error => {
         console.error('Fetching Body Part List failed, please try again later', error);
@@ -85,12 +95,20 @@ export class DropdownService {
   fetchMovementPatternList() {
     this.fss.colWithIds$('movement-patterns')
       .subscribe((movementPatternList: DropDown[]) => {
-        this.movementPatternList = movementPatternList;
+        this.movementPatternList = movementPatternList.sort((v1, v2) => {
+          return this.orderDropDowns(v1, v2);
+        });
         this.movementPatternListChanged$.next([...this.movementPatternList]);
       }, error => {
         console.error('Fetching Movement Pattern List failed, please try again later', error);
         this.movementPatternListChanged$.next(null);
       });
+  }
+
+  orderDropDowns(a: DropDown, b: DropDown) {
+    if (a.name < b.name) { return -1; }
+    if (a.name > b.name) { return 1; }
+    return 0;
   }
 
 }

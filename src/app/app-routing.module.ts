@@ -5,7 +5,6 @@ import { AuthGuard } from './auth/auth.guard';
 import { TrainingComponent } from './training/training.component';
 import { AdminGuard } from './admin/admin.guard';
 import { AdminComponent } from './admin/admin.component';
-import { AlgoliaSearchComponent } from './algolia-search/algolia-search.component';
 
 const routes: Routes = [
   { path: '', component: WelcomeComponent},
