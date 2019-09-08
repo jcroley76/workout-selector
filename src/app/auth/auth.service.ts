@@ -3,16 +3,16 @@ import { AuthData } from './auth-data.model';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { User } from './user.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subject, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { UIService } from '../shared/ui.service';
-import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class AuthService {
   private isAuthenticated = false;
   authChanged$ = new Subject<boolean>();
-  loggedInUser$ = new Observable<User>();
+  loggedInUser$ = new Observable<any>();
 
   constructor(private router: Router,
               private afAuth: AngularFireAuth,
@@ -20,13 +20,15 @@ export class AuthService {
               private uiService: UIService) {
     //// Get auth data, then get firestore user document || null
     this.loggedInUser$ = this.afAuth.authState
-      .switchMap(user => {
-        if (user) {
-          return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
-        } else {
-          return Observable.of(null);
-        }
-      });
+      .pipe(
+        switchMap(user => {
+          if (user) {
+            return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+          } else {
+            return of(null);
+          }
+        })
+      );
   }
 
   initAuthListener() {
@@ -48,7 +50,7 @@ export class AuthService {
       authData.password)
       .then(credential => {
         console.log('registerUser', credential);
-        this.updateUserData(credential);
+        this.updateUserData(credential as unknown as User);
         this.uiService.loadingStateChanged$.next(false);
         this.router.navigate(['/training']);
       })
@@ -79,7 +81,7 @@ export class AuthService {
 
   logout() {
     this.afAuth.auth.signOut();
-    this.loggedInUser$ = Observable.of(null);
+    this.loggedInUser$ = new Observable<null>();
     this.router.navigate(['/login']);
   }
 

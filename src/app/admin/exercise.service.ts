@@ -1,11 +1,5 @@
-import {AngularFirestore} from 'angularfire2/firestore';
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
+import {Subject, Subscription} from 'rxjs';
 import {Exercise} from '../shared/models/exercise.model';
 import {FirestoreService} from '../shared/firestore.service';
 import {NgxSpinnerService} from 'ngx-spinner';

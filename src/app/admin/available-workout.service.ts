@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {AvailableWorkout} from '../shared/models/available-workout.model';
 import {UIService} from '../shared/ui.service';
 import {FirestoreService} from '../shared/firestore.service';

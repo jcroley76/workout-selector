@@ -3,7 +3,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {AuthService} from '../../auth/auth.service';
 import {RecordedWorkoutService} from '../recorded-workout.service';
 import {UIService} from '../../shared/ui.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {RecordedWorkout} from '../../shared/models/recorded-workout.model';
 
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DropDown } from './models/dropdown.model';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FirestoreService } from './firestore.service';
 
 @Injectable()

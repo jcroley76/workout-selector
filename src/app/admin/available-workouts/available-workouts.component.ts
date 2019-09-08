@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AvailableWorkout } from '../../shared/models/available-workout.model';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog, MatDialogConfig } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { AvailableWorkoutService } from '../available-workout.service';
 import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.component';
 import { Router } from '@angular/router';
@@ -16,8 +16,8 @@ export class AvailableWorkoutsComponent implements OnInit, AfterViewInit, OnDest
   dataSource = new MatTableDataSource<AvailableWorkout>();
   private awChangedSubscription: Subscription;
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private availableWorkoutService: AvailableWorkoutService,
               private dialog: MatDialog,

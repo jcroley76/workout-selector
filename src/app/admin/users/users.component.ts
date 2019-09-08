@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../auth/user.model';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog, MatDialogConfig } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { DeleteDialogComponent } from '../../shared/delete-dialog/delete-dialog.component';
 import { UserService } from '../user.service';
 import { UserEditComponent } from '../user-edit/user-edit.component';
@@ -16,8 +16,8 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   dataSource = new MatTableDataSource<User>();
   private usChangedSubscription: Subscription;
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private userService: UserService,
               private dialog: MatDialog) { }

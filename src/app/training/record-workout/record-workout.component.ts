@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {DropDown} from '../../shared/models/dropdown.model';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {RecordedWorkoutService} from '../recorded-workout.service';
 import {DropdownService} from '../../shared/dropdown.service';

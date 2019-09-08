@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
+import {Subject, BehaviorSubject} from 'rxjs';
 import {UIService} from '../shared/ui.service';
 import {RecordedWorkout, WorkoutExercise} from '../shared/models/recorded-workout.model';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {FirestoreService} from '../shared/firestore.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 

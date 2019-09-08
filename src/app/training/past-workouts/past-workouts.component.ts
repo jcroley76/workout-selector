@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { RecordedWorkout } from '../../shared/models/recorded-workout.model';
 import { MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { RecordedWorkoutService } from '../recorded-workout.service';
@@ -19,8 +19,8 @@ export class PastWorkoutsComponent implements OnInit, AfterViewInit, OnDestroy {
   loggedInUserSubscription: Subscription;
   private rwChangedSubscription: Subscription;
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private recordedWorkoutService: RecordedWorkoutService,
               private authService: AuthService,

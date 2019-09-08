@@ -1,25 +1,29 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore,
+import {Injectable} from '@angular/core';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
   AngularFirestoreCollection,
-  AngularFirestoreDocument
+  DocumentChangeAction,
+  Action,
+  DocumentSnapshotDoesNotExist,
+  DocumentSnapshotExists,
 } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/switchMap';
+import { Observable, from } from 'rxjs';
+import { map, tap, take, switchMap, mergeMap, expand, takeWhile } from 'rxjs/operators';
 
-import * as firebase from 'firebase/app';
+type CollectionPredicate<T> = string | AngularFirestoreCollection<T>;
+type DocPredicate<T> = string | AngularFirestoreDocument<T>;
 
-type CollectionPredicate<T>   = string |  AngularFirestoreCollection<T>;
-type DocPredicate<T>          = string |  AngularFirestoreDocument<T>;
+import * as firebase from 'firebase';
 
 // FROM: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#4-Upsert-Update-or-Create-Method
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class FirestoreService {
 
-  constructor(private afs: AngularFirestore) {}
+  constructor(private afs: AngularFirestore) {
+  }
 
   /// **************
   /// Get a Reference
@@ -35,28 +39,38 @@ export class FirestoreService {
   /// **************
   /// Get Data
   /// **************
-  doc$<T>(ref:  DocPredicate<T>): Observable<T> {
-    return this.doc(ref).snapshotChanges().map(doc => {
-      return doc.payload.data() as T;
-    });
+  doc$<T>(ref: DocPredicate<T>): Observable<T> {
+    return this.doc(ref).snapshotChanges()
+      .pipe(
+        switchMap(doc => {
+          return doc.payload.data() as T;
+        })
+      );
   }
 
   col$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<T[]> {
-    return this.col(ref, queryFn).snapshotChanges().map(docs => {
-      return docs.map(a => a.payload.doc.data()) as T[];
-    });
+    return this.col(ref, queryFn).snapshotChanges()
+      .pipe(
+        map(docs => {
+          return docs.map(a => a.payload.doc.data()) as T[];
+        })
+      );
   }
 
   /// with Ids
   colWithIds$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<any[]> {
     console.log('FirestoreService colWithIds$.');
-    return this.col(ref, queryFn).snapshotChanges().map(actions => {
-      return actions.map(a => {
-        const data = a.payload.doc.data();
-        const id = a.payload.doc.id;
-        return { id, ...data };
-      });
-    });
+    return this.col(ref, queryFn)
+      .snapshotChanges()
+      .pipe(
+        map((actions: DocumentChangeAction<T>[]) => {
+          return actions.map((a: DocumentChangeAction<T>) => {
+            const data: Object = a.payload.doc.data() as T;
+            const id = a.payload.doc.id;
+            return {id, ...data};
+          });
+        })
+      );
   }
 
   /// **************
@@ -107,10 +121,13 @@ export class FirestoreService {
 
 
   /// If doc exists update, otherwise set
-  upsert<T>(ref: DocPredicate<T>, data: any) {
-    const doc = this.doc(ref).snapshotChanges().take(1).toPromise();
+  upsert<T>(ref: DocPredicate<T>, data: any): Promise<void> {
+    const doc = this.doc(ref)
+      .snapshotChanges()
+      .pipe(take(1))
+      .toPromise();
 
-    return doc.then(snap => {
+    return doc.then((snap: Action<DocumentSnapshotDoesNotExist | DocumentSnapshotExists<T>>) => {
       return snap.payload.exists ? this.update(ref, data) : this.set(ref, data);
     });
   }
@@ -121,23 +138,29 @@ export class FirestoreService {
 
   inspectDoc(ref: DocPredicate<any>): void {
     const tick = new Date().getTime();
-    this.doc(ref).snapshotChanges()
-      .take(1)
-      .do(d => {
-        const tock = new Date().getTime() - tick;
-        console.log(`Loaded Document in ${tock}ms`, d);
-      })
+    this.doc(ref)
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        tap((d: Action<DocumentSnapshotDoesNotExist | DocumentSnapshotExists<any>>) => {
+          const tock = new Date().getTime() - tick;
+          console.log(`Loaded Document in ${tock}ms`, d);
+        }),
+      )
       .subscribe();
   }
 
   inspectCol(ref: CollectionPredicate<any>): void {
     const tick = new Date().getTime();
-    this.col(ref).snapshotChanges()
-      .take(1)
-      .do(c => {
-        const tock = new Date().getTime() - tick;
-        console.log(`Loaded Collection in ${tock}ms`, c);
-      })
+    this.col(ref)
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        tap((c: DocumentChangeAction<any>[]) => {
+          const tock = new Date().getTime() - tick;
+          console.log(`Loaded Collection in ${tock}ms`, c);
+        }),
+      )
       .subscribe();
   }
 
@@ -147,19 +170,22 @@ export class FirestoreService {
 
   /// create a reference between two documents
   connect(host: DocPredicate<any>, key: string, doc: DocPredicate<any>) {
-    return this.doc(host).update({ [key]: this.doc(doc).ref });
+    return this.doc(host).update({[key]: this.doc(doc).ref});
   }
 
   /// returns a documents references mapped to AngularFirestoreDocument
   docWithRefs$<T>(ref: DocPredicate<T>) {
-    return this.doc$(ref).map(doc => {
-      for (const k of Object.keys(doc)) {
-        if (doc[k] instanceof firebase.firestore.DocumentReference) {
-          doc[k] = this.doc(doc[k].path);
-        }
-      }
-      return doc;
-    });
+    return this.doc$(ref)
+      .pipe(
+        map(doc => {
+          for (const k of Object.keys(doc)) {
+            if (doc[k] instanceof firebase.firestore.DocumentReference) {
+              doc[k] = this.doc(doc[k].path);
+            }
+          }
+          return doc;
+        })
+      );
   }
 
   /// **************
@@ -176,8 +202,8 @@ export class FirestoreService {
 
     const currentTime = this.timestamp;
 
-    batch.update(itemDoc, { timestamp: currentTime });
-    batch.update(userDoc, { timestamp: currentTime });
+    batch.update(itemDoc, {timestamp: currentTime});
+    batch.update(userDoc, {timestamp: currentTime});
 
     /// commit operations
     return batch.commit();
